@@ -2,3 +2,25 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+
+
+
+
+
+---
+
+
+spring:
+  profiles:
+    active: local
+
+
+---
+
+
+spring:
+  profiles:
+    active: dev
+
+
