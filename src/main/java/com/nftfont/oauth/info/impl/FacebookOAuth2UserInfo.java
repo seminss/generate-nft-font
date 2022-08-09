@@ -1,5 +1,9 @@
 package com.nftfont.oauth.info.impl;
 
+import com.nftfont.oauth.info.OAuth2UserInfo;
+
+import java.util.Map;
+
 public class FacebookOAuth2UserInfo extends OAuth2UserInfo {
     public FacebookOAuth2UserInfo(Map<String, Object> attributes) {
         super(attributes);

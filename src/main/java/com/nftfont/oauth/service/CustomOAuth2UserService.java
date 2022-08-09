@@ -1,10 +1,12 @@
 package com.nftfont.oauth.service;
 
+import com.nftfont.core.exception.OAuthProviderMissMatchException;
 import com.nftfont.module.user.user.domain.User;
 import com.nftfont.module.user.user.domain.UserRepository;
 import com.nftfont.oauth.entity.ProviderType;
 import com.nftfont.oauth.entity.RoleType;
 import com.nftfont.oauth.entity.UserPrincipal;
+import com.nftfont.oauth.info.OAuth2UserInfo;
 import com.nftfont.oauth.info.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -13,7 +15,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 
 @Service
@@ -28,8 +29,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         try {
             return this.process(userRequest, user);
-        } catch (AuthenticationException ex) {
-            throw ex;
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());

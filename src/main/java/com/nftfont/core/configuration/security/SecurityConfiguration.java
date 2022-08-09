@@ -9,9 +9,11 @@ import com.nftfont.core.configuration.properties.CorsProperties;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
 import com.nftfont.oauth.RestAuthenticationEntryPoint;
 import com.nftfont.oauth.entity.RoleType;
+import com.nftfont.oauth.filter.TokenAuthenticationFilter;
 import com.nftfont.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.nftfont.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.nftfont.oauth.handler.TokenAccessDeniedHandler;
+import com.nftfont.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.nftfont.oauth.service.CustomOAuth2UserService;
 import com.nftfont.oauth.service.CustomUserDetailsService;
 import com.nftfont.oauth.token.AuthTokenProvider;
@@ -56,11 +58,6 @@ public class SecurityConfiguration {
     /**
      * UserDetailsService 설정
      */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
 
 
     @Bean
@@ -78,6 +75,9 @@ public class SecurityConfiguration {
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
+                // 임시~~~~~~~~~~~~~~~~~
+                .authorizeRequests().antMatchers("/").permitAll().and()
+                // ~~~~~~~~~~~~~~~~ 임시
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
@@ -103,11 +103,7 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    @Override
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

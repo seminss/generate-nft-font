@@ -1,5 +1,9 @@
 package com.nftfont.oauth.info.impl;
 
+import com.nftfont.oauth.info.OAuth2UserInfo;
+
+import java.util.Map;
+
 public class NaverOAuth2UserInfo extends OAuth2UserInfo {
 
     public NaverOAuth2UserInfo(Map<String, Object> attributes) {

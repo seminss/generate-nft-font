@@ -1,5 +1,38 @@
 package com.nftfont.oauth.handler;
 
+import com.nftfont.core.configuration.properties.AppProperties;
+import com.nftfont.core.utils.CookieUtil;
+import com.nftfont.module.user.user.domain.UserRefreshToken;
+import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
+import com.nftfont.oauth.entity.ProviderType;
+import com.nftfont.oauth.entity.RoleType;
+import com.nftfont.oauth.info.OAuth2UserInfo;
+import com.nftfont.oauth.info.OAuth2UserInfoFactory;
+import com.nftfont.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.nftfont.oauth.token.AuthToken;
+import com.nftfont.oauth.token.AuthTokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
+
+import static com.nftfont.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static com.nftfont.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
+
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
