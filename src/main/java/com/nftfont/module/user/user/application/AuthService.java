@@ -11,6 +11,7 @@ import com.nftfont.module.user.user.presentation.response.ApiResponse;
 import com.nftfont.core.oauth.entity.UserPrincipal;
 import com.nftfont.core.configuration.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,12 +20,15 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.util.Date;
 
 import static com.nftfont.core.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional
 public class AuthService {
     private final AppProperties appProperties;
     private final JwtTokenProvider jwtTokenProvider;
@@ -52,12 +56,13 @@ public class AuthService {
         );
 
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userId);
+
         if (userRefreshToken == null) {
-            // 없는 경우 새로 등록
+
             userRefreshToken = new UserRefreshToken(userId, refreshToken.getToken());
             userRefreshTokenRepository.saveAndFlush(userRefreshToken);
+
         } else {
-            // DB에 refresh 토큰 업데이트
             userRefreshToken.setRefreshToken(refreshToken.getToken());
         }
 

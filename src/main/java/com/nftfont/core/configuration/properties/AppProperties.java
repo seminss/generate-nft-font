@@ -2,12 +2,13 @@ package com.nftfont.core.configuration.properties;
 
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Configuration
 public class AppProperties {
 
     private final Auth auth = new Auth();
@@ -38,5 +39,6 @@ public class AppProperties {
             return this;
         }
     }
+
 }
 
