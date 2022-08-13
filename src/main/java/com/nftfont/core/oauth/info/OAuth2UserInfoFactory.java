@@ -1,10 +1,10 @@
-package com.nftfont.oauth.info;
+package com.nftfont.core.oauth.info;
 
-import com.nftfont.oauth.entity.ProviderType;
-import com.nftfont.oauth.info.impl.FacebookOAuth2UserInfo;
-import com.nftfont.oauth.info.impl.GoogleOAuth2UserInfo;
-import com.nftfont.oauth.info.impl.KakaoOAuth2UserInfo;
-import com.nftfont.oauth.info.impl.NaverOAuth2UserInfo;
+import com.nftfont.core.oauth.info.impl.KakaoOAuth2UserInfo;
+import com.nftfont.core.oauth.info.impl.NaverOAuth2UserInfo;
+import com.nftfont.core.oauth.entity.ProviderType;
+import com.nftfont.core.oauth.info.impl.FacebookOAuth2UserInfo;
+import com.nftfont.core.oauth.info.impl.GoogleOAuth2UserInfo;
 
 import java.util.Map;
 

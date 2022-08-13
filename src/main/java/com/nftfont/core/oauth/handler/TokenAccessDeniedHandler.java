@@ -1,4 +1,4 @@
-package com.nftfont.oauth.handler;
+package com.nftfont.core.oauth.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;

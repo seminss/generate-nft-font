@@ -1,8 +1,8 @@
 package com.nftfont.module.user.user.domain;
 
 
-import com.nftfont.oauth.entity.ProviderType;
-import com.nftfont.oauth.entity.RoleType;
+import com.nftfont.core.oauth.entity.ProviderType;
+import com.nftfont.core.oauth.entity.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

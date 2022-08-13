@@ -1,8 +1,6 @@
 package com.nftfont.core.configuration.jwt;
 
 import com.nftfont.core.utils.HeaderUtil;
-import com.nftfont.oauth.token.AuthToken;
-import com.nftfont.oauth.token.AuthTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -19,7 +17,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -27,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String tokenStr = HeaderUtil.getAccessToken(request);
-        AuthToken token =  tokenProvider.convertAuthToken(tokenStr);
+        JwtToken token =  tokenProvider.convertAuthToken(tokenStr);
 
         if(token.validate()){
             Authentication authentication = tokenProvider.getAuthentication(token);

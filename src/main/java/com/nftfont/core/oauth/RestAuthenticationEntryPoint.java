@@ -1,4 +1,4 @@
-package com.nftfont.oauth;
+package com.nftfont.core.oauth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;

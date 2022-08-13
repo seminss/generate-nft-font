@@ -1,6 +1,5 @@
 package com.nftfont.core.configuration.jwt;
 
-import com.nftfont.oauth.token.AuthTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,7 @@ public class JwtConfig {
     private String secret;
 
     @Bean
-    public AuthTokenProvider jwtProvider(){
-        return new AuthTokenProvider(secret);
+    public JwtTokenProvider jwtProvider(){
+        return new JwtTokenProvider(secret);
     }
 }

@@ -1,4 +1,4 @@
-package com.nftfont.oauth.repository;
+package com.nftfont.core.oauth.repository;
 
 import com.nftfont.core.utils.CookieUtil;
 import com.nimbusds.oauth2.sdk.util.StringUtils;

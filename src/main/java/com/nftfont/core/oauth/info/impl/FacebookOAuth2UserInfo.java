@@ -1,6 +1,6 @@
-package com.nftfont.oauth.info.impl;
+package com.nftfont.core.oauth.info.impl;
 
-import com.nftfont.oauth.info.OAuth2UserInfo;
+import com.nftfont.core.oauth.info.OAuth2UserInfo;
 
 import java.util.Map;
 

@@ -1,13 +1,13 @@
-package com.nftfont.oauth.service;
+package com.nftfont.core.oauth.service;
 
 import com.nftfont.core.exception.OAuthProviderMissMatchException;
+import com.nftfont.core.oauth.info.OAuth2UserInfo;
+import com.nftfont.core.oauth.info.OAuth2UserInfoFactory;
 import com.nftfont.module.user.user.domain.User;
 import com.nftfont.module.user.user.domain.UserRepository;
-import com.nftfont.oauth.entity.ProviderType;
-import com.nftfont.oauth.entity.RoleType;
-import com.nftfont.oauth.entity.UserPrincipal;
-import com.nftfont.oauth.info.OAuth2UserInfo;
-import com.nftfont.oauth.info.OAuth2UserInfoFactory;
+import com.nftfont.core.oauth.entity.ProviderType;
+import com.nftfont.core.oauth.entity.RoleType;
+import com.nftfont.core.oauth.entity.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

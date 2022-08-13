@@ -1,4 +1,4 @@
-package com.nftfont.oauth.token;
+package com.nftfont.core.configuration.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.Getter;
@@ -12,17 +12,17 @@ import java.util.Date;
 @Slf4j
 @RequiredArgsConstructor
 @Getter
-public class AuthToken {
+public class JwtToken {
     private final String token ;
     private final Key key;
 
     private static final String AUTHORITIES_KEY = "role";
 
-    AuthToken(String id, String role, Date expiry, Key key){
+    JwtToken(String id, String role, Date expiry, Key key){
         this.key = key;
         this.token = createAuthToken(id,role,expiry);
     }
-    AuthToken(String id,Date expiry, Key key){
+    JwtToken(String id, Date expiry, Key key){
         this.key = key;
         this.token = createAuthToken(id, expiry);
     }

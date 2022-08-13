@@ -1,4 +1,4 @@
-package com.nftfont.oauth.entity;
+package com.nftfont.core.oauth.entity;
 
 import lombok.Getter;
 

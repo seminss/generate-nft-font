@@ -1,16 +1,16 @@
-package com.nftfont.oauth.handler;
+package com.nftfont.core.oauth.handler;
 
+import com.nftfont.core.configuration.jwt.JwtTokenProvider;
 import com.nftfont.core.configuration.properties.AppProperties;
+import com.nftfont.core.oauth.info.OAuth2UserInfo;
+import com.nftfont.core.oauth.info.OAuth2UserInfoFactory;
+import com.nftfont.core.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.nftfont.core.utils.CookieUtil;
 import com.nftfont.module.user.user.domain.UserRefreshToken;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
-import com.nftfont.oauth.entity.ProviderType;
-import com.nftfont.oauth.entity.RoleType;
-import com.nftfont.oauth.info.OAuth2UserInfo;
-import com.nftfont.oauth.info.OAuth2UserInfoFactory;
-import com.nftfont.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.nftfont.oauth.token.AuthToken;
-import com.nftfont.oauth.token.AuthTokenProvider;
+import com.nftfont.core.oauth.entity.ProviderType;
+import com.nftfont.core.oauth.entity.RoleType;
+import com.nftfont.core.configuration.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,14 +30,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
-import static com.nftfont.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
-import static com.nftfont.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
-
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final AuthTokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final AppProperties appProperties;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
@@ -56,7 +53,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        Optional<String> redirectUri = CookieUtil.getCookie(request, OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
         if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
@@ -75,7 +72,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         RoleType roleType = hasAuthority(authorities, RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
 
         Date now = new Date();
-        AuthToken accessToken = tokenProvider.createAuthToken(
+        JwtToken accessToken = jwtTokenProvider.createAuthToken(
                 userInfo.getId(),
                 roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
@@ -84,7 +81,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         // refresh 토큰 설정
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
 
-        AuthToken refreshToken = tokenProvider.createAuthToken(
+        JwtToken refreshToken = jwtTokenProvider.createAuthToken(
                 appProperties.getAuth().getTokenSecret(),
                 new Date(now.getTime() + refreshTokenExpiry)
         );
@@ -100,8 +97,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
 
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+        CookieUtil.deleteCookie(request, response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN);
+        CookieUtil.addCookie(response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", accessToken.getToken())

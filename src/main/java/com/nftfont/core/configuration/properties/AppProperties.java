@@ -1,16 +1,13 @@
 package com.nftfont.core.configuration.properties;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@ConfigurationProperties(prefix = "app")
 public class AppProperties {
 
     private final Auth auth = new Auth();
@@ -21,8 +18,11 @@ public class AppProperties {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Auth {
+        @Value("${app.auth.tokenSecret}")
         private String tokenSecret;
+        @Value("${app.auth.tokenExpiry}")
         private long tokenExpiry;
+        @Value("${app.auth.refreshTokenExpiry}")
         private long refreshTokenExpiry;
     }
 

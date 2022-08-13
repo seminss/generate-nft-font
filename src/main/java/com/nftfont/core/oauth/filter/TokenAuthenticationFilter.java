@@ -1,8 +1,8 @@
-package com.nftfont.oauth.filter;
+package com.nftfont.core.oauth.filter;
 
+import com.nftfont.core.configuration.jwt.JwtTokenProvider;
 import com.nftfont.core.utils.HeaderUtil;
-import com.nftfont.oauth.token.AuthToken;
-import com.nftfont.oauth.token.AuthTokenProvider;
+import com.nftfont.core.configuration.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
-    private final AuthTokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     protected void doFilterInternal(
@@ -28,10 +28,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain)  throws ServletException, IOException {
 
         String tokenStr = HeaderUtil.getAccessToken(request);
-        AuthToken token = tokenProvider.convertAuthToken(tokenStr);
+        JwtToken token = jwtTokenProvider.convertAuthToken(tokenStr);
 
         if (token.validate()) {
-            Authentication authentication = tokenProvider.getAuthentication(token);
+            Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

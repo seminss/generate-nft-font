@@ -1,8 +1,8 @@
-package com.nftfont.oauth.service;
+package com.nftfont.core.oauth.service;
 
 import com.nftfont.module.user.user.domain.User;
 import com.nftfont.module.user.user.domain.UserRepository;
-import com.nftfont.oauth.entity.UserPrincipal;
+import com.nftfont.core.oauth.entity.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

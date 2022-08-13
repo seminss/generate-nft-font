@@ -1,4 +1,4 @@
-package com.nftfont.oauth.info;
+package com.nftfont.core.oauth.info;
 
 import java.util.Map;
 
