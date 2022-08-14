@@ -2,6 +2,9 @@ package com.nftfont.core.configuration.jwt;
 
 import com.nftfont.core.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +60,19 @@ public class JwtTokenProvider {
         }
 
         throw new TokenValidFailedException();
-
     }
+    public boolean  validate(String token){
+        try{
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+
+            // 2.
+            Date expireDt = claims.getBody().getExpiration();
+            Date nowDt = new Date();
+
+            return !expireDt.before(nowDt);
+        }catch (Exception e){
+            return false;
+        }
+    }
+
 }

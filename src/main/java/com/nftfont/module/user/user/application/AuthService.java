@@ -4,10 +4,13 @@ package com.nftfont.module.user.user.application;
 import com.nftfont.core.configuration.jwt.JwtTokenProvider;
 import com.nftfont.core.configuration.properties.AppProperties;
 import com.nftfont.core.oauth.entity.RoleType;
+import com.nftfont.core.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.nftfont.core.utils.CookieUtil;
 import com.nftfont.core.utils.HeaderUtil;
+import com.nftfont.module.user.user.domain.User;
 import com.nftfont.module.user.user.domain.UserRefreshToken;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
+import com.nftfont.module.user.user.domain.UserRepository;
 import com.nftfont.module.user.user.presentation.request.AuthReqModel;
 import com.nftfont.module.user.user.presentation.response.ApiResponse;
 import com.nftfont.core.oauth.entity.UserPrincipal;
@@ -19,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -36,48 +40,48 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final UserRepository userRepository;
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
-    public ApiResponse authLogin(AuthReqModel authReqModel, HttpServletRequest request,
-                                 HttpServletResponse response){
 
-        Authentication authentication = authenticationManager.
-                authenticate(new UsernamePasswordAuthenticationToken(authReqModel.getId(), authReqModel.getPassword()));
+    public ApiResponse signInWithKakao(HttpServletRequest request,HttpServletResponse response,String token){
+        if(!jwtTokenProvider.validate(token)){
+            throw new RuntimeException();
+        }
+        JwtToken jwtToken = jwtTokenProvider.convertJwtToken(token);
 
-        String userId = authReqModel.getId();
+        Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Date now = new Date();
-        JwtToken jwtToken = jwtTokenProvider.createJwtToken(userId,
-                ((UserPrincipal) authentication.getPrincipal()).getRoleType().getCode(),
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
-        );
+        User user = userRepository.findByUserId(authentication.getName());
 
+        Date now = new Date();
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
+
+
         JwtToken refreshToken = jwtTokenProvider.createJwtToken(
                 appProperties.getAuth().getTokenSecret(),
                 new Date(now.getTime() + refreshTokenExpiry)
         );
 
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userId);
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(authentication.getName());
 
-        if (userRefreshToken == null) {
-
-            userRefreshToken = new UserRefreshToken(userId, refreshToken.getToken());
-            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
-
-        } else {
+        if (userRefreshToken != null) {
             userRefreshToken.setRefreshToken(refreshToken.getToken());
+        } else {
+            userRefreshToken = new UserRefreshToken(authentication.getName(),refreshToken.getToken());
+            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
         }
 
         int cookieMaxAge = (int) refreshTokenExpiry / 60;
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+
+        CookieUtil.deleteCookie(request, response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN);
+        CookieUtil.addCookie(response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return ApiResponse.success("token", jwtToken.getToken());
-
     }
+
 
     public ApiResponse authRefresh(HttpServletRequest request, HttpServletResponse response){
         // access token 확인

@@ -37,10 +37,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
-
-
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-
 
         User savedUser = userRepository.findByUserId(userInfo.getId());
 
@@ -55,6 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else {
             savedUser = createUser(userInfo, providerType);
         }
+
 
         return UserPrincipal.create(savedUser, user.getAttributes());
     }

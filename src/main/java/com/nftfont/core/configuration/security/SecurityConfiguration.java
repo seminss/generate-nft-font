@@ -40,11 +40,9 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     private final AppProperties appProperties;
     private final CorsProperties corsProperties;
     private final JwtTokenProvider tokenProvider;
-    private final CustomUserDetailsService userDetailsService;
     private final CustomOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
@@ -52,7 +50,6 @@ public class SecurityConfiguration {
     /**
      * UserDetailsService 설정
      */
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -74,9 +71,8 @@ public class SecurityConfiguration {
                 // ~~~~~~~~~~~~~~~~ 임시
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-//                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
-//                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                 .and()
+                // oauth2 로그인부분
                 .oauth2Login()
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorization")
@@ -98,11 +94,11 @@ public class SecurityConfiguration {
 
 
 
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public JwtAuthenticationFilter JwtAuthenticationFilter() {
         return new JwtAuthenticationFilter(tokenProvider);

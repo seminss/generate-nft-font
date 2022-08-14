@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -26,6 +27,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     private final String password;
     private final ProviderType providerType;
     private final RoleType roleType;
+
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
@@ -84,6 +86,8 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
         return null;
     }
     public static UserPrincipal create(User user) {
+        System.out.println("이이이이이잉"+user.getPassword());
+
         return new UserPrincipal(
                 user.getUserId(),
                 user.getPassword(),
@@ -95,7 +99,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = create(user);
         userPrincipal.setAttributes(attributes);
-
+        System.out.println("이이이이이잉"+user.getPassword());
         return userPrincipal;
     }
 

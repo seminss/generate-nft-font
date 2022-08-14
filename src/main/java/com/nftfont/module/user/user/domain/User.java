@@ -92,7 +92,7 @@ public class User {
     ) {
         this.userId = userId;
         this.username = username;
-        this.password = "NO_PASS";
+        this.password = "abcd";
         this.email = email != null ? email : "NO_EMAIL";
         this.emailVerifiedYn = emailVerifiedYn;
         this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
