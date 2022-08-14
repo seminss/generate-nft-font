@@ -28,7 +28,12 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("account_email");
+        Map<String, Object> kakao_account = (Map<String, Object>) attributes.get("kakao_account");
+        if (kakao_account == null) {
+            return null;
+        }
+        
+        return (String) kakao_account.get("email");
     }
 
     @Override
@@ -39,7 +44,7 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
             return null;
         }
 
-        return (String) properties.get("thumbnail_image");
+        return (String) properties.get("profile_image");
     }
 }
 

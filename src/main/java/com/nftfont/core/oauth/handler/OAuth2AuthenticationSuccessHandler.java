@@ -55,7 +55,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CookieUtil.getCookie(request, OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
-
+        
         if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
             throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
@@ -72,7 +72,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         RoleType roleType = hasAuthority(authorities, RoleType.ADMIN.getCode()) ? RoleType.ADMIN : RoleType.USER;
 
         Date now = new Date();
-        JwtToken accessToken = jwtTokenProvider.createAuthToken(
+        JwtToken accessToken = jwtTokenProvider.createJwtToken(
                 userInfo.getId(),
                 roleType.getCode(),
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
@@ -81,7 +81,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         // refresh 토큰 설정
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
 
-        JwtToken refreshToken = jwtTokenProvider.createAuthToken(
+        JwtToken refreshToken = jwtTokenProvider.createJwtToken(
                 appProperties.getAuth().getTokenSecret(),
                 new Date(now.getTime() + refreshTokenExpiry)
         );
@@ -126,6 +126,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
 
+        
         return appProperties.getOauth2().getAuthorizedRedirectUris()
                 .stream()
                 .anyMatch(authorizedRedirectUri -> {

@@ -2,12 +2,11 @@ package com.nftfont.core.configuration.security;
 
 
 import com.nftfont.core.configuration.jwt.JwtAuthenticationEntryPoint;
+import com.nftfont.core.configuration.jwt.JwtAuthenticationFilter;
 import com.nftfont.core.configuration.jwt.JwtTokenProvider;
 import com.nftfont.core.configuration.properties.AppProperties;
 import com.nftfont.core.configuration.properties.CorsProperties;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
-import com.nftfont.core.oauth.RestAuthenticationEntryPoint;
-import com.nftfont.core.oauth.filter.TokenAuthenticationFilter;
 import com.nftfont.core.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.nftfont.core.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.nftfont.core.oauth.handler.TokenAccessDeniedHandler;
@@ -40,7 +39,6 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     private final AppProperties appProperties;
@@ -68,17 +66,16 @@ public class SecurityConfiguration {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
                 // 임시~~~~~~~~~~~~~~~~~
-                .authorizeRequests().antMatchers("/").permitAll().and()
+                .authorizeRequests().antMatchers("/swagger-ui/index.html").permitAll().and()
                 // ~~~~~~~~~~~~~~~~ 임시
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 //                .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
 //                .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-                .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint()
@@ -94,7 +91,7 @@ public class SecurityConfiguration {
                 .successHandler(oAuth2AuthenticationSuccessHandler())
                 .failureHandler(oAuth2AuthenticationFailureHandler());
 
-        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -107,8 +104,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
+    public JwtAuthenticationFilter JwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(tokenProvider);
     }
 
     @Bean

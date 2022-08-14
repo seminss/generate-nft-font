@@ -26,7 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest){
         OAuth2User user = super.loadUser(userRequest);
-
         try {
             return this.process(userRequest, user);
         } catch (Exception ex) {
@@ -38,7 +37,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
+
+
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
+
+
         User savedUser = userRepository.findByUserId(userInfo.getId());
 
         if (savedUser != null) {

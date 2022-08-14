@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -29,15 +28,15 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public JwtToken createAuthToken(String id, Date expiry){
+    public JwtToken createJwtToken(String id, Date expiry){
         return new JwtToken(id,expiry,key);
     }
 
-    public JwtToken createAuthToken(String id, String role, Date expiry){
+    public JwtToken createJwtToken(String id, String role, Date expiry){
         return new JwtToken(id,role,expiry,key);
     }
 
-    public JwtToken convertAuthToken(String token){
+    public JwtToken convertJwtToken(String token){
         return new JwtToken(token,key);
     }
 

@@ -30,7 +30,7 @@ public class JwtToken {
     private String createAuthToken(String id,Date expiry){
         return Jwts.builder()
                 .setSubject(id)
-                .signWith(key, SignatureAlgorithm.HS256 )
+                .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(expiry)
                 .compact();
     }
