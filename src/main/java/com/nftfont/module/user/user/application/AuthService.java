@@ -11,18 +11,14 @@ import com.nftfont.module.user.user.domain.User;
 import com.nftfont.module.user.user.domain.UserRefreshToken;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
 import com.nftfont.module.user.user.domain.UserRepository;
-import com.nftfont.module.user.user.presentation.request.AuthReqModel;
 import com.nftfont.module.user.user.presentation.response.ApiResponse;
-import com.nftfont.core.oauth.entity.UserPrincipal;
 import com.nftfont.core.configuration.jwt.JwtToken;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -38,7 +34,6 @@ import java.util.Date;
 public class AuthService {
     private final AppProperties appProperties;
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final UserRepository userRepository;
 
@@ -46,15 +41,17 @@ public class AuthService {
     private final static String REFRESH_TOKEN = "refresh_token";
 
     public ApiResponse signInWithKakao(HttpServletRequest request,HttpServletResponse response,String token){
-        if(!jwtTokenProvider.validate(token)){
-            throw new RuntimeException();
-        }
+
         JwtToken jwtToken = jwtTokenProvider.convertJwtToken(token);
+
+        if (!jwtToken.validate()) {
+            return ApiResponse.invalidAccessToken();
+        }
 
         Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        User user = userRepository.findByUserId(authentication.getName());
+        System.out.println("여기가지왓ㅇ므");
+//        User user = userRepository.findByUserId(authentication.getName());
 
         Date now = new Date();
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();

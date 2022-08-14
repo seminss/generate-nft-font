@@ -61,18 +61,4 @@ public class JwtTokenProvider {
 
         throw new TokenValidFailedException();
     }
-    public boolean  validate(String token){
-        try{
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-
-            // 2.
-            Date expireDt = claims.getBody().getExpiration();
-            Date nowDt = new Date();
-
-            return !expireDt.before(nowDt);
-        }catch (Exception e){
-            return false;
-        }
-    }
-
 }
