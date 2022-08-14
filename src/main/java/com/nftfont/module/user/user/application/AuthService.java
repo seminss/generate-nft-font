@@ -50,7 +50,7 @@ public class AuthService {
 
         Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println("여기가지왓ㅇ므");
+
 //        User user = userRepository.findByUserId(authentication.getName());
 
         Date now = new Date();

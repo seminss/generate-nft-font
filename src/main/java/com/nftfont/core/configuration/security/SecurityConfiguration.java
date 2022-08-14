@@ -66,11 +66,15 @@ public class SecurityConfiguration {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
-                // 임시~~~~~~~~~~~~~~~~~
-                .authorizeRequests().antMatchers("/swagger-ui/index.html").permitAll().and()
-                // ~~~~~~~~~~~~~~~~ 임시
                 .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                    // 추가하기
+                    .antMatchers("/swagger-ui/index.html").permitAll()
+                    .antMatchers("/v1/kakao").permitAll()
+                    /// 추가 하기
+                    .anyRequest().hasAnyRole("USER","ADMIN","GUEST")
+                .and()
+                .authorizeRequests()
+//                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
                 // oauth2 로그인부분
                 .oauth2Login()

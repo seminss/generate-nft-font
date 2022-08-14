@@ -86,7 +86,6 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
         return null;
     }
     public static UserPrincipal create(User user) {
-        System.out.println("이이이이이잉"+user.getPassword());
 
         return new UserPrincipal(
                 user.getUserId(),
@@ -99,7 +98,6 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = create(user);
         userPrincipal.setAttributes(attributes);
-        System.out.println("이이이이이잉"+user.getPassword());
         return userPrincipal;
     }
 
