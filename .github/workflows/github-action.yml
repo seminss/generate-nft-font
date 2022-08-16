@@ -55,22 +55,21 @@ jobs:
           docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/nftfont .
           docker push ${{ secrets.DOCKER_REPO }}/nftfont
           docker logout 
-    ## deploy to develop
-    - name: Deploy to dev
+    ## deploy to production
+    - name: Deploy to prod
       uses: appleboy/ssh-action@master
-      id: deploy-dev
+      id: deploy-prod
       if: contains(github.ref, 'main')
       with:
-        host: ${{ secrets.HOST_DEV }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: 22
-        #key: ${{ secrets.PRIVATE_KEY }}
-        script: |
-            sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_REPO }}/nftfont
-            docker-compose up -d
-            docker image prune -f
+          host: ${{ secrets.HOST_PROD }}
+          username: ec2-user
+          key: ${{ secrets.PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+              sudo docker rm -f $(docker ps -qa)
+              sudo docker pull ${{ secrets.DOCKER_REPO }}/dotoriham-prod
+              docker-compose up -d
+              docker image prune -f
   ## time
   current-time:
     needs: CI-CD
