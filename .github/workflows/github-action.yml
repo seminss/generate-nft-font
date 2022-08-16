@@ -52,7 +52,7 @@ jobs:
     - name: Docker build & push to dev
       run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/nftfont .
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/nftfont .
           docker push ${{ secrets.DOCKER_REPO }}/nftfont
           docker logout 
     ## deploy to develop
