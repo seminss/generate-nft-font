@@ -47,14 +47,6 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
 
-    ## docker build & push to production
-    - name: Docker build & push to prod
-      if: contains(github.ref, 'main')
-      run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile-prod -t ${{ secrets.DOCKER_REPO }}/dotoriham-prod .
-          docker push ${{ secrets.DOCKER_REPO }}/dotoriham-prod
-
     ## docker build & push to develop
     - name: Docker build & push to dev
       if: contains(github.ref, 'develop')
