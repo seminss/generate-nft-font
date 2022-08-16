@@ -62,12 +62,12 @@ jobs:
       if: contains(github.ref, 'main')
       with:
           host: ${{ secrets.HOST_PROD }}
-          username: ec2-user
+          username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
               sudo docker rm -f $(docker ps -qa)
-              sudo docker pull ${{ secrets.DOCKER_REPO }}/dotoriham-prod
+              sudo docker pull ${{ secrets.DOCKER_REPO }}/nftfont
               docker-compose up -d
               docker image prune -f
   ## time
