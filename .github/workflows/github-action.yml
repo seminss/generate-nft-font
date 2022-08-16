@@ -12,7 +12,8 @@ permissions:
 
 jobs:
   CI-CD:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    if: "contains(github.event.head_commit.message, '[build]')"
     steps:
 
     ## jdk setting
@@ -49,12 +50,11 @@ jobs:
 
     ## docker build & push to develop
     - name: Docker build & push to dev
-      if: contains(github.ref, 'develop')
       run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/dotoriham-dev .
           docker push ${{ secrets.DOCKER_REPO }}/dotoriham-dev
-
+          docker logout 
     ## deploy to production
     - name: Deploy to prod
       uses: appleboy/ssh-action@master
