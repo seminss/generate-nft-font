@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
-@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class AuthController {
 

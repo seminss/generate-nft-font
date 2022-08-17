@@ -68,8 +68,9 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
                     // 추가하기
-                    .antMatchers("/swagger-ui/index.html").permitAll()
-                    .antMatchers("/v1/kakao").permitAll()
+                    .antMatchers("/api-docs/**","/swagger-ui/**").permitAll()
+                    .antMatchers("/hello/api").permitAll()
+                    .antMatchers("/kakao").permitAll()
                     /// 추가 하기
                     .anyRequest().hasAnyRole("USER","ADMIN","GUEST")
                 .and()
