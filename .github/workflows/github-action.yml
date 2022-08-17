@@ -1,5 +1,5 @@
-# github repository Actions 페이지에 나타낼 이름
-name: CI/CD
+# github repository Actions 페이지에 나타낼 이름     
+name: CI/CD 
 
 # event trigger
 on:
@@ -23,53 +23,52 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin' # https://github.com/actions/setup-java
+        
+    - name: Change gradlew permissions
+      run: chmod +x ./gradlew
+  
 
-    ## gradle caching
-    - name: Gradle Caching
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-
-    ## create application-dev.yml
-    - name: make application-dev.yml
+    ## create application-dev.properties
+    - name: make application-dev.properties
       if: contains(github.ref, 'main')
       run: |
         cd ./src/main/resources
-        touch ./application-dev.yml
-        echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
+        touch ./application-dev.properties
+        echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.properties
       shell: bash
 
     ## gradle build
     - name: Build with Gradle
-      run: ./gradlew build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+      run: ./gradlew build -x test
 
     ## docker build & push to develop
     - name: Docker build & push to dev
       run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/nftfont .
-          docker push ${{ secrets.DOCKER_REPO }}/nftfont
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/nftfont .
+          docker push ${{ secrets.DOCKER_USERNAME }}/nftfont
           docker logout 
     ## deploy to production
-    - name: Deploy to prod
+    - name: Deploy to dev
       uses: appleboy/ssh-action@master
       id: deploy-prod
       if: contains(github.ref, 'main')
       with:
-          host: ${{ secrets.HOST_PROD }}
+          host: ${{ secrets.HOST_DEV }}
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
-              sudo docker rm -f $(docker ps -qa)
-              sudo docker pull ${{ secrets.DOCKER_REPO }}/nftfont
-              docker-compose up -d
+              sudo docker rm -f $(docker ps -a -q)
               docker image prune -f
+              docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nftfont
+              docker stop nft
+              docker rm nft
+              docker run -d --name nft -p 80:80 ${{ secrets.DOCKER_USERNAME }}/nftfont
+              docker logout
+
+              
   ## time
   current-time:
     needs: CI-CD
