@@ -6,13 +6,13 @@ import com.nftfont.core.configuration.jwt.JwtAuthenticationFilter;
 import com.nftfont.core.configuration.jwt.JwtTokenProvider;
 import com.nftfont.core.configuration.properties.AppProperties;
 import com.nftfont.core.configuration.properties.CorsProperties;
+import com.nftfont.core.oauth.service.CustomUserDetailsService;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
 import com.nftfont.core.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.nftfont.core.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.nftfont.core.oauth.handler.TokenAccessDeniedHandler;
 import com.nftfont.core.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.nftfont.core.oauth.service.CustomOAuth2UserService;
-import com.nftfont.core.oauth.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
@@ -46,10 +45,14 @@ public class SecurityConfiguration {
     private final CustomOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
-
+    private final CustomUserDetailsService customUserDetailsService;
     /**
      * UserDetailsService 설정
      */
+//    @Bean
+//    public CustomUserDetailsService userDetailsService(){
+//        return customUserDetailsService;
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -72,7 +75,6 @@ public class SecurityConfiguration {
                     .antMatchers("/hello/api").permitAll()
                     .antMatchers("/kakao").permitAll()
                     /// 추가 하기
-                    .anyRequest().hasAnyRole("USER","ADMIN","GUEST")
                 .and()
                 .authorizeRequests()
 //                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()

@@ -1,4 +1,4 @@
-package com.nftfont.core.oauth.entity;
+package com.nftfont.module.user.user.domain.user_pricipal;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

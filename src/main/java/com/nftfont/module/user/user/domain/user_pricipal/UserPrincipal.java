@@ -1,5 +1,6 @@
-package com.nftfont.core.oauth.entity;
+package com.nftfont.module.user.user.domain.user_pricipal;
 
+import com.nftfont.core.oauth.entity.ProviderType;
 import com.nftfont.module.user.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
