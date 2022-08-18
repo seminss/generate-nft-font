@@ -35,7 +35,6 @@ public class AuthService {
     private final AppProperties appProperties;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
-    private final UserRepository userRepository;
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
