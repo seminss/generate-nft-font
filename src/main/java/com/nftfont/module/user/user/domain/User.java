@@ -70,6 +70,11 @@ public class User {
     @NotNull
     private RoleType roleType;
 
+    @Column(name = "BACKGROUND_IMAGE_URL")
+    private String backgroundImageUrl;
+
+    @Column(name = "SELF_DESCRIPTION")
+    private String selfDescription;
     @Column(name = "CREATED_AT")
     @NotNull
     private LocalDateTime createdAt;

@@ -48,6 +48,8 @@ dependencies {
 	implementation 'mysql:mysql-connector-java'
 	implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '5.6.9.Final'
 
+	// aws
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
