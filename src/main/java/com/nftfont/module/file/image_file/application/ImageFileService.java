@@ -1,6 +1,8 @@
 package com.nftfont.module.file.image_file.application;
 
 import com.nftfont.core.infra.aws.AwsS3Service;
+import com.nftfont.core.infra.aws.FileDetail;
+import com.nftfont.module.file.image_file.domain.ImageFileObject;
 import com.nftfont.module.file.image_file.domain.ImageFileObjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +20,36 @@ public class ImageFileService {
     private final ImageFileObjectRepository imageFileObjectRepository;
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public ImageFileDto saveImage(MultipartFile file){
+    public ImageFileDto saveProfileImage(MultipartFile file){
+        FileDetail fileDetail = awsS3Service.uploadProfileImage(file);
 
-        return null;
+        imageFileObjectRepository.save(ImageFileObject.of(fileDetail,file.getOriginalFilename()));
+
+        return ImageFileDto.builder()
+                .imageUrl(fileDetail.getUrl())
+                .build();
+    }
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public ImageFileDto saveOriginalImage(MultipartFile file){
+        FileDetail fileDetail = awsS3Service.uploadOriginalImage(file);
+
+        imageFileObjectRepository.save(ImageFileObject.of(fileDetail,file.getOriginalFilename()));
+
+        return ImageFileDto.builder()
+                .imageUrl(fileDetail.getUrl())
+                .build();
+    }
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void deleteImageFile(String url){
+        Optional<ImageFileObject>  optionalImageFileObject = imageFileObjectRepository.findByUrl(url);
+        if(optionalImageFileObject.isEmpty()){
+            return ;
+        }
+
+        ImageFileObject imageFileObject = optionalImageFileObject.get();
+        awsS3Service.deleteFile(imageFileObject.getUrl());
+
+        imageFileObject.setDeleted(true);
+        imageFileObjectRepository.save(imageFileObject);
     }
 }

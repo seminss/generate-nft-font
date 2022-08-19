@@ -1,8 +1,10 @@
 package com.nftfont.module.file.image_file.domain;
 
+import com.nftfont.core.infra.aws.FileDetail;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Setter
@@ -20,7 +22,7 @@ public class ImageFileObject {
     private Boolean deleted;
 
     @Column()
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @Column()
     private String originalFileName;
@@ -29,4 +31,14 @@ public class ImageFileObject {
 
     @Column(unique = true,nullable = false)
     private String url;
+
+    public static ImageFileObject of(FileDetail fileDetail,String originalFileName){
+        return ImageFileObject.builder()
+                .deleted(false)
+                .originalFileName(originalFileName)
+                .url(fileDetail.getUrl())
+                .createdAt(LocalDateTime.now())
+                .size(fileDetail.getFileSize())
+                .build();
+    }
 }

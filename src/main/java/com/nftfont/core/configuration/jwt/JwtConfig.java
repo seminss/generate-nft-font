@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JwtConfig {
+
     @Value("${app.auth.tokenSecret}")
     private String secret;
 

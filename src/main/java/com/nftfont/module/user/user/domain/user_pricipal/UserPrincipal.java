@@ -22,8 +22,8 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
-    private final Long userSeq;
+public class UserPrincipal implements UserDetails, OidcUser {
+    private final Long id;
     private final String userId;
     private final String password;
     private final ProviderType providerType;
@@ -32,8 +32,8 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public Long getUserSeq(){
-        return userSeq;
+    public Long getId(){
+        return id;
     }
     @Override
     public Map<String, Object> getAttributes(){
@@ -92,7 +92,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     public static UserPrincipal create(User user) {
 
         return new UserPrincipal(
-                user.getUserSeq(),
+                user.getId(),
                 user.getUserId(),
                 user.getPassword(),
                 user.getProviderType(),
@@ -103,6 +103,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = create(user);
         userPrincipal.setAttributes(attributes);
+
         return userPrincipal;
     }
 

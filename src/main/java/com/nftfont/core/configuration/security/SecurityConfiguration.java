@@ -15,9 +15,11 @@ import com.nftfont.core.oauth.repository.OAuth2AuthorizationRequestBasedOnCookie
 import com.nftfont.core.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,13 +51,11 @@ public class SecurityConfiguration {
     /**
      * UserDetailsService 설정
      */
-//    @Bean
-//    public CustomUserDetailsService userDetailsService(){
-//        return customUserDetailsService;
-//    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .cors()
                 .and()
@@ -69,6 +69,7 @@ public class SecurityConfiguration {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
+                .userDetailsService(customUserDetailsService)
                 .authorizeRequests()
                     // 추가하기
                     .antMatchers("/api-docs/**","/swagger-ui/**").permitAll()
@@ -76,10 +77,10 @@ public class SecurityConfiguration {
                     .antMatchers("/kakao").permitAll()
                     /// 추가 하기
                 .and()
-                .authorizeRequests()
+                //.authorizeRequests()
 //                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .and()
-                // oauth2 로그인부분
+                //.and()
+                // oauth2
                 .oauth2Login()
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorization")

@@ -7,18 +7,16 @@ import lombok.Data;
 @Data
 @Builder
 public class UserProfileDto {
-    private Long userSeq;
+    private Long id;
     private String name;
-    private String userId;
     private String profileImageUrl;
     private String backgroundImageUrl;
     private String selfDescription;
 
     public static UserProfileDto of(User user){
         return UserProfileDto.builder()
-                .userSeq(user.getUserSeq())
+                .id(user.getId())
                 .name(user.getUsername())
-                .userId(user.getUserId())
                 .profileImageUrl(user.getProfileImageUrl())
                 .backgroundImageUrl(user.getBackgroundImageUrl())
                 .selfDescription(user.getSelfDescription())

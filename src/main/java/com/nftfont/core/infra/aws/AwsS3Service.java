@@ -34,7 +34,11 @@ public class AwsS3Service {
         String uploadFileName = "user/"+"profile/"+"profile_image/"+fileName;
 
         upload(file,uploadFileName);
-
+        
+        /*
+         image resize 필요
+         */
+        
         return FileDetail.builder()
                 .url(baseUrl+"/"+uploadFileName)
                 .fileSize(file.getSize())
@@ -42,7 +46,7 @@ public class AwsS3Service {
                 .build();
     }
 
-    public FileDetail uploadBackgroundImage(MultipartFile file){
+    public FileDetail uploadOriginalImage(MultipartFile file){
         String fileName = createFileName(file.getOriginalFilename());
         String uploadFileName = "user/"+"profile/"+"background/"+fileName;
 
@@ -54,8 +58,8 @@ public class AwsS3Service {
                 .build();
     }
 
-    public void deleteFile(String fileName){
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket,fileName));
+    public void deleteFile(String url){
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket,url));
     }
 
     private void upload(MultipartFile file, String fileName){
