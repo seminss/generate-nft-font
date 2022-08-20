@@ -13,12 +13,11 @@ import java.util.stream.Collectors;
 public class ApiSecurityChecker {
 
     public boolean hasUserPermission(Authentication authentication, Long id) {
-        return true;
-//        long memberId = ((UserPrincipal)authentication.getPrincipal()).getId();
-//
-//        return memberId == id
-//                &&
-//                authentication.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()).contains("ROLE_USER");
+        long memberId = ((UserPrincipal)authentication.getPrincipal()).getId();
+
+        return memberId == id
+                &&
+                authentication.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()).contains("ROLE_USER");
     }
 
 }
