@@ -39,9 +39,6 @@ public class UserService {
 
     public UserProfileDto updateProfile(Long id, ProfileUpdateBody profileUpdateBody, MultipartFile profileImageFile,MultipartFile backgroundImageFile){
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("aSDFA"));
-        if(profileUpdateBody == null){
-            System.out.println("asdldaskk");
-        }
 
         if(profileImageFile != null && !profileImageFile.isEmpty()){
             if(user.getProfileImageUrl() != null){

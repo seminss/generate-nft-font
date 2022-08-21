@@ -3,14 +3,19 @@ package com.nftfont.module.user.user.application;
 
 import com.nftfont.core.configuration.jwt.JwtTokenProvider;
 import com.nftfont.core.configuration.properties.AppProperties;
+import com.nftfont.module.user.user.domain.User;
+import com.nftfont.module.user.user.domain.UserRepository;
 import com.nftfont.module.user.user.domain.user_pricipal.RoleType;
 import com.nftfont.core.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.nftfont.core.utils.CookieUtil;
 import com.nftfont.core.utils.HeaderUtil;
 import com.nftfont.module.user.user.domain.UserRefreshToken;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
+import com.nftfont.module.user.user.domain.user_pricipal.UserPrincipal;
+import com.nftfont.module.user.user.presentation.request.SignInWithTokenBody;
 import com.nftfont.module.user.user.presentation.response.ApiResponse;
 import com.nftfont.core.configuration.jwt.JwtToken;
+import com.nftfont.module.user.user.presentation.response.SuccessSignInDto;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +37,10 @@ public class AuthService {
     private final AppProperties appProperties;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
-
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
-    public ApiResponse signInWithKakao(HttpServletRequest request,HttpServletResponse response,String token){
+    public ApiResponse signInWithOauth2(HttpServletRequest request,HttpServletResponse response,String token){
 
         JwtToken jwtToken = jwtTokenProvider.convertJwtToken(token);
 
@@ -47,11 +51,10 @@ public class AuthService {
         Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-//        User user = userRepository.findByUserId(authentication.getName());
+        UserPrincipal userPrincipal =(UserPrincipal)authentication.getPrincipal();
 
         Date now = new Date();
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
-
 
         JwtToken refreshToken = jwtTokenProvider.createJwtToken(
                 appProperties.getAuth().getTokenSecret(),
@@ -72,9 +75,46 @@ public class AuthService {
         CookieUtil.deleteCookie(request, response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN);
         CookieUtil.addCookie(response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-        return ApiResponse.success("token", jwtToken.getToken());
+        return ApiResponse.success("userInfo", SuccessSignInDto.of(jwtToken.getToken(),userPrincipal.getId(),userPrincipal.getUserEmail()));
     }
 
+    public ApiResponse signInWithAccessToken(SignInWithTokenBody body,HttpServletRequest request,HttpServletResponse response){
+        JwtToken jwtToken = jwtTokenProvider.convertJwtToken(body.getAccessToken());
+
+        if(!jwtToken.validate()){
+            return ApiResponse.invalidAccessToken();
+        }
+
+        Authentication authentication = jwtTokenProvider.getAuthentication(jwtToken);
+
+        UserPrincipal userPrincipal =(UserPrincipal)authentication.getPrincipal();
+
+
+        Date now = new Date();
+        long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
+
+        JwtToken refreshToken = jwtTokenProvider.createJwtToken(
+                appProperties.getAuth().getTokenSecret(),
+                new Date(now.getTime() + refreshTokenExpiry)
+        );
+
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(authentication.getName());
+
+        if (userRefreshToken != null) {
+            userRefreshToken.setRefreshToken(refreshToken.getToken());
+        } else {
+            userRefreshToken = new UserRefreshToken(authentication.getName(),refreshToken.getToken());
+            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
+        }
+
+        int cookieMaxAge = (int) refreshTokenExpiry / 60;
+
+        CookieUtil.deleteCookie(request, response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN);
+        CookieUtil.addCookie(response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+
+        return ApiResponse.success("userInfo", SuccessSignInDto.of(jwtToken.getToken(),userPrincipal.getId(),userPrincipal.getUserEmail()));
+
+    }
 
     public ApiResponse authRefresh(HttpServletRequest request, HttpServletResponse response){
         // access token 확인

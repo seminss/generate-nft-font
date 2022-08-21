@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AwsS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -57,7 +59,12 @@ public class AwsS3Service {
     }
 
     public void deleteFile(String url){
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket,url));
+        String key = url.substring(url.indexOf("/",10)+1);
+        try{
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket,key));
+        }catch (Exception e){
+            log.info(e.getMessage());
+        }
     }
 
     private void upload(MultipartFile file, String fileName){

@@ -28,13 +28,14 @@ public class UserPrincipal implements UserDetails, OidcUser {
     private final String password;
     private final ProviderType providerType;
     private final RoleType roleType;
-
+    private final String userEmail;
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
     public Long getId(){
         return id;
     }
+    public String getUserEmail(){return userEmail;}
     @Override
     public Map<String, Object> getAttributes(){
         return attributes;
@@ -97,6 +98,7 @@ public class UserPrincipal implements UserDetails, OidcUser {
                 user.getPassword(),
                 user.getProviderType(),
                 RoleType.USER,
+                user.getEmail(),
                 Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))
         );
     }

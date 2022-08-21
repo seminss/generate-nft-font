@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class UserFollowService {
         userFollowRepository.save(UserFollow.of(fromUser,toUser));
     }
 
+    @Transactional
     public void unfollow(Long fromUserId, Long toUserId){
         User fromUser = userRepository.findById(fromUserId).orElseThrow(()->new RuntimeException("abcc"));
         User toUser = userRepository.findById(toUserId).orElseThrow(()->new RuntimeException("abfd"));
