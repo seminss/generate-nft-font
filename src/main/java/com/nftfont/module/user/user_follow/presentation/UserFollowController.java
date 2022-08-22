@@ -1,5 +1,6 @@
 package com.nftfont.module.user.user_follow.presentation;
 
+import com.nftfont.core.exception.AuthenticationException;
 import com.nftfont.module.user.user.domain.user_pricipal.UserPrincipal;
 import com.nftfont.module.user.user_follow.application.UserFollowService;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,14 @@ public class UserFollowController {
     @PostMapping("/user/follow/{toUserId}")
     public void followUser(@PathVariable Long toUserId, @AuthenticationPrincipal UserPrincipal userPrincipal){
         if(userPrincipal == null){
-            throw new RuntimeException("abcd");
+            throw new AuthenticationException("인증오류");
         }
         userFollowService.follow(userPrincipal.getId(),toUserId);
     }
     @PostMapping("/user/unfollow/{toUserId}")
     public void unfollowUser(@PathVariable Long toUserId,@AuthenticationPrincipal UserPrincipal userPrincipal){
         if(userPrincipal == null){
-            throw new RuntimeException("bcad");
+            throw new AuthenticationException("인증오류");
         }
         userFollowService.unfollow(userPrincipal.getId(),toUserId);
     }
