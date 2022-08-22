@@ -32,5 +32,4 @@ public class UserFollowController {
         userFollowService.unfollow(userPrincipal.getId(),toUserId);
     }
 
-
 }
