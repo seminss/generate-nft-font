@@ -23,7 +23,7 @@ public class UserFollowRepoSupport {
                 .select(userFollow.count())
                 .from(userFollow)
                 .where(where)
-                .fetch().size());
+                .fetchOne());
     }
     public Long getFollowersCount(Long userId){
         BooleanBuilder where = new BooleanBuilder();
@@ -34,6 +34,6 @@ public class UserFollowRepoSupport {
                 .select(userFollow.count())
                 .from(userFollow)
                 .where(where)
-                .fetch().size());
+                .fetchOne());
     }
 }
