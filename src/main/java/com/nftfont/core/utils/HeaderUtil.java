@@ -1,5 +1,7 @@
 package com.nftfont.core.utils;
 
+import com.nftfont.core.exception.AuthenticationException;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class HeaderUtil {
@@ -14,10 +16,9 @@ public class HeaderUtil {
             return null;
         }
 
-        if (headerValue.startsWith(TOKEN_PREFIX)) {
+        if (!headerValue.startsWith(TOKEN_PREFIX)) {
             return headerValue.substring(TOKEN_PREFIX.length());
         }
-
-        return null;
+        throw new AuthenticationException("access 인증 토큰이 없습니다.");
     }
 }

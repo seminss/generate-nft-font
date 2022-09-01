@@ -1,13 +1,12 @@
 package com.nftfont.module.font.font.domain;
 
+import com.nftfont.module.user.user.domain.User;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "NFT_FONT")
@@ -20,7 +19,14 @@ public class NftFont {
     private Long id;
     private String ownerName;
     private String fontUrl;
-    private String thumbnailUrl;
+    private String fontPreview;
     private Long likedCount;
+    @OneToOne()
+    private User producer;
     private String fontName;
+    private FontType fontType;
+    private SupportType supportType;
+    @Column(nullable = false)
+    private LocalDateTime createDt;
+    private Long viewCount;
 }

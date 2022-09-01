@@ -1,12 +1,9 @@
 package com.nftfont.module.user.user.domain;
 
 
-import com.nftfont.core.oauth.entity.ProviderType;
-import com.nftfont.module.user.user.domain.user_pricipal.RoleType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.nftfont.module.user.user.presentation.request.SignUpBody;
+import com.nftfont.module.user.user_pricipal.RoleType;
+import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
@@ -19,6 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "USERS")
 public class User {
@@ -28,10 +26,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USER_ID",length = 64, unique = true)
-    @NotNull
-    @Size(max = 64)
+    @Column()
     private String userId;
+
+    @Column(nullable = false)
+    private String walletAddress;
 
     @Column(name = "USERNAME",length = 100)
     @NotNull
@@ -52,18 +51,12 @@ public class User {
 
     @Column(name = "EMAIL_VERIFIED_YN",length = 1)
     @NotNull
-    @Size(min = 1, max = 1)
-    private String emailVerifiedYn;
+    private Boolean emailVerifiedYn;
 
     @Column(name = "PROFILE_IMAGE_URL",length = 512)
     @NotNull
     @Size(max = 512)
     private String profileImageUrl;
-
-    @Column(name = "PROVIDER_TYPE",length = 20)
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private ProviderType providerType;
 
     @Column(name = "ROLE_TYPE",length = 20)
     @Enumerated(EnumType.STRING)
@@ -84,26 +77,20 @@ public class User {
     private LocalDateTime modifiedAt;
 
 
-    public User(
-            @NotNull @Size(max = 64) String userId,
-            @NotNull @Size(max = 100) String username,
-            @NotNull @Size(max = 512) String email,
-            @NotNull @Size(max = 1) String emailVerifiedYn,
-            @NotNull @Size(max = 512) String profileImageUrl,
-            @NotNull ProviderType providerType,
-            @NotNull RoleType roleType,
-            @NotNull LocalDateTime createdAt,
-            @NotNull LocalDateTime modifiedAt
-    ) {
-        this.userId = userId;
-        this.username = username;
-        this.password = "null";
-        this.email = email != null ? email : "NO_EMAIL";
-        this.emailVerifiedYn = emailVerifiedYn;
-        this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
-        this.providerType = providerType;
-        this.roleType = roleType;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+    public static User of(SignUpBody body,String profileImageUrl,String backgroundImageUrl){
+        return User.builder()
+                .walletAddress(body.getWalletAddress())
+                .username(body.getUserName())
+                .email(body.getEmail())
+                .emailVerifiedYn(false)
+                .profileImageUrl(profileImageUrl)
+                .backgroundImageUrl(backgroundImageUrl)
+                .selfDescription(body.getSelfDescription())
+                .roleType(RoleType.USER)
+                .password("NO_PASS")
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
+                .userId("NO_ID")
+                .build();
     }
 }

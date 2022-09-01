@@ -2,6 +2,8 @@ package com.nftfont.module.file.image_file.application;
 
 import com.nftfont.core.infra.aws.AwsS3Service;
 import com.nftfont.core.infra.aws.FileDetail;
+import com.nftfont.core.infra.aws.FilePath;
+import com.nftfont.core.infra.aws.FileType;
 import com.nftfont.module.file.image_file.domain.ImageFileObject;
 import com.nftfont.module.file.image_file.domain.ImageFileObjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ public class ImageFileService {
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public ImageFileDto saveProfileImage(MultipartFile file){
-        FileDetail fileDetail = awsS3Service.uploadProfileImage(file);
+        FileDetail fileDetail = awsS3Service.uploadFile(file, FileType.IMAGE_FILE, FilePath.PROFILE);
 
         imageFileObjectRepository.save(ImageFileObject.of(fileDetail,file.getOriginalFilename()));
 
@@ -30,8 +32,8 @@ public class ImageFileService {
                 .build();
     }
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public ImageFileDto saveOriginalImage(MultipartFile file){
-        FileDetail fileDetail = awsS3Service.uploadOriginalImage(file);
+    public ImageFileDto saveBackgroundImage(MultipartFile file){
+        FileDetail fileDetail = awsS3Service.uploadFile(file,FileType.IMAGE_FILE,FilePath.BACKGROUND);
 
         imageFileObjectRepository.save(ImageFileObject.of(fileDetail,file.getOriginalFilename()));
 

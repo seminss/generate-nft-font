@@ -29,9 +29,9 @@ public class AwsS3Service {
     @Value("${cloud.aws.s3.url}")
     private String baseUrl;
 
-    public FileDetail uploadProfileImage(MultipartFile file){
+    public FileDetail uploadFile(MultipartFile file,FileType fileType,FilePath filePath){
         String fileName = createFileName(file.getOriginalFilename());
-        String uploadFileName = "user/"+"profile/"+"profile_image/"+fileName;
+        String uploadFileName = filePath.getPath()+fileName;
 
         upload(file,uploadFileName);
         
@@ -42,19 +42,7 @@ public class AwsS3Service {
         return FileDetail.builder()
                 .url(baseUrl+"/"+uploadFileName)
                 .fileSize(file.getSize())
-                .fileType(FileType.IMAGE_FILE)
-                .build();
-    }
-
-    public FileDetail uploadOriginalImage(MultipartFile file){
-        String fileName = createFileName(file.getOriginalFilename());
-        String uploadFileName = "user/"+"profile/"+"background/"+fileName;
-
-        upload(file,uploadFileName);
-        return FileDetail.builder()
-                .url(baseUrl+"/"+uploadFileName)
-                .fileSize(file.getSize())
-                .fileType(FileType.IMAGE_FILE)
+                .fileType(fileType)
                 .build();
     }
 

@@ -6,20 +6,17 @@ import com.nftfont.core.configuration.jwt.JwtAuthenticationFilter;
 import com.nftfont.core.configuration.jwt.JwtTokenProvider;
 import com.nftfont.core.configuration.properties.AppProperties;
 import com.nftfont.core.configuration.properties.CorsProperties;
-import com.nftfont.core.oauth.service.CustomUserDetailsService;
+import com.nftfont.module.user.user_pricipal.CustomUserDetailsService;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
 import com.nftfont.core.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.nftfont.core.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.nftfont.core.oauth.handler.TokenAccessDeniedHandler;
 import com.nftfont.core.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.nftfont.core.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -44,7 +41,7 @@ public class SecurityConfiguration {
     private final AppProperties appProperties;
     private final CorsProperties corsProperties;
     private final JwtTokenProvider tokenProvider;
-    private final CustomOAuth2UserService oAuth2UserService;
+    //private final CustomOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final CustomUserDetailsService customUserDetailsService;
@@ -74,26 +71,28 @@ public class SecurityConfiguration {
                     // 추가하기
                     .antMatchers("/api-docs/**","/swagger-ui/**").permitAll()
                     .antMatchers("/hello/api").permitAll()
-                    .antMatchers("/kakao").permitAll()
+                    .antMatchers("/kakao").permitAll();
                     /// 추가 하기
-                .and()
+
                 //.authorizeRequests()
 //                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 //.and()
                 // oauth2
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
-                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/*/oauth2/code/*")
-                .and()
-                .userInfoEndpoint()
-                .userService(oAuth2UserService)
-                .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler())
-                .failureHandler(oAuth2AuthenticationFailureHandler());
+
+
+//                .oauth2Login()
+//                .authorizationEndpoint()
+//                .baseUri("/oauth2/authorization")
+//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+//                .and()
+//                .redirectionEndpoint()
+//                .baseUri("/*/oauth2/code/*")
+//                .and()
+//                .userInfoEndpoint()
+//                .userService(oAuth2UserService)
+//                .and()
+//                .successHandler(oAuth2AuthenticationSuccessHandler())
+//                .failureHandler(oAuth2AuthenticationFailureHandler());
 
         http.addFilterBefore(JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

@@ -9,7 +9,7 @@ import com.nftfont.core.utils.CookieUtil;
 import com.nftfont.module.user.user.domain.UserRefreshToken;
 import com.nftfont.module.user.user.domain.UserRefreshTokenRepository;
 import com.nftfont.core.oauth.entity.ProviderType;
-import com.nftfont.module.user.user.domain.user_pricipal.RoleType;
+import com.nftfont.module.user.user_pricipal.RoleType;
 import com.nftfont.core.configuration.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

@@ -7,8 +7,8 @@ import com.nftfont.module.user.user.application.dto.UserProfileDto;
 import com.nftfont.module.user.user.domain.User;
 import com.nftfont.module.user.user.domain.UserRepository;
 import com.nftfont.module.user.user.presentation.request.ProfileUpdateBody;
-import com.nftfont.module.user.user_like_font.application.UserLikeFontService;
-import com.nftfont.module.user.user_like_font.domain.UserLikeFont;
+import com.nftfont.module.font.user_like_font.application.UserLikeFontService;
+import com.nftfont.module.font.user_like_font.domain.UserLikeFont;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class UserService {
 
         if(backgroundImageFile != null && !backgroundImageFile.isEmpty()){
             imageFileService.deleteImageFile(user.getBackgroundImageUrl());
-            ImageFileDto imageFileDto = imageFileService.saveOriginalImage(backgroundImageFile);
+            ImageFileDto imageFileDto = imageFileService.saveBackgroundImage(backgroundImageFile);
             user.setBackgroundImageUrl(imageFileDto.getImageUrl());
         }
 
@@ -64,12 +64,12 @@ public class UserService {
 
         return UserProfileDto.of(userRepository.save(user));
     }
-    public List<FontThumbnailDto> findUserLikedFonts(Long id){
-        Optional<List<UserLikeFont>> optionalFonts = userLikeFontService.findHistoryByUserId(id);
-        if(!optionalFonts.isPresent()){
-            return null;
-        }
-        List<UserLikeFont> fonts = optionalFonts.get();
-        return fonts.stream().map(userLikeFont -> FontThumbnailDto.ofLike(userLikeFont)).collect(Collectors.toList());
-    }
+//    public List<FontThumbnailDto> findUserLikedFonts(Long id){
+//        Optional<List<UserLikeFont>> optionalFonts = userLikeFontService.findHistoryByUserId(id);
+//        if(!optionalFonts.isPresent()){
+//            return null;
+//        }
+//        List<UserLikeFont> fonts = optionalFonts.get();
+//        return fonts.stream().map(userLikeFont -> FontThumbnailDto.ofLike(userLikeFont)).collect(Collectors.toList());
+//    }
 }

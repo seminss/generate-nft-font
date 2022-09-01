@@ -1,6 +1,6 @@
 package com.nftfont.module.font.font.application.dto;
 
-import com.nftfont.module.user.user_like_font.domain.UserLikeFont;
+import com.nftfont.module.font.user_like_font.domain.UserLikeFont;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,13 +13,13 @@ public class FontThumbnailDto {
     private String ownerName;
     private String fontName;
 
-    public static FontThumbnailDto ofLike(UserLikeFont userLikeFont){
-        return FontThumbnailDto.builder()
-                .fontId(userLikeFont.getFontId())
-                .fontName(userLikeFont.getNftFont().getFontName())
-                .fontThumbnail(userLikeFont.getNftFont().getThumbnailUrl())
-                .likedCount(userLikeFont.getNftFont().getLikedCount())
-                .ownerName(userLikeFont.getNftFont().getOwnerName())
-                .build();
-    }
+//    public static FontThumbnailDto ofLike(UserLikeFont userLikeFont){
+//        return FontThumbnailDto.builder()
+//                .fontId(userLikeFont.getFontId())
+//                .fontName(userLikeFont.getNftFont().getFontName())
+//                .fontThumbnail(userLikeFont.getNftFont().getThumbnailUrl())
+//                .likedCount(userLikeFont.getNftFont().getLikedCount())
+//                .ownerName(userLikeFont.getNftFont().getOwnerName())
+//                .build();
+//    }
 }

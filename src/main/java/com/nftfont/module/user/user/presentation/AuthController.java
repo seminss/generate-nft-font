@@ -1,10 +1,12 @@
 package com.nftfont.module.user.user.presentation;
-import com.nftfont.core.annotation.QueryStringArgResolver;
 import com.nftfont.module.user.user.application.AuthService;
 import com.nftfont.module.user.user.presentation.request.SignInWithTokenBody;
+import com.nftfont.module.user.user.presentation.request.SignUpBody;
 import com.nftfont.module.user.user.presentation.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,19 +24,23 @@ public class AuthController {
         return authService.authRefresh(request,response);
     }
 
-    @GetMapping("/auth/kakao")
-    public ApiResponse signInWithKakao(@QueryStringArgResolver String token,HttpServletRequest request,HttpServletResponse response){
-        return authService.signInWithOauth2(request,response,token);
-    }
-
-    @GetMapping("/auth/google")
-    public ApiResponse signInWithGoogle(@QueryStringArgResolver String token,HttpServletRequest request,HttpServletResponse response){
-        return authService.signInWithOauth2(request,response,token);
-    }
-
     @PostMapping("/auth/accessToken")
     public ApiResponse signInWithToken(@RequestBody @Valid SignInWithTokenBody body,HttpServletRequest request,HttpServletResponse response){
         return authService.signInWithAccessToken(body,request,response);
+    }
+
+//    @PostMapping("/signup")
+//    public void signUp(@RequestBody @Valid SignUpBody body){
+//        authService.signUpWithWallet(body);
+//    }
+
+
+    @PostMapping(value = "/signup",
+            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
+    public void signUp(@RequestPart(required = true) SignUpBody body,
+                       @RequestPart(required = false) MultipartFile profileImage,
+                       @RequestPart(required = false) MultipartFile backgroundImage){
+        authService.signUpWithWallet(body,profileImage,backgroundImage);
     }
 }
 
