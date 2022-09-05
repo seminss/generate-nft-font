@@ -1,11 +1,11 @@
 package com.nftfont.module.file.image_file.application;
 
-import com.nftfont.core.infra.aws.AwsS3Service;
-import com.nftfont.core.infra.aws.FileDetail;
-import com.nftfont.core.infra.aws.FilePath;
-import com.nftfont.core.infra.aws.FileType;
-import com.nftfont.module.file.image_file.domain.ImageFileObject;
-import com.nftfont.module.file.image_file.domain.ImageFileObjectRepository;
+import com.nftfont.common.infra.aws.AwsS3Service;
+import com.nftfont.common.infra.aws.FileDetail;
+import com.nftfont.common.infra.aws.FilePath;
+import com.nftfont.common.infra.aws.FileType;
+import com.nftfont.domain.file.image_file.ImageFileObject;
+import com.nftfont.domain.file.image_file.ImageFileObjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

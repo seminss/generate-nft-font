@@ -1,6 +1,5 @@
 package com.nftfont.module.font.font.application.dto;
 
-import com.nftfont.module.font.user_like_font.domain.UserLikeFont;
 import lombok.Builder;
 import lombok.Data;
 
