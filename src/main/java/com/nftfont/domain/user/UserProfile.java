@@ -36,17 +36,7 @@ public class UserProfile {
     @NotNull
     @Size(max = 100)
     private String username;
-/*
-    @Column(name = "EMAIL",length = 512, unique = true)
-    @NotNull
-    @Size(max = 512)
-    @Email(message = "이메일 형식이 아니에요!")
-    private String email;
 
-    @Column(name = "EMAIL_VERIFIED_YN",length = 1)
-    @NotNull
-    private Boolean emailVerifiedYn;
-*/
     @Column(name = "PROFILE_IMAGE_URL",length = 512)
     @NotNull
     @Size(max = 512)

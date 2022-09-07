@@ -31,12 +31,7 @@ public class User {
 
     @Column(nullable = false)
     private String walletAddress;
-/*
-    @Column(name = "USERNAME",length = 100)
-    @NotNull
-    @Size(max = 100)
-    private String username;
-*/
+
     @JsonIgnore
     @Column(name = "PASSWORD",length = 128)
     @NotNull
@@ -52,23 +47,12 @@ public class User {
     @Column(name = "EMAIL_VERIFIED_YN",length = 1)
     @NotNull
     private Boolean emailVerifiedYn;
-    /*
-        @Column(name = "PROFILE_IMAGE_URL",length = 512)
-        @NotNull
-        @Size(max = 512)
-        private String profileImageUrl;
-    */
+
     @Column(name = "ROLE_TYPE",length = 20)
     @Enumerated(EnumType.STRING)
     @NotNull
     private RoleType roleType;
-/*
-    @Column(name = "BACKGROUND_IMAGE_URL")
-    private String backgroundImageUrl;
 
-    @Column(name = "SELF_DESCRIPTION")
-    private String selfDescription;
-    */
     @Column(name = "CREATED_AT")
     @NotNull
     private LocalDateTime createdAt;

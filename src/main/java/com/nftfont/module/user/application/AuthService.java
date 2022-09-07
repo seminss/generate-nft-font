@@ -89,7 +89,6 @@ public class AuthService {
         CookieUtil.deleteCookie(request, response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN);
         CookieUtil.addCookie(response, OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-        //return ApiResponse.success("userInfo", SuccessSignInDto.of(jwtToken.getToken(),userPrincipal.getId(),userPrincipal.getUserEmail()));
         return ApiResponse.success("userInfo", SuccessSignInDto.of(jwtToken.getToken(),userPrincipal.getId(),userPrincipal.getUserEmail()));
     }
 
