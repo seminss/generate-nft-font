@@ -1,7 +1,7 @@
 package com.nftfont.domain.font.font;
 
-import com.nftfont.domain.user.User;
-import com.nftfont.domain.user.UserProfile;
+import com.nftfont.domain.user.user.User;
+import com.nftfont.domain.user.userprofile.UserProfile;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

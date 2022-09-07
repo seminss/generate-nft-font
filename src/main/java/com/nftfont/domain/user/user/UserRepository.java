@@ -1,5 +1,6 @@
-package com.nftfont.domain.user;
+package com.nftfont.domain.user.user;
 
+import com.nftfont.domain.user.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

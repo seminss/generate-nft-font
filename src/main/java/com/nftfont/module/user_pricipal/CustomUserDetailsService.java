@@ -1,8 +1,8 @@
 package com.nftfont.module.user_pricipal;
 
 import com.nftfont.domain.userprincipal.UserPrincipal;
-import com.nftfont.domain.user.User;
-import com.nftfont.domain.user.UserRepository;
+import com.nftfont.domain.user.user.User;
+import com.nftfont.domain.user.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

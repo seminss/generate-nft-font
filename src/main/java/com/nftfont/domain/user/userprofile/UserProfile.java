@@ -1,11 +1,11 @@
-package com.nftfont.domain.user;
+package com.nftfont.domain.user.userprofile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nftfont.domain.font.font.NftFont;
+import com.nftfont.domain.user.user.User;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;

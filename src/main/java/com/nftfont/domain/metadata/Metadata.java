@@ -2,7 +2,7 @@ package com.nftfont.domain.metadata;
 
 import com.nftfont.domain.font.font.NftFont;
 import com.nftfont.domain.glyph.Glyph;
-import com.nftfont.domain.user.User;
+import com.nftfont.domain.user.user.User;
 import lombok.*;
 
 import javax.persistence.*;

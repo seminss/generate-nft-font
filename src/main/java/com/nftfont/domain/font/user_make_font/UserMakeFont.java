@@ -2,7 +2,7 @@ package com.nftfont.domain.font.user_make_font;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nftfont.domain.file.image_file.ImageFileObject;
-import com.nftfont.domain.user.User;
+import com.nftfont.domain.user.user.User;
 import lombok.*;
 
 import javax.persistence.*;

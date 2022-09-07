@@ -7,7 +7,7 @@ import com.nftfont.common.jwt.JwtAuthenticationFilter;
 import com.nftfont.common.jwt.JwtTokenProvider;
 import com.nftfont.config.properties.AppProperties;
 import com.nftfont.module.user_pricipal.CustomUserDetailsService;
-import com.nftfont.domain.user.UserRefreshTokenRepository;
+import com.nftfont.domain.user.user.UserRefreshTokenRepository;
 import com.nftfont.common.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.nftfont.common.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.nftfont.common.oauth.handler.TokenAccessDeniedHandler;

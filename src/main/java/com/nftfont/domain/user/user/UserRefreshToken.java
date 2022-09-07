@@ -1,4 +1,4 @@
-package com.nftfont.domain.user;
+package com.nftfont.domain.user.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

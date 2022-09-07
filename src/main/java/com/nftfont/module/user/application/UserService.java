@@ -1,13 +1,13 @@
 package com.nftfont.module.user.application;
 
-import com.nftfont.domain.user.UserProfile;
-import com.nftfont.domain.user.UserProfileRepository;
+import com.nftfont.domain.user.userprofile.UserProfile;
+import com.nftfont.domain.user.userprofile.UserProfileRepository;
 import com.nftfont.module.file.image_file.application.ImageFileDto;
 import com.nftfont.module.file.image_file.application.ImageFileService;
 import com.nftfont.module.user.presentation.request.ProfileUpdateBody;
 import com.nftfont.module.user.application.dto.UserProfileDto;
-import com.nftfont.domain.user.User;
-import com.nftfont.domain.user.UserRepository;
+import com.nftfont.domain.user.user.User;
+import com.nftfont.domain.user.user.UserRepository;
 import com.nftfont.module.font.user_like_font.application.UserLikeFontService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

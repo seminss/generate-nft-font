@@ -2,7 +2,7 @@ package com.nftfont.domain.font.user_like_font;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nftfont.domain.font.font.NftFont;
-import com.nftfont.domain.user.User;
+import com.nftfont.domain.user.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
