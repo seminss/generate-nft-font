@@ -1,5 +1,7 @@
 package com.nftfont.module.user.application;
 
+import com.nftfont.domain.user.UserProfile;
+import com.nftfont.domain.user.UserProfileRepository;
 import com.nftfont.module.file.image_file.application.ImageFileDto;
 import com.nftfont.module.file.image_file.application.ImageFileService;
 import com.nftfont.module.user.presentation.request.ProfileUpdateBody;
@@ -18,45 +20,50 @@ import org.webjars.NotFoundException;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
     private final ImageFileService imageFileService;
     private final UserLikeFontService userLikeFontService;
 
     public UserProfileDto findMyProfile(Long id){
         User user = userRepository.findById(id).orElseThrow(()->new NotFoundException("마마마"));
-        return UserProfileDto.of(user);
+        /**임시*/
+        UserProfile profile = new UserProfile();
+        return UserProfileDto.of(user,profile);
     }
 
     public UserProfileDto findOneProfile(Long id){
         User user = userRepository.findById(id).orElseThrow(()->new NotFoundException("aBC"));
-        return UserProfileDto.of(user);
+        UserProfile profile = new UserProfile();
+        return UserProfileDto.of(user,profile);
     }
 
     public UserProfileDto updateProfile(Long id, ProfileUpdateBody profileUpdateBody, MultipartFile profileImageFile, MultipartFile backgroundImageFile){
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("aSDFA"));
+        UserProfile profile = new UserProfile();
 
         if(profileImageFile != null && !profileImageFile.isEmpty()){
-            if(user.getProfileImageUrl() != null){
-                imageFileService.deleteImageFile(user.getProfileImageUrl());
+            if(profile.getProfileImageUrl() != null){
+                imageFileService.deleteImageFile(profile.getProfileImageUrl());
                 ImageFileDto imageFileDto = imageFileService.saveProfileImage(profileImageFile);
-                user.setProfileImageUrl(imageFileDto.getImageUrl());
+                profile.setProfileImageUrl(imageFileDto.getImageUrl());
             }
         }
 
         if(backgroundImageFile != null && !backgroundImageFile.isEmpty()){
-            imageFileService.deleteImageFile(user.getBackgroundImageUrl());
+            imageFileService.deleteImageFile(profile.getBackgroundImageUrl());
             ImageFileDto imageFileDto = imageFileService.saveBackgroundImage(backgroundImageFile);
-            user.setBackgroundImageUrl(imageFileDto.getImageUrl());
+            profile.setBackgroundImageUrl(imageFileDto.getImageUrl());
         }
 
         if(profileUpdateBody.getName() != null){
-            user.setUsername(profileUpdateBody.getName());
+            profile.setUsername(profileUpdateBody.getName());
         }
 
         if(profileUpdateBody.getSelfDescription() != null){
-            user.setSelfDescription(profileUpdateBody.getSelfDescription());
+            profile.setSelfDescription(profileUpdateBody.getSelfDescription());
         }
 
-        return UserProfileDto.of(userRepository.save(user));
+        return UserProfileDto.of(userRepository.save(user), profile);
     }
 //    public List<FontThumbnailDto> findUserLikedFonts(Long id){
 //        Optional<List<UserLikeFont>> optionalFonts = userLikeFontService.findHistoryByUserId(id);

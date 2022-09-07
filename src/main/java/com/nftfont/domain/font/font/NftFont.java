@@ -1,6 +1,7 @@
 package com.nftfont.domain.font.font;
 
 import com.nftfont.domain.user.User;
+import com.nftfont.domain.user.UserProfile;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,4 +30,9 @@ public class NftFont {
     @Column(nullable = false)
     private LocalDateTime createDt;
     private Long downloadCount;
+
+    //@ManyToOne(targetEntity = UserProfile.class)
+    //@JoinColumn(name = "USER_PROFILE_ID", insertable = false, updatable = false)
+    private UserProfile userProfile;
+
 }
