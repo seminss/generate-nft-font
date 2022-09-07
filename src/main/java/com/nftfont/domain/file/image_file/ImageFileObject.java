@@ -32,6 +32,9 @@ public class ImageFileObject {
     @Column(unique = true,nullable = false)
     private String url;
 
+    @Enumerated(EnumType.STRING)
+    private ImageType imageType;
+
     public static ImageFileObject of(FileDetail fileDetail,String originalFileName){
         return ImageFileObject.builder()
                 .deleted(false)
