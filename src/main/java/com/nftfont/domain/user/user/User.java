@@ -22,12 +22,9 @@ import java.time.LocalDateTime;
 public class User {
     @JsonIgnore
     @Id
-    @Column(name = "USER_SEQ")
+    @Column()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column()
-    private String userId;
 
     @Column(nullable = false)
     private String walletAddress;
@@ -61,20 +58,13 @@ public class User {
     @NotNull
     private LocalDateTime modifiedAt;
 
-    public static User of(SignUpBody body,String profileImageUrl,String backgroundImageUrl){
+    public static User of(SignUpBody body){
         return User.builder()
                 .walletAddress(body.getWalletAddress())
-                //.username(body.getUserName())
-                //.email(body.getEmail())
-                //.emailVerifiedYn(false)
-                //.profileImageUrl(profileImageUrl)
-                //.backgroundImageUrl(backgroundImageUrl)
-                //.selfDescription(body.getSelfDescription())
                 .roleType(RoleType.USER)
                 .password("NO_PASS")
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())
-                .userId("NO_ID")
                 .build();
     }
 }

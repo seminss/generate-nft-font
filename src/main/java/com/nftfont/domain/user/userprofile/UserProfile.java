@@ -30,8 +30,6 @@ public class UserProfile {
     @JoinColumn(name = "USER_SEQ", nullable = false, insertable = false, updatable = false)
     private User user;
 
-    private Long userId;
-
     @Column(name = "USERNAME",length = 100)
     @NotNull
     @Size(max = 100)

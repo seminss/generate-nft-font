@@ -8,10 +8,12 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -21,25 +23,22 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class JwtTokenProvider {
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-    private final Key key;
+
+    private final CustomUserDetailsService customUserDetailsService;
     private static final String AUTHORITIES_KEY = "role";
-    public JwtTokenProvider(String secret){
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-    }
 
     public JwtToken createJwtToken(String id, Date expiry){
-        return new JwtToken(id,expiry,key);
+        return new JwtToken(id,expiry);
     }
 
     public JwtToken createJwtToken(String id, String role, Date expiry){
-        return new JwtToken(id,role,expiry,key);
+        return new JwtToken(id,role,expiry);
     }
 
     public JwtToken convertJwtToken(String token){
-        return new JwtToken(token,key);
+        return new JwtToken(token);
     }
 
     public Authentication getAuthentication(JwtToken jwtToken){

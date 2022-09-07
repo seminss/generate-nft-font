@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "glyph")
+@Table(name = "metadata")
 public class Metadata {
 
 
@@ -23,17 +23,14 @@ public class Metadata {
 
     @OneToOne()
     private User user;
-    private Long userId;
 
     @OneToOne()
     private NftFont nftFont;
 
-    private Long fontId;
 
     @OneToOne()
     private Glyph glyph;
 
-    private Long glyphId;
 
     @Column()
     private String ext;

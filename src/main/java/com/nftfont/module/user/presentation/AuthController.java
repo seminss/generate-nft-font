@@ -1,4 +1,6 @@
 package com.nftfont.module.user.presentation;
+import com.nftfont.common.dto.ApiResult;
+import com.nftfont.module.user.application.dto.UserCreation;
 import com.nftfont.module.user.presentation.request.SignUpBody;
 import com.nftfont.module.user.presentation.response.ApiResponse;
 import com.nftfont.module.user.application.AuthService;
@@ -19,19 +21,14 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/refresh")
-    public ApiResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        return authService.authRefresh(request,response);
-    }
-
-    @PostMapping("/auth/accessToken")
-    public ApiResponse signInWithToken(@RequestBody @Valid SignInWithTokenBody body,HttpServletRequest request,HttpServletResponse response){
-        return authService.signInWithAccessToken(body,request,response);
-    }
-
-//    @PostMapping("/signup")
-//    public void signUp(@RequestBody @Valid SignUpBody body){
-//        authService.signUpWithWallet(body);
+//    @GetMapping("/refresh")
+//    public ApiResponse refreshToken(HttpServletRequest request, HttpServletResponse response) {
+//        return authService.authRefresh(request,response);
+//    }
+//
+//    @PostMapping("/auth/accessToken")
+//    public ApiResult<UserCreation.ResponseDto> signInWithToken(@RequestBody @Valid SignInWithTokenBody body, HttpServletRequest request, HttpServletResponse response){
+//        return ApiResult.success(authService.signInWithAccessToken(body,request,response));
 //    }
 
 

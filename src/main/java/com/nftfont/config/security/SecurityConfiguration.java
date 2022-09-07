@@ -5,13 +5,8 @@ import com.nftfont.config.properties.CorsProperties;
 import com.nftfont.common.jwt.JwtAuthenticationEntryPoint;
 import com.nftfont.common.jwt.JwtAuthenticationFilter;
 import com.nftfont.common.jwt.JwtTokenProvider;
-import com.nftfont.config.properties.AppProperties;
 import com.nftfont.module.user_pricipal.CustomUserDetailsService;
 import com.nftfont.domain.user.user.UserRefreshTokenRepository;
-import com.nftfont.common.oauth.handler.OAuth2AuthenticationFailureHandler;
-import com.nftfont.common.oauth.handler.OAuth2AuthenticationSuccessHandler;
-import com.nftfont.common.oauth.handler.TokenAccessDeniedHandler;
-import com.nftfont.common.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -38,11 +33,9 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final AppProperties appProperties;
     private final CorsProperties corsProperties;
     private final JwtTokenProvider tokenProvider;
     //private final CustomOAuth2UserService oAuth2UserService;
-    private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final CustomUserDetailsService customUserDetailsService;
     /**
@@ -64,7 +57,6 @@ public class SecurityConfiguration {
                 .httpBasic().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(tokenAccessDeniedHandler)
                 .and()
                 .userDetailsService(customUserDetailsService)
                 .authorizeRequests()
@@ -109,26 +101,6 @@ public class SecurityConfiguration {
     @Bean
     public JwtAuthenticationFilter JwtAuthenticationFilter() {
         return new JwtAuthenticationFilter(tokenProvider);
-    }
-
-    @Bean
-    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
-        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
-    }
-
-    @Bean
-    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
-        return new OAuth2AuthenticationSuccessHandler(
-                tokenProvider,
-                appProperties,
-                userRefreshTokenRepository,
-                oAuth2AuthorizationRequestBasedOnCookieRepository()
-        );
-    }
-
-    @Bean
-    public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
-        return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
     }
 
     @Bean

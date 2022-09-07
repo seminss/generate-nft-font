@@ -22,7 +22,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserPrincipal implements UserDetails, OidcUser {
     private final Long id;
-    private final String userId;
     private final String password;
     private final RoleType roleType;
     private final String userEmail;
@@ -45,7 +44,7 @@ public class UserPrincipal implements UserDetails, OidcUser {
 
     @Override
     public String getUsername() {
-        return userId;
+        return "NONE";
     }
 
     @Override
@@ -91,7 +90,6 @@ public class UserPrincipal implements UserDetails, OidcUser {
 
         return new UserPrincipal(
                 user.getId(),
-                user.getUserId(),
                 user.getPassword(),
                 RoleType.USER,
                 user.getEmail(),

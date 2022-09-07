@@ -33,6 +33,5 @@ public class NftFont {
 
     //@ManyToOne(targetEntity = UserProfile.class)
     //@JoinColumn(name = "USER_PROFILE_ID", insertable = false, updatable = false)
-    private UserProfile userProfile;
 
 }
