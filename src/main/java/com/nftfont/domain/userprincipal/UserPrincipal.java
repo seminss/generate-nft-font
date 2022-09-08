@@ -24,7 +24,7 @@ public class UserPrincipal implements UserDetails, OidcUser {
     private final Long id;
     private final String password;
     private final RoleType roleType;
-    //private final String userEmail;
+
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
@@ -90,7 +90,7 @@ public class UserPrincipal implements UserDetails, OidcUser {
 
         return new UserPrincipal(
                 user.getId(),
-                user.getPassword(),
+                "none",
                 RoleType.USER,
                 //user.getEmail(),
                 Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))

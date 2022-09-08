@@ -42,10 +42,6 @@ public class UserProfile {
     @Email(message = "이메일 형식이 아니에요!")
     private String email;
 
-    @Column(name = "EMAIL_VERIFIED_YN",length = 1)
-    @NotNull
-    private Boolean emailVerifiedYn;
-
     @Column(name = "PROFILE_IMAGE_URL",length = 512)
     @NotNull
     @Size(max = 512)
@@ -53,11 +49,6 @@ public class UserProfile {
 
     @Column(name = "BACKGROUND_IMAGE_URL")
     private String backgroundImageUrl;
-
-//    @Column(name="USER_NFT")
-//    @OneToMany
-//    @JoinColumn(name="NFT_FONT")
-//    private List<NftFont> nftFontList = new ArrayList<NftFont>(); //이거 왜 칼럼 추가가 안되는걸까요,,ㅠ
 
     @Column(name = "SELF_DESCRIPTION")
     private String selfDescription;

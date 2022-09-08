@@ -29,22 +29,6 @@ public class User {
     @Column(nullable = false)
     private String walletAddress;
 
-    @JsonIgnore
-    @Column(name = "PASSWORD",length = 128)
-    @NotNull
-    @Size(max = 128)
-    private String password;
-
-/*    @Column(name = "EMAIL",length = 512, unique = true)
-    @NotNull
-    @Size(max = 512)
-    @Email(message = "이메일 형식이 아니에요!")
-    private String email;
-
-    @Column(name = "EMAIL_VERIFIED_YN",length = 1)
-    @NotNull
-    private Boolean emailVerifiedYn;*/
-
     @Column(name = "ROLE_TYPE",length = 20)
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -62,7 +46,6 @@ public class User {
         return User.builder()
                 .walletAddress(body.getWalletAddress())
                 .roleType(RoleType.USER)
-                .password("NO_PASS")
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())
                 .build();
