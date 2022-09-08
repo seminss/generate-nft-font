@@ -30,16 +30,10 @@ public class UserLikeFont {
     @JoinColumn(name = "USER_SEQ", nullable = false, insertable = false, updatable = false)
     private User user;
 
-    @Column()
-    private Long userId;
-
     @JsonIgnore
     @ManyToOne(targetEntity = NftFont.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "NFT_FONT_ID")
     private NftFont nftFont;
-
-    @Column()
-    private Long fontId;
 
     @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

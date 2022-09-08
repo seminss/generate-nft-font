@@ -22,6 +22,4 @@ public class Glyph {
 
     @OneToOne()
     private NftFont font;
-
-    private Long fontId;
 }

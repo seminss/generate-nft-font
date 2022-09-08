@@ -25,8 +25,6 @@ public class UserMakeFont {
     @JoinColumn(name = "USER_SEQ", nullable = false, insertable = false, updatable = false)
     private User user;
 
-    private Long userId;
-
     @OneToOne()
     private ImageFileObject imageFileObject;
 

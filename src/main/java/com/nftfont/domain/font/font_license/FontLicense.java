@@ -22,9 +22,6 @@ public class FontLicense {
     private NftFont nftFont;
 
     @Column()
-    private Long fontId;
-
-    @Column()
     private String ext;
 
 }
