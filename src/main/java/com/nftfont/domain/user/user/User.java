@@ -35,7 +35,7 @@ public class User {
     @Size(max = 128)
     private String password;
 
-    @Column(name = "EMAIL",length = 512, unique = true)
+/*    @Column(name = "EMAIL",length = 512, unique = true)
     @NotNull
     @Size(max = 512)
     @Email(message = "이메일 형식이 아니에요!")
@@ -43,7 +43,7 @@ public class User {
 
     @Column(name = "EMAIL_VERIFIED_YN",length = 1)
     @NotNull
-    private Boolean emailVerifiedYn;
+    private Boolean emailVerifiedYn;*/
 
     @Column(name = "ROLE_TYPE",length = 20)
     @Enumerated(EnumType.STRING)

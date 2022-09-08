@@ -23,7 +23,7 @@ public class NftFont {
     //
     private Long likedCount;
     @OneToOne()
-    private User producer;
+    private User producer; //테이블 조인
     private String fontName;
     private FontType fontType;
     private SupportType supportType;
