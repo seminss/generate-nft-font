@@ -3,16 +3,15 @@ package com.nftfont.domain.user.userprofile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nftfont.domain.font.font.NftFont;
 import com.nftfont.domain.user.user.User;
+import com.nftfont.module.file.image_file.application.ImageFileDto;
+import com.nftfont.module.user.dto.UserProfileCreation;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -57,4 +56,15 @@ public class UserProfile {
 
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
+
+    public static UserProfile ofCreation(UserProfileCreation.RequestDto request, ImageFileDto profileImage,ImageFileDto backgroundImage){
+        return UserProfile.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .profileImageUrl(profileImage.getImageUrl())
+                .backgroundImageUrl(backgroundImage.getImageUrl())
+                .selfDescription(request.getSelfDescription())
+                .build();
+    }
+
 }

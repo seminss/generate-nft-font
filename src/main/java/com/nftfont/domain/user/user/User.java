@@ -2,6 +2,7 @@ package com.nftfont.domain.user.user;
 
 
 import com.nftfont.domain.userprincipal.RoleType;
+import com.nftfont.module.user.dto.UserCreation;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 
@@ -39,12 +40,12 @@ public class User {
     @NotNull
     private LocalDateTime modifiedAt;
 
-//    public static User of(SignUpBody body){
-//        return User.builder()
-//                .walletAddress(body.getWalletAddress())
-//                .roleType(RoleType.USER)
-//                .createdAt(LocalDateTime.now())
-//                .modifiedAt(LocalDateTime.now())
-//                .build();
-//    }
+    public static User of(UserCreation.RequestDto request){
+        return User.builder()
+                .walletAddress(request.getWalletAddress())
+                .roleType(RoleType.USER)
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
+                .build();
+    }
 }

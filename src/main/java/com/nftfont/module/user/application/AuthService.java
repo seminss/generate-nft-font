@@ -1,16 +1,20 @@
 package com.nftfont.module.user.application;
 
 
+import com.nftfont.common.exception.ConflictException;
 import com.nftfont.common.jwt.JwtTokenProvider;
+import com.nftfont.domain.user.user.User;
+import com.nftfont.domain.user.userprofile.UserProfile;
+import com.nftfont.domain.user.userprofile.UserProfileRepository;
 import com.nftfont.module.file.image_file.application.ImageFileService;
 import com.nftfont.domain.user.user.UserRepository;
 import com.nftfont.module.user.dto.UserCreation;
 import com.nftfont.domain.user.user.UserRefreshTokenRepository;
+import com.nftfont.module.user.dto.UserProfileCreation;
+import com.nftfont.module.web3j.Web3jCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.web3j.crypto.WalletUtils;
-import org.web3j.protocol.Web3j;
 
 import javax.transaction.Transactional;
 
@@ -25,14 +29,16 @@ public class AuthService {
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
     private final ImageFileService imageFileService;
+    private final Web3jCustom web3jCustom;
+    private final UserProfileRepository userProfileRepository;
 
+    public UserCreation.ResponseDto signUpWithWallet(UserCreation.RequestDto request){
+        if(!web3jCustom.validateUserAddress(request.getWalletAddress())){
+            throw new ConflictException("유효하지 않은 지갑주소 입니다.");
+        }
 
-    public UserCreation.ResponseDto signUpWithWallet(UserCreation.RequestDto body){
-        WalletUtils.isValidAddress(body.getWalletAddress());
-        Web3j web3j ;
-        return null ;
+        return UserCreation.ResponseDto.of(userRepository.save(User.of(request)));
     }
-
 
 //    public UserCreation.ResponseDto signInWithAccessToken(SignInWithTokenBody body, HttpServletRequest request, HttpServletResponse response){
 //        JwtToken jwtToken = jwtTokenProvider.convertJwtToken(body.getAccessToken());

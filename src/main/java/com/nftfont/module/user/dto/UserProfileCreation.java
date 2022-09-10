@@ -1,27 +1,25 @@
 package com.nftfont.module.user.dto;
 
-import com.nftfont.domain.user.user.User;
+import com.nftfont.domain.user.userprofile.UserProfile;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-public interface UserCreation {
+public interface UserProfileCreation {
+
 
     @Data
     class RequestDto{
+        @NotNull
+        private String username;
 
-        @Email
         private String email;
 
-        @NotNull
-        private String walletAddress;
-
-        @NotNull
-        private String password;
+        private String selfDescription;
 
     }
+
 
     @Data
     @Builder
@@ -29,10 +27,9 @@ public interface UserCreation {
 
         private Long id;
 
-
-        public static ResponseDto of(User user){
+        public static ResponseDto of(UserProfile userProfile){
             return ResponseDto.builder()
-                    .id(user.getId())
+                    .id(userProfile.getId())
                     .build();
         }
     }

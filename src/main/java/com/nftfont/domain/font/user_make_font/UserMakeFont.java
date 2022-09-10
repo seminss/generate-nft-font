@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "font_license")
+@Table(name = "user_make_font")
 public class UserMakeFont {
 
     @Id

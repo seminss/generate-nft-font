@@ -1,6 +1,6 @@
 package com.nftfont.domain.file.image_file;
 
-import com.nftfont.common.infra.aws.FileDetail;
+import com.nftfont.domain.file.FileDetail;
 import lombok.*;
 
 import javax.persistence.*;

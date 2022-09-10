@@ -1,4 +1,4 @@
-package com.nftfont.common.infra.aws;
+package com.nftfont.domain.file;
 
 import lombok.Builder;
 import lombok.Data;

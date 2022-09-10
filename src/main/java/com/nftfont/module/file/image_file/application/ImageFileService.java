@@ -1,9 +1,9 @@
 package com.nftfont.module.file.image_file.application;
 
 import com.nftfont.common.infra.aws.AwsS3Service;
-import com.nftfont.common.infra.aws.FileDetail;
-import com.nftfont.common.infra.aws.FilePath;
-import com.nftfont.common.infra.aws.FileType;
+import com.nftfont.domain.file.FileDetail;
+import com.nftfont.domain.file.FilePath;
+import com.nftfont.domain.file.FileType;
 import com.nftfont.domain.file.image_file.ImageFileObject;
 import com.nftfont.domain.file.image_file.ImageFileObjectRepository;
 import lombok.RequiredArgsConstructor;
