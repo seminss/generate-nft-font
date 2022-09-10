@@ -1,4 +1,4 @@
-package com.nftfont.module.user.application.dto;
+package com.nftfont.module.user.dto;
 
 import com.nftfont.domain.user.user.User;
 import com.nftfont.domain.user.userprofile.UserProfile;

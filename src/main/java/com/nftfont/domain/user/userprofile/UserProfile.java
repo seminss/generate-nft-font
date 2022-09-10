@@ -11,10 +11,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
+@Table(name = "user_profile")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,38 +25,36 @@ import java.util.List;
 public class UserProfile {
     @JsonIgnore
     @Id
-    @Column(name = "USER_PROFILE_ID")
+    @Column(name = "user_profile_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonIgnore
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_SEQ", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     private User user;
 
-    @Column(name = "USERNAME",length = 100)
-    @NotNull
+    @Column(name = "user_name",length = 100,nullable = false)
     @Size(max = 100)
     private String username;
 
-    @Column(name = "EMAIL",length = 512, unique = true)
-    @NotNull
+    @Column(name = "user_email",length = 512, unique = true,nullable = false)
     @Size(max = 512)
     @Email(message = "이메일 형식이 아니에요!")
     private String email;
 
-    @Column(name = "PROFILE_IMAGE_URL",length = 512)
-    @NotNull
-    @Size(max = 512)
+    @OneToMany(mappedBy = "userProfile",fetch = FetchType.LAZY)
+    private Set<NftFont> nftFonts = new LinkedHashSet<>();
+
+    @Column(name = "image_url")
     private String profileImageUrl;
 
-    @Column(name = "BACKGROUND_IMAGE_URL")
+    @Column(name = "background_image_url")
     private String backgroundImageUrl;
 
-    @Column(name = "SELF_DESCRIPTION")
+    @Column(name = "self_description")
     private String selfDescription;
 
-    @Column(name = "PROFILE_MODIFIED_AT")
-    @NotNull
+    @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 }

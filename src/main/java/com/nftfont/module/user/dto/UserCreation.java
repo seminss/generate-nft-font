@@ -1,4 +1,4 @@
-package com.nftfont.module.user.application.dto;
+package com.nftfont.module.user.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -2,33 +2,17 @@ package com.nftfont.module.user.application;
 
 
 import com.nftfont.common.jwt.JwtTokenProvider;
-import com.nftfont.module.file.image_file.application.ImageFileDto;
 import com.nftfont.module.file.image_file.application.ImageFileService;
-import com.nftfont.domain.user.user.User;
 import com.nftfont.domain.user.user.UserRepository;
-import com.nftfont.module.user.application.dto.UserCreation;
-import com.nftfont.module.user.presentation.request.SignInWithTokenBody;
-import com.nftfont.module.user.presentation.request.SignUpBody;
-import com.nftfont.module.user.presentation.response.ApiResponse;
-import com.nftfont.domain.userprincipal.RoleType;
-import com.nftfont.common.utils.CookieUtil;
-import com.nftfont.common.utils.HeaderUtil;
-import com.nftfont.domain.user.user.UserRefreshToken;
+import com.nftfont.module.user.dto.UserCreation;
 import com.nftfont.domain.user.user.UserRefreshTokenRepository;
-import com.nftfont.domain.userprincipal.UserPrincipal;
-import com.nftfont.common.jwt.JwtToken;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.web3j.crypto.WalletUtils;
+import org.web3j.protocol.Web3j;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -43,12 +27,10 @@ public class AuthService {
     private final ImageFileService imageFileService;
 
 
-    public void signUpWithWallet(SignUpBody body, MultipartFile profileI, MultipartFile backgroundI){
-        ImageFileDto profile = imageFileService.saveProfileImage(profileI);
-        ImageFileDto background = imageFileService.saveBackgroundImage(backgroundI);
-
-        userRepository.save(User.of(body));
-
+    public UserCreation.ResponseDto signUpWithWallet(UserCreation.RequestDto body){
+        WalletUtils.isValidAddress(body.getWalletAddress());
+        Web3j web3j ;
+        return null ;
     }
 
 
