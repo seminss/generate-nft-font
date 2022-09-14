@@ -27,8 +27,6 @@ package com.nftfont.fontastic;
  * @version     0.4 (4)
  */
 
-import fontastic.FContour;
-import fontastic.FPoint;
 import processing.core.PVector;
 
 import java.util.ArrayList;

@@ -31,9 +31,7 @@
 
 package com.nftfont.fontastic;
 
-import fontastic.FContour;
-import fontastic.FGlyph;
-import fontastic.FPoint;
+
 import org.doubletype.ossa.Engine;
 import org.doubletype.ossa.OutOfRangeException;
 import org.doubletype.ossa.adapter.EContour;

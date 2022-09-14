@@ -34,7 +34,6 @@ dependencies {
 
 	implementation files('libs/core.jar')
 	implementation files('libs/doubletype.jar')
-	implementation files('libs/Fontastic.jar')
 	implementation files('libs/sfntly.jar')
 
 
