@@ -21,7 +21,6 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRefreshTokenRepository userRefreshTokenRepository;

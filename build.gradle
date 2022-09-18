@@ -27,6 +27,7 @@ jar {
 
 repositories {
 	mavenCentral()
+
 }
 
 dependencies {
@@ -68,6 +69,9 @@ dependencies {
 	// nft-storage-api
 	implementation files("target/nft.storage-client-1.0.jar")
 	implementation fileTree(dir: 'target/lib',includes: ['*.jar'])
+
+	// svg2png
+	implementation fileTree(dir: 'svglib',includes: ['*.jar'])
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'

@@ -24,9 +24,9 @@ public class FontController {
     /***
      * * 영문자,한글자모,특수기호(정해야함) 총 몇개????
      */
-    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#id)")
-    @PostMapping("/font/create")
-    public void createFont(){
-        
-    }
+//    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#id)")
+//    @PostMapping("/font/create")
+//    public void createFont(){
+//
+//    }
 }
