@@ -4,8 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nftfont.common.utils.FileUtil;
 import com.nftfont.common.utils.Pair;
+import com.nftfont.domain.font.font.NftFont;
+import com.nftfont.domain.font.font.NftFontRepository;
 import com.nftfont.domain.glyph.Glyph;
 import com.nftfont.domain.glyph.GlyphRepository;
+
 import com.nftfont.module.ipfs.IpfsService;
 import com.nftfont.module.metadata.MetaDataService;
 import com.nftfont.module.metadata.MetadataOfGlyph;
@@ -40,6 +43,7 @@ public class UserMakeFontService {
     private final IpfsService ipfsService;
     private final GlyphRepository glyphRepository;
     private final MetaDataService metaDataService;
+    private final NftFontRepository nftFontRepository;
     private final ObjectMapper mapper;
     public void createFont(Long userId,List<MultipartFile> svgFiles) throws IOException, TranscoderException, ApiException, ParseException, ExecutionException, InterruptedException {
 
@@ -52,20 +56,28 @@ public class UserMakeFontService {
          * ttf 파일로 변환 후 ttf 도 pinning 한다. *
          *  *
          */
-        CompletableFuture<List<String>> ttfCIDs = ipfsService.store(List.of(new File("example/NotoSansKR-Bold.otf")));
+        CompletableFuture<List<String>> ttfCIDs = ipfsService.store(List.of(new File("example/NotoSansKR-Medium.otf")));
 //        ipfsService.store(null,null);
         /**
          * ttf file create*
          * something*
          */
 
+        NftFont nftFont;
+
         /**
          * create metadata*
          */
 
         System.out.println("마ㅣ마ㅣ마ㅏ마마마ㅏaaaaaaaa");
+
+        ttfCIDs.thenCompose(List->{
+            return null;
+        });
+
         pngCIDs.thenCompose(List -> {
             java.util.List<Glyph> glyphs = List.stream().map(Glyph::of).collect(Collectors.toList());
+            glyphRepository.saveAll(glyphs);
             List<MetadataOfGlyph> metaData = metaDataService.createMetaData(glyphs);
             for (MetadataOfGlyph metadataOfGlyph : metaData) {
                 String s = null;
@@ -83,6 +95,7 @@ public class UserMakeFontService {
                 }
                 try {
                     ipfsService.store(java.util.List.of(file));
+                    file.delete();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (TranscoderException e) {
@@ -93,9 +106,6 @@ public class UserMakeFontService {
             }
             return null;
         });
-//        List<String> PCIDs = pngCIDs.thenCompose(s -> ttfCIDs.get());
-//        String TCID = ttfCIDs.get().get(0);
-
 
         System.out.println("마ㅣ마ㅣ마ㅏ마마마ㅏ");
 //
