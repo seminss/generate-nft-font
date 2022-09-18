@@ -66,6 +66,9 @@ dependencies {
 	// web3j
 	implementation 'org.web3j:core:4.8.7'
 
+	// string2json
+	implementation files("target/json-simple-1.1.1.jar")
+
 	// nft-storage-api
 	implementation files("target/nft.storage-client-1.0.jar")
 	implementation fileTree(dir: 'target/lib',includes: ['*.jar'])
