@@ -10,7 +10,6 @@ import com.nftfont.domain.glyph.Glyph;
 import com.nftfont.domain.glyph.GlyphRepository;
 
 import com.nftfont.module.font.user_make_font.dto.FontCreate;
-import com.nftfont.module.ipfs.IpfsPinningEvent;
 import com.nftfont.module.ipfs.IpfsService;
 import com.nftfont.module.metadata.MetaDataService;
 import com.nftfont.module.metadata.MetadataOfGlyph;
@@ -100,7 +99,6 @@ public class UserMakeFontService {
                 }
                 try {
                     ipfsService.store(java.util.List.of(file),userId);
-                    file.delete();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (TranscoderException e) {

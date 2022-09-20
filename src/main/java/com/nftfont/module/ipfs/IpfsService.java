@@ -44,8 +44,8 @@ public class IpfsService {
         for (File file : files) {
             UploadResponse result = apiInstance.store(file);
             CIDs.add(result.getValue().getCid());
-            file.delete();
             eventPublisher.publishEvent(IpfsPinningEvent.of(file.getName(),result.getValue().getCid(),userId));
+            file.delete();
         }
 
         return CompletableFuture.completedFuture(CIDs);

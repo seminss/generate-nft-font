@@ -28,6 +28,7 @@ public class UserMakeFontController {
     @PostMapping(value = "/font/create",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     public ApiResult<FontCreate.ResponseDto> createFont(@RequestPart Long userId, @RequestPart List<MultipartFile> svgFiles) throws IOException, TranscoderException, ApiException,
             ParseException, ExecutionException, InterruptedException {
+
         FontCreate.ResponseDto responseDto = userMakeFontService.createFont(userId, svgFiles);
         ApiResult<FontCreate.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;

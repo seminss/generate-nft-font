@@ -1,4 +1,4 @@
-package com.nftfont.module.user_pricipal;
+package com.nftfont.module.user.application;
 
 import com.nftfont.config.redis.CacheKey;
 import com.nftfont.domain.userprincipal.UserPrincipal;
