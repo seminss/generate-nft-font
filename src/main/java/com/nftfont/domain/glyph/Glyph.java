@@ -27,6 +27,7 @@ public class Glyph {
     @Column
     private String name;
 
+    private Long userId;
     public static Glyph of(String cid){
         return Glyph.builder()
                 .cid(cid)

@@ -2,26 +2,26 @@ package com.nftfont.module.font.user_make_font.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nftfont.common.dto.ApiResult;
 import com.nftfont.common.utils.FileUtil;
-import com.nftfont.common.utils.Pair;
 import com.nftfont.domain.font.font.NftFont;
 import com.nftfont.domain.font.font.NftFontRepository;
 import com.nftfont.domain.glyph.Glyph;
 import com.nftfont.domain.glyph.GlyphRepository;
 
+import com.nftfont.module.font.user_make_font.dto.FontCreate;
+import com.nftfont.module.ipfs.IpfsPinningEvent;
 import com.nftfont.module.ipfs.IpfsService;
 import com.nftfont.module.metadata.MetaDataService;
 import com.nftfont.module.metadata.MetadataOfGlyph;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.transcoder.TranscoderException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import storage.nft.ApiException;
-import storage.nft.JSON;
+
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,32 +42,38 @@ public class UserMakeFontService {
     private final GlyphRepository glyphRepository;
     private final MetaDataService metaDataService;
     private final NftFontRepository nftFontRepository;
+    private final ApplicationEventPublisher eventPublisher;
     private final ObjectMapper mapper;
-    public void createFont(Long userId,List<MultipartFile> svgFiles) throws IOException, TranscoderException, ApiException, ParseException, ExecutionException, InterruptedException {
+    public FontCreate.ResponseDto createFont(Long userId, List<MultipartFile> svgFiles) throws IOException, TranscoderException, ApiException {
 
         /**
          * png 업로드*
          */
-        CompletableFuture<List<String>> pngCIDs = ipfsService.store(ipfsFile(svgFiles));
+        CompletableFuture<List<String>> pngCIDs = ipfsService.store(ipfsFile(svgFiles),userId);
 
         /**
          * ttf 파일로 변환 후 ttf 도 pinning 한다. *
          *  *
          */
-        CompletableFuture<List<String>> ttfCIDs = ipfsService.store(List.of(new File("example/NotoSansKR-Medium.otf")));
+        CompletableFuture<List<String>> ttfCIDs = ipfsService.store(List.of(new File("example/NotoSansKR-Medium.otf")),userId);
 //        ipfsService.store(null,null);
         /**
          * ttf file create*
-         * something*
+         * do something*
+         * 1. 폰트 아이디 만들어줘야하고*
+         * 2. s3에 저장하기*
+         * 3. ipfs 에 피닝하기*
+         * 4. db에 cid값과 함께 저장하기*
          */
-
-        NftFont nftFont;
+        /**
+         * 더미데이터*
+         */
+        Long fontId = 1L;
+        NftFont nftFont = null;
 
         /**
          * create metadata*
          */
-
-        System.out.println("마ㅣ마ㅣ마ㅏ마마마ㅏaaaaaaaa");
 
         ttfCIDs.thenCompose(List->{
             return null;
@@ -77,10 +81,11 @@ public class UserMakeFontService {
 
         pngCIDs.thenCompose(List -> {
             java.util.List<Glyph> glyphs = List.stream().map(Glyph::of).collect(Collectors.toList());
+            setGlyphsInfo(userId,nftFont,glyphs);
             glyphRepository.saveAll(glyphs);
             List<MetadataOfGlyph> metaData = metaDataService.createMetaData(glyphs);
             for (MetadataOfGlyph metadataOfGlyph : metaData) {
-                String s = null;
+                String s;
                 try {
                     s = mapper.writeValueAsString(metadataOfGlyph);
                 } catch (JsonProcessingException e) {
@@ -94,7 +99,7 @@ public class UserMakeFontService {
                     throw new RuntimeException(e);
                 }
                 try {
-                    ipfsService.store(java.util.List.of(file));
+                    ipfsService.store(java.util.List.of(file),userId);
                     file.delete();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -107,15 +112,7 @@ public class UserMakeFontService {
             return null;
         });
 
-        System.out.println("마ㅣ마ㅣ마ㅏ마마마ㅏ");
-//
-//        /**
-//         * png 피닝을 바탕으로 음.. *
-//         * 각 피닝마다 메타데이터 생성해줘야하는데 *
-//         */
-//        List<MetadataOfGlyph> metaData = metaDataService.createMetaData(collect);
-//
-//        // 이후 ipfs 또 피닝하기
+        return FontCreate.ResponseDto.of(fontId);
     }
 
     private List<File> ipfsFile(List<MultipartFile> svgFiles) throws IOException, TranscoderException {
@@ -136,4 +133,11 @@ public class UserMakeFontService {
         writer.write(str);
         writer.close();
     }
+    public static void setGlyphsInfo(Long userId,NftFont nftFont,List<Glyph> glyphs){
+        for (Glyph glyph : glyphs) {
+            glyph.setFont(nftFont);
+            glyph.setUserId(userId);
+        }
+    }
+
 }
