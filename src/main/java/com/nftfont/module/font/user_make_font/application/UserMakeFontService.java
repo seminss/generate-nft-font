@@ -2,14 +2,15 @@ package com.nftfont.module.font.user_make_font.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nftfont.common.dto.ApiResult;
 import com.nftfont.common.utils.FileUtil;
+import com.nftfont.config.redis.CacheKey;
 import com.nftfont.domain.font.font.NftFont;
 import com.nftfont.domain.font.font.NftFontRepository;
 import com.nftfont.domain.glyph.Glyph;
 import com.nftfont.domain.glyph.GlyphRepository;
 
 import com.nftfont.module.font.user_make_font.dto.FontCreate;
+import com.nftfont.module.ipfs.IpfsPinningEvent;
 import com.nftfont.module.ipfs.IpfsService;
 import com.nftfont.module.metadata.MetaDataService;
 import com.nftfont.module.metadata.MetadataOfGlyph;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.transcoder.TranscoderException;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import storage.nft.ApiException;
@@ -41,6 +43,7 @@ public class UserMakeFontService {
     private final GlyphRepository glyphRepository;
     private final MetaDataService metaDataService;
     private final NftFontRepository nftFontRepository;
+    private final RedisTemplate<String,Object> redisTemplate;
     private final ApplicationEventPublisher eventPublisher;
     private final ObjectMapper mapper;
     public FontCreate.ResponseDto createFont(Long userId, List<MultipartFile> svgFiles) throws IOException, TranscoderException, ApiException {
@@ -48,13 +51,13 @@ public class UserMakeFontService {
         /**
          * png 업로드*
          */
-        CompletableFuture<List<String>> pngCIDs = ipfsService.store(ipfsFile(svgFiles),userId);
+        CompletableFuture<List<String>> pngCIDs = ipfsService.asyncStore(ipfsFile(svgFiles),userId);
 
         /**
          * ttf 파일로 변환 후 ttf 도 pinning 한다. *
          *  *
          */
-        CompletableFuture<List<String>> ttfCIDs = ipfsService.store(List.of(new File("example/NotoSansKR-Medium.otf")),userId);
+        CompletableFuture<List<String>> ttfCIDs = ipfsService.asyncStore(List.of(new File("example/NotoSansKR-Medium.otf")),userId);
 //        ipfsService.store(null,null);
         /**
          * ttf file create*
@@ -80,7 +83,7 @@ public class UserMakeFontService {
 
         pngCIDs.thenCompose(List -> {
             java.util.List<Glyph> glyphs = List.stream().map(Glyph::of).collect(Collectors.toList());
-            setGlyphsInfo(userId,nftFont,glyphs);
+            setGlyphsInfo(userId, nftFont, glyphs);
             glyphRepository.saveAll(glyphs);
             List<MetadataOfGlyph> metaData = metaDataService.createMetaData(glyphs);
             for (MetadataOfGlyph metadataOfGlyph : metaData) {
@@ -91,14 +94,14 @@ public class UserMakeFontService {
                     throw new RuntimeException(e);
                 }
 
-                File file = new File(UUID.randomUUID()+".json");
+                File file = new File(UUID.randomUUID() + ".json");
                 try {
-                    writeStringToFile(s,file);
+                    writeStringToFile(s, file);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 try {
-                    ipfsService.store(java.util.List.of(file),userId);
+                    ipfsService.store(java.util.List.of(file), userId);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (TranscoderException e) {
@@ -107,8 +110,11 @@ public class UserMakeFontService {
                     throw new RuntimeException(e);
                 }
             }
+            redisTemplate.delete(CacheKey.IPFS_PINNING+userId.toString());
+            //eventPublisher.publishEvent(IpfsPinningEvent.of(null,null,-1L));
             return null;
         });
+
 
         return FontCreate.ResponseDto.of(fontId);
     }

@@ -19,7 +19,15 @@ public class IpfsPinningListener {
 
         String realKey = CacheKey.IPFS_PINNING+event.getUserId().toString();
 
+        if(event.getUserId()==-1L){
+            redisTemplate.delete(realKey);
+            return;
+        }
+
+
         redisTemplate.opsForList().rightPush(realKey, event.getFileName());
     }
+
+
 
 }

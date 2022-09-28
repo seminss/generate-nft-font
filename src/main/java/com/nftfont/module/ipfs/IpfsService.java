@@ -34,7 +34,7 @@ public class IpfsService {
     private final ApplicationEventPublisher eventPublisher;
     private final RedisTemplate<String,Object> redisTemplate;
     @Async
-    public CompletableFuture<List<String>> store(List<File> files,Long userId) throws IOException, TranscoderException, ApiException {
+    public CompletableFuture<List<String>> asyncStore(List<File> files, Long userId) throws IOException, TranscoderException, ApiException {
 
         ApiClient defaultClient = setClient();
         setBearerAuth(defaultClient);
@@ -51,14 +51,32 @@ public class IpfsService {
         return CompletableFuture.completedFuture(CIDs);
     }
 
+    public CompletableFuture<List<String>> store(List<File> files, Long userId) throws IOException, TranscoderException, ApiException {
+
+        ApiClient defaultClient = setClient();
+        setBearerAuth(defaultClient);
+
+        NftStorageApi apiInstance = new NftStorageApi(defaultClient);
+        List<String> CIDs = new ArrayList<>();
+        for (File file : files) {
+            UploadResponse result = apiInstance.store(file);
+            CIDs.add(result.getValue().getCid());
+            eventPublisher.publishEvent(IpfsPinningEvent.of(file.getName(),result.getValue().getCid(),userId));
+            file.delete();
+        }
+
+        return CompletableFuture.completedFuture(CIDs);
+    }
+
+
     public Progress.ResponseDto getProgress(Long userId,Long fondId){
         String realKey = CacheKey.IPFS_PINNING+userId.toString();
 
         Long size = redisTemplate.opsForList().size(realKey);
-        /**
-         * 사이즈 같으면 리턴해주깅...*
-         */
-
+        System.out.println("사이즈에요"+size);
+        if(size==0){
+            return Progress.ResponseDto.ofFinished();
+        }
 
 
         String fileName =(String) redisTemplate.opsForList().range(realKey, size-1, size-1).get(0);
