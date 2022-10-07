@@ -110,8 +110,7 @@ public class UserMakeFontService {
                     throw new RuntimeException(e);
                 }
             }
-            redisTemplate.delete(CacheKey.IPFS_PINNING+userId.toString());
-            //eventPublisher.publishEvent(IpfsPinningEvent.of(null,null,-1L));
+            redisTemplate.opsForList().rightPush(CacheKey.IPFS_PINNING+userId.toString(),null);
             return null;
         });
 
