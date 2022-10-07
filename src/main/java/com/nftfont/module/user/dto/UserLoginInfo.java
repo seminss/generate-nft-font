@@ -7,20 +7,12 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-public interface UserCreation {
+public interface UserLoginInfo {
 
     @Data
     class RequestDto{
-
-        @Email
-        private String email;
-
         @NotNull
         private String walletAddress;
-
-        @NotNull
-        private String password;
-
     }
 
     @Data
@@ -28,7 +20,6 @@ public interface UserCreation {
     class ResponseDto{
 
         private Long id;
-
 
         public static ResponseDto of(User user){
             return ResponseDto.builder()
