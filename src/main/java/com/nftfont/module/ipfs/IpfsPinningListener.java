@@ -2,9 +2,13 @@ package com.nftfont.module.ipfs;
 
 import com.nftfont.config.redis.CacheKey;
 import lombok.RequiredArgsConstructor;
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.util.XMLResourceDescriptor;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,8 +28,9 @@ public class IpfsPinningListener {
             return;
         }
 
+        
 
-        redisTemplate.opsForList().rightPush(realKey, event.getFileName());
+        redisTemplate.opsForList().rightPush(realKey, event.getCid());
     }
 
 

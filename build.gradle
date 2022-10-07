@@ -69,6 +69,9 @@ dependencies {
 	// string2json
 	implementation files("target/json-simple-1.1.1.jar")
 
+	// AsposeJavaApi
+	implementation files("aspose/aspose-imaging-22.9-jdk16.jar")
+	implementation files("aspose/aspose-words-22.9-jdk17.jar")
 	// nft-storage-api
 	implementation files("target/nft.storage-client-1.0.jar")
 	implementation fileTree(dir: 'target/lib',includes: ['*.jar'])
