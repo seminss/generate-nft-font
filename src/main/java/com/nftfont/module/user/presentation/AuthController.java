@@ -1,6 +1,5 @@
 package com.nftfont.module.user.presentation;
 import com.nftfont.common.dto.ApiResult;
-import com.nftfont.module.user.dto.UserCreation;
 import com.nftfont.module.user.application.AuthService;
 import com.nftfont.module.user.dto.UserLoginInfo;
 import com.nftfont.module.user.dto.UserProfileCreation;
