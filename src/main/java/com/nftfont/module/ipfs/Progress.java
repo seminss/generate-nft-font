@@ -4,6 +4,8 @@ import com.nftfont.module.font.user_make_font.dto.FontCreate;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 public interface Progress {
 
 
@@ -20,10 +22,15 @@ public interface Progress {
                     .finished(false)
                     .build();
         }
+    }
+    @Data
+    @Builder
+    class finishedDto{
+        private List<String> filenames;
+        private List<String> cids;
 
-        public static ResponseDto ofFinished(){
-            return ResponseDto.builder()
-                    .finished(true)
+        public static finishedDto of(String filename,String cid){
+            return finishedDto.builder()
                     .build();
         }
 

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -73,15 +74,18 @@ public class IpfsService {
         String realKey = CacheKey.IPFS_PINNING+userId.toString();
 
         Long size = redisTemplate.opsForList().size(realKey);
-        System.out.println("사이즈에요"+size);
-        if(size==0){
-            return Progress.ResponseDto.ofFinished();
+        Object o = redisTemplate.opsForList().range(realKey, size - 1, size - 1).get(0);
+        List<String> range = redisTemplate.opsForList().range(realKey, 0, size).stream().map(Object::toString).collect(Collectors.toList());
+        if(o==null){
+
         }
 
 
-        String fileName =(String) redisTemplate.opsForList().range(realKey, size-1, size-1).get(0);
 
-        return Progress.ResponseDto.of(fileName,size);
+
+        String cid =(String) redisTemplate.opsForList().range(realKey, size-1, size-1).get(0);
+
+        return Progress.ResponseDto.of(cid,size);
     }
 
     private ApiClient setClient(){
