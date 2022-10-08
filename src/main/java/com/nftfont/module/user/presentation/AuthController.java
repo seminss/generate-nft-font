@@ -30,13 +30,8 @@ public class AuthController {
     @PostMapping("/users/auth/signature")
     public ApiResult<UserSignature.ResponseDto> verifySignIn(@RequestBody @Valid UserSignature.RequestDto request) throws SignatureException {
         UserSignature.ResponseDto responseDto = authService.verifySignature(request);
-        User user = userRepository.findByWalletAddress(request.getWalletAddress()).orElseThrow(()-> new ConflictException("없서요"));
-        String addressUsedToSignHashedMessage = SignUtil.getAddressUsedToSignHashedMessage(request.getSignature(), user.getNonce());
-        System.out.println(addressUsedToSignHashedMessage+"될가요");
-//        User user = userRepository.findByWalletAddress(request.getWalletAddress()).orElseThrow(()-> new ConflictException("없서요"));
-//        String addressUsedToSignHashedMessage = authService.getAddressUsedToSignHashedMessage(request.getSignature(), user.getNonce());
-//        System.out.println(addressUsedToSignHashedMessage+"제발돼라");
-        return null;
+        ApiResult<UserSignature.ResponseDto> apiResult = ApiResult.success(responseDto);
+        return apiResult;
     }
 }
 

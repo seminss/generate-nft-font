@@ -3,10 +3,14 @@ package com.nftfont.module.user.application;
 
 import com.nftfont.common.exception.ConflictException;
 import com.nftfont.common.exception.VerifySignatureException;
+import com.nftfont.common.jwt.JwtToken;
 import com.nftfont.common.jwt.JwtTokenProvider;
+import com.nftfont.config.properties.AppProperties;
 import com.nftfont.domain.user.user.User;
+import com.nftfont.domain.user.user.UserRefreshToken;
 import com.nftfont.domain.user.userprofile.UserProfile;
 import com.nftfont.domain.user.userprofile.UserProfileRepository;
+import com.nftfont.domain.userprincipal.RoleType;
 import com.nftfont.module.file.image_file.application.ImageFileService;
 import com.nftfont.domain.user.user.UserRepository;
 import com.nftfont.module.user.dto.UserLoginInfo;
@@ -25,6 +29,8 @@ import org.web3j.utils.Numeric;
 
 import javax.transaction.Transactional;
 import java.security.SignatureException;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,12 +41,8 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final UserRepository userRepository;
-    private final static long THREE_DAYS_MSEC = 259200000;
-    private final static String REFRESH_TOKEN = "refresh_token";
-    private final ImageFileService imageFileService;
     private final Web3jCustom web3jCustom;
-    private final UserProfileRepository userProfileRepository;
-
+    private final AppProperties appProperties;
     private final String personalMessagePrefix = "Ethereum Signed Message:";
     private final String hexPrefix = "0x";
     public UserLoginInfo.ResponseDto signUpWithWallet(UserLoginInfo.RequestDto request){
@@ -63,11 +65,33 @@ public class AuthService {
 
         User user = userRepository.findByWalletAddress(request.getWalletAddress()).orElseThrow(()-> new ConflictException("해당 지갑주소를 가진 유저가 없습니다."));
         String publicAddress = getAddressUsedToSignHashedMessage(request.getSignature(), user.getNonce());
-
         // 서명검증에 성공함
         if(publicAddress.equals(user.getWalletAddress().toLowerCase())){
+
             updateNonce(user);
+
             // 토큰 발급
+            Date now = new Date();
+            JwtToken accessToken = jwtTokenProvider.createJwtToken(user.getId().toString(), RoleType.USER.getCode(),
+                    new Date(now.getTime()+appProperties.getAuth().getTokenExpiry()));
+
+            JwtToken refreshToken = jwtTokenProvider.createJwtToken(
+                    appProperties.getAuth().getTokenSecret(),
+                    new Date(now.getTime()+appProperties.getAuth().getRefreshTokenExpiry())
+            );
+
+
+            UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(user.getId().toString());
+
+            if(userRefreshToken!=null){
+                userRefreshToken.setRefreshToken(refreshToken.getToken());
+            }else{
+                userRefreshToken = new UserRefreshToken(user.getId().toString(), refreshToken.getToken());
+                userRefreshTokenRepository.saveAndFlush(userRefreshToken);
+            }
+
+            return UserSignature.ResponseDto.ofSuccess(accessToken.getToken(),refreshToken.getToken(),user.getId());
+
         }
 
         throw new VerifySignatureException("서명 검증이 실패했어요");

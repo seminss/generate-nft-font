@@ -1,6 +1,7 @@
 package com.nftfont.common.jwt;
 
 import com.nftfont.common.exception.TokenValidFailedException;
+import com.nftfont.config.properties.AppProperties;
 import com.nftfont.module.user.application.CustomUserDetailsService;
 import com.nftfont.domain.userprincipal.UserPrincipal;
 import io.jsonwebtoken.Claims;
@@ -24,13 +25,13 @@ public class JwtTokenProvider {
 
     private final CustomUserDetailsService customUserDetailsService;
     private static final String AUTHORITIES_KEY = "role";
-
+    private final AppProperties appProperties;
     public JwtToken createJwtToken(String id, Date expiry){
-        return new JwtToken(id,expiry);
+        return new JwtToken(id,expiry,appProperties.getAuth().getTokenSecret());
     }
 
     public JwtToken createJwtToken(String id, String role, Date expiry){
-        return new JwtToken(id,role,expiry);
+        return new JwtToken(id,role,expiry,appProperties.getAuth().getTokenSecret());
     }
 
     public JwtToken convertJwtToken(String token){

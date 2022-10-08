@@ -21,5 +21,14 @@ public interface UserSignature {
         private String accessToken;
         @NotNull
         private String refreshToken;
+        private Long userId;
+        public static ResponseDto ofSuccess(String accessToken,String refreshToken,Long userId){
+            return ResponseDto.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .userId(userId)
+                    .build();
+        }
+
     }
 }
