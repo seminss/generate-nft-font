@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-
-import java.security.Key;
 import java.util.Date;
 
 @Slf4j
@@ -16,15 +15,16 @@ import java.util.Date;
 public class JwtToken {
     private final String token ;
 
-    @Value("${app.auth.tokenSecret}")
     private String secret;
 
     private static final String AUTHORITIES_KEY = "role";
 
-    JwtToken(String id, String role, Date expiry){
+    JwtToken(String id, String role, Date expiry,String secret){
+        this.secret=secret;
         this.token = createAuthToken(id,role,expiry);
     }
-    JwtToken(String id, Date expiry){
+    JwtToken(String id, Date expiry,String secret){
+        this.secret=secret;
         this.token = createAuthToken(id, expiry);
     }
 

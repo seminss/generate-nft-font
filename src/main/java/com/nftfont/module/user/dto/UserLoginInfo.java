@@ -19,11 +19,11 @@ public interface UserLoginInfo {
     @Builder
     class ResponseDto{
 
-        private Long id;
+        private String nonce;
 
         public static ResponseDto of(User user){
             return ResponseDto.builder()
-                    .id(user.getId())
+                    .nonce(user.getNonce())
                     .build();
         }
     }

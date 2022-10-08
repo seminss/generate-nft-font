@@ -2,7 +2,6 @@ package com.nftfont.domain.user.user;
 
 
 import com.nftfont.domain.userprincipal.RoleType;
-import com.nftfont.module.user.dto.UserCreation;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 
@@ -36,16 +35,22 @@ public class User {
     @NotNull
     private LocalDateTime createdAt;
 
+    @Column(name = "nonce")
+    private String nonce;
+
     @Column(name = "modified_at")
     @NotNull
     private LocalDateTime modifiedAt;
 
-    public static User of(UserCreation.RequestDto request){
+    public static User ofCreate(String walletAddress,String nonce){
         return User.builder()
-                .walletAddress(request.getWalletAddress())
+                .walletAddress(walletAddress)
+                .nonce(nonce)
                 .roleType(RoleType.USER)
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())
                 .build();
+
     }
+
 }
