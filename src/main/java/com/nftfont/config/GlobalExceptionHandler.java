@@ -1,9 +1,6 @@
 package com.nftfont.config;
 
-import com.nftfont.common.exception.AuthenticationException;
-import com.nftfont.common.exception.ExceptionResponse;
-import com.nftfont.common.exception.OAuthProviderMissMatchException;
-import com.nftfont.common.exception.TokenValidFailedException;
+import com.nftfont.common.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -29,4 +26,18 @@ public class GlobalExceptionHandler {
     public ExceptionResponse tokenValidFailedException(TokenValidFailedException e){
         return ExceptionResponse.of(e);
     }
+
+
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse conflictException(ConflictException e){
+        return ExceptionResponse.of(e);
+    }
+
+    @ExceptionHandler(VerifySignatureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionResponse verifySignatureException(VerifySignatureException e){
+        return ExceptionResponse.of(e);
+    }
+
 }
