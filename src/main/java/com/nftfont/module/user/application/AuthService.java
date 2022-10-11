@@ -5,31 +5,31 @@ import com.nftfont.common.exception.ConflictException;
 import com.nftfont.common.exception.VerifySignatureException;
 import com.nftfont.common.jwt.JwtToken;
 import com.nftfont.common.jwt.JwtTokenProvider;
+import com.nftfont.common.utils.CookieUtil;
+import com.nftfont.common.utils.HeaderUtil;
 import com.nftfont.config.properties.AppProperties;
 import com.nftfont.domain.user.user.User;
 import com.nftfont.domain.user.user.UserRefreshToken;
-import com.nftfont.domain.user.userprofile.UserProfile;
-import com.nftfont.domain.user.userprofile.UserProfileRepository;
 import com.nftfont.domain.userprincipal.RoleType;
-import com.nftfont.module.file.image_file.application.ImageFileService;
 import com.nftfont.domain.user.user.UserRepository;
 import com.nftfont.module.user.dto.UserLoginInfo;
 import com.nftfont.domain.user.user.UserRefreshTokenRepository;
-import com.nftfont.module.user.dto.UserProfileCreation;
-import com.nftfont.module.user.dto.UserSignature;
-import com.nftfont.module.web3j.SignUtil;
+import com.nftfont.module.user.dto.AccessTokenResponse;
 import com.nftfont.module.web3j.Web3jCustom;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.server.Cookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
-import org.web3j.crypto.Hash;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
-import javax.transaction.Transactional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.SignatureException;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,6 +45,8 @@ public class AuthService {
     private final AppProperties appProperties;
     private final String personalMessagePrefix = "Ethereum Signed Message:";
     private final String hexPrefix = "0x";
+    private final static long THREE_DAYS_MSEC = 259200000;
+    private final static String REFRESH_TOKEN = "refresh_token";
     public UserLoginInfo.ResponseDto signUpWithWallet(UserLoginInfo.RequestDto request){
         if(!web3jCustom.validateUserAddress(request.getWalletAddress())) {
             throw new ConflictException("유효하지 않은 지갑주소입니다.");
@@ -61,42 +63,98 @@ public class AuthService {
         return UserLoginInfo.ResponseDto.of(savedUser);
     }
 
-    public UserSignature.ResponseDto verifySignature(UserSignature.RequestDto request) throws SignatureException {
+    public AccessTokenResponse.ResponseDto verifySignature(AccessTokenResponse.RequestDto request,HttpServletResponse response)
+            throws SignatureException {
 
         User user = userRepository.findByWalletAddress(request.getWalletAddress()).orElseThrow(()-> new ConflictException("해당 지갑주소를 가진 유저가 없습니다."));
         String publicAddress = getAddressUsedToSignHashedMessage(request.getSignature(), user.getNonce());
-        // 서명검증에 성공함
-        if(publicAddress.equals(user.getWalletAddress().toLowerCase())){
 
-            updateNonce(user);
-
-            // 토큰 발급
-            Date now = new Date();
-            JwtToken accessToken = jwtTokenProvider.createJwtToken(user.getId().toString(), RoleType.USER.getCode(),
-                    new Date(now.getTime()+appProperties.getAuth().getTokenExpiry()));
-
-            JwtToken refreshToken = jwtTokenProvider.createJwtToken(
-                    appProperties.getAuth().getTokenSecret(),
-                    new Date(now.getTime()+appProperties.getAuth().getRefreshTokenExpiry())
-            );
-
-
-            UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(user.getId().toString());
-
-            if(userRefreshToken!=null){
-                userRefreshToken.setRefreshToken(refreshToken.getToken());
-            }else{
-                userRefreshToken = new UserRefreshToken(user.getId().toString(), refreshToken.getToken());
-                userRefreshTokenRepository.saveAndFlush(userRefreshToken);
-            }
-
-            return UserSignature.ResponseDto.ofSuccess(accessToken.getToken(),refreshToken.getToken(),user.getId());
-
+        if(!publicAddress.equals(user.getWalletAddress().toLowerCase())){
+            throw new VerifySignatureException("서명 검증이 실패했어요");
         }
 
-        throw new VerifySignatureException("서명 검증이 실패했어요");
+        // 서명검증에 성공함
+        updateNonce(user);
+
+        // 토큰 발급
+        Date now = new Date();
+        JwtToken accessToken = jwtTokenProvider.createJwtToken(user.getId().toString(), RoleType.USER.getCode(),
+                new Date(now.getTime()+appProperties.getAuth().getTokenExpiry()));
+
+        JwtToken refreshToken = jwtTokenProvider.createJwtToken(
+                appProperties.getAuth().getTokenSecret(),
+                new Date(now.getTime()+appProperties.getAuth().getRefreshTokenExpiry())
+        );
+
+
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(user.getId().toString());
+
+        if(userRefreshToken!=null){
+            userRefreshToken.setRefreshToken(refreshToken.getToken());
+        }else{
+            userRefreshToken = new UserRefreshToken(user.getId().toString(), refreshToken.getToken());
+            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
+        }
+
+        setCookie(response, refreshToken.getToken());
+
+        return AccessTokenResponse.ResponseDto.ofSuccess(accessToken.getToken(),user.getId());
+
+
     }
 
+    public AccessTokenResponse.ResponseDto refreshToken(HttpServletRequest request, HttpServletResponse response, String refreshToken){
+        String accessToken = HeaderUtil.getAccessToken(request);
+        JwtToken authToken = jwtTokenProvider.convertJwtToken(accessToken);
+
+        if(!authToken.validate()){
+            return AccessTokenResponse.ResponseDto.ofSuccess(accessToken);
+        }
+
+        Claims claims = authToken.getTokenClaims();
+        if(claims == null){
+            return AccessTokenResponse.ResponseDto.ofSuccess(accessToken);
+        }
+
+        String userId = claims.getSubject();
+        RoleType roleType = RoleType.of(claims.get("role",String.class));
+
+        JwtToken authRefreshToken = jwtTokenProvider.convertJwtToken(refreshToken);
+
+        if(authRefreshToken.validate()){
+            return AccessTokenResponse.ResponseDto.ofSuccess(null);
+        }
+
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId,refreshToken);
+        if(userRefreshToken == null){
+            return AccessTokenResponse.ResponseDto.ofSuccess(null);
+        }
+        Date now = new Date();
+        JwtToken newAccessToken = jwtTokenProvider.createJwtToken(
+                userId,roleType.getCode(),new Date(now.getTime()+appProperties.getAuth().getTokenExpiry())
+        );
+
+        long validTime = authRefreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
+
+        if (validTime <= THREE_DAYS_MSEC) {
+            // refresh 토큰 설정
+            long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
+
+            authRefreshToken = jwtTokenProvider.createJwtToken(
+                    appProperties.getAuth().getTokenSecret(),
+                    new Date(now.getTime() + refreshTokenExpiry)
+            );
+
+            // DB에 refresh 토큰 업데이트
+            userRefreshToken.setRefreshToken(authRefreshToken.getToken());
+
+            int cookieMaxAge = (int) refreshTokenExpiry / 60;
+            CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
+            CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
+        }
+
+        return AccessTokenResponse.ResponseDto.ofSuccess(newAccessToken.getToken());
+    }
 
     public String getAddressUsedToSignHashedMessage(String signedHash, String originalMessage) throws SignatureException {
 
@@ -129,5 +187,14 @@ public class AuthService {
         String newNonce = personalMessagePrefix+UUID.randomUUID();
         user.setNonce(newNonce);
         userRepository.save(user);
+    }
+    private void setCookie(HttpServletResponse response, String refreshToken) {
+        ResponseCookie cookieHeader = ResponseCookie.from(REFRESH_TOKEN, refreshToken)
+                .sameSite(Cookie.SameSite.NONE.attributeValue())
+                .maxAge(appProperties.getAuth().getRefreshTokenExpiry())
+                .secure(true)
+                .httpOnly(true)
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookieHeader.toString());
     }
 }
