@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 public class AccessTokenResponse {
     @Data
-    class RequestDto{
+    class static RequestDto{
         @NotNull
         private String walletAddress;
         @NotNull
@@ -16,7 +16,7 @@ public class AccessTokenResponse {
 
     @Data
     @Builder
-    class ResponseDto{
+    class static ResponseDto{
         @NotNull
         private String accessToken;
         private Long userId;
