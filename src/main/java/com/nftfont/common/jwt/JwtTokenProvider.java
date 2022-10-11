@@ -39,8 +39,14 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(JwtToken jwtToken){
+        Claims claims;
+
         if(jwtToken.validate()){
-            Claims claims = jwtToken.getTokenClaims();
+            try {
+                claims = jwtToken.getTokenClaims();
+            }catch (Exception e){
+                throw new RuntimeException(e.getMessage());
+            }
 
             Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})

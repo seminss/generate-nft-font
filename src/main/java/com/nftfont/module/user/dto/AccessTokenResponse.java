@@ -5,7 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
-public interface UserSignature {
+public interface AccessTokenResponse {
     @Data
     class RequestDto{
         @NotNull
@@ -19,16 +19,17 @@ public interface UserSignature {
     class ResponseDto{
         @NotNull
         private String accessToken;
-        @NotNull
-        private String refreshToken;
         private Long userId;
-        public static ResponseDto ofSuccess(String accessToken,String refreshToken,Long userId){
+        public static ResponseDto ofSuccess(String accessToken,Long userId){
             return ResponseDto.builder()
                     .accessToken(accessToken)
-                    .refreshToken(refreshToken)
                     .userId(userId)
                     .build();
         }
-
+        public static ResponseDto ofSuccess(String accessToken){
+            return ResponseDto.builder()
+                    .accessToken(accessToken)
+                    .build();
+        }
     }
 }
