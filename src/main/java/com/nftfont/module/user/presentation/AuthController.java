@@ -22,7 +22,6 @@ import java.security.SignatureException;
 public class AuthController {
 
     private final AuthService authService;
-    private final AppProperties appProperties;
     @PostMapping("/users/signIn")
     public ApiResult<UserLoginInfo.ResponseDto> signIn(@RequestBody @Valid UserLoginInfo.RequestDto request){
         UserLoginInfo.ResponseDto responseDto = authService.signUpWithWallet(request);
@@ -39,7 +38,8 @@ public class AuthController {
     }
 
     @GetMapping("/users/auth/refresh")
-    public ApiResult<AccessTokenResponse.ResponseDto> updateAccessToken(HttpServletRequest request, HttpServletResponse response, @CookieValue("refreshToken") Cookie cookie){
+    public ApiResult<AccessTokenResponse.ResponseDto> updateAccessToken(HttpServletRequest request, HttpServletResponse response,
+                                                                        @CookieValue("refresh_token") Cookie cookie){
         String refreshToken = cookie.getValue();
         AccessTokenResponse.ResponseDto responseDto = authService.refreshToken(request, response, refreshToken);
         ApiResult<AccessTokenResponse.ResponseDto> apiResult = ApiResult.success(responseDto);

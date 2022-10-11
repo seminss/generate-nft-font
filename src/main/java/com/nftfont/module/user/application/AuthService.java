@@ -108,12 +108,12 @@ public class AuthService {
         JwtToken authToken = jwtTokenProvider.convertJwtToken(accessToken);
 
         if(!authToken.validate()){
-            return AccessTokenResponse.ResponseDto.ofSuccess(accessToken);
+            return null;
         }
 
         Claims claims = authToken.getTokenClaims();
         if(claims == null){
-            return AccessTokenResponse.ResponseDto.ofSuccess(accessToken);
+            return null;
         }
 
         String userId = claims.getSubject();
@@ -122,12 +122,12 @@ public class AuthService {
         JwtToken authRefreshToken = jwtTokenProvider.convertJwtToken(refreshToken);
 
         if(authRefreshToken.validate()){
-            return AccessTokenResponse.ResponseDto.ofSuccess(null);
+            return null;
         }
 
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId,refreshToken);
         if(userRefreshToken == null){
-            return AccessTokenResponse.ResponseDto.ofSuccess(null);
+            return null;
         }
         Date now = new Date();
         JwtToken newAccessToken = jwtTokenProvider.createJwtToken(
@@ -190,10 +190,8 @@ public class AuthService {
     }
     private void setCookie(HttpServletResponse response, String refreshToken) {
         ResponseCookie cookieHeader = ResponseCookie.from(REFRESH_TOKEN, refreshToken)
-                .sameSite(Cookie.SameSite.NONE.attributeValue())
+                .path("/users/auth/refresh")
                 .maxAge(appProperties.getAuth().getRefreshTokenExpiry())
-                .secure(true)
-                .httpOnly(true)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookieHeader.toString());
     }

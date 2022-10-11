@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -35,13 +36,16 @@ public class SecurityConfiguration {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final CorsProperties corsProperties;
     private final JwtTokenProvider tokenProvider;
-    //private final CustomOAuth2UserService oAuth2UserService;
-    private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final CustomUserDetailsService customUserDetailsService;
-    /**
-     * UserDetailsService 설정
-     */
 
+    private static final String[] GET_PERMITTED_URLS = {
+            "/users/auth/refresh"
+    };
+
+    private static final String[] POST_PERMITTED_URLS = {
+            "/users/signIn",
+            "/users/auth/signature"
+    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -60,11 +64,12 @@ public class SecurityConfiguration {
                 .and()
                 .userDetailsService(customUserDetailsService)
                 .authorizeRequests()
-                    // 추가하기
+
                     .antMatchers("/api-docs/**","/swagger-ui/**").permitAll()
                     .antMatchers("/hello/api").permitAll()
-                    .antMatchers("/kakao").permitAll();
-                    /// 추가 하기
+                    .antMatchers(HttpMethod.GET,GET_PERMITTED_URLS).permitAll()
+                    .antMatchers(HttpMethod.POST,POST_PERMITTED_URLS).permitAll()
+                .anyRequest().authenticated();
 
                 //.authorizeRequests()
 //                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
