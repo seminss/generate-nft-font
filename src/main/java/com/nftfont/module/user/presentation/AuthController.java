@@ -22,14 +22,14 @@ import java.security.SignatureException;
 public class AuthController {
 
     private final AuthService authService;
-    @PostMapping("/signIn")
+    @PostMapping("/null")
     public ApiResult<UserLoginInfo.ResponseDto> signIn(@RequestBody @Valid UserLoginInfo.RequestDto request){
         UserLoginInfo.ResponseDto responseDto = authService.signUpWithWallet(request);
         ApiResult<UserLoginInfo.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }
 
-    @PostMapping("/auth/signature")
+    @PostMapping("/signIn")
     public ApiResult<AccessTokenResponse.ResponseDto> verifySignIn(@RequestBody @Valid AccessTokenResponse.RequestDto request,
                                                                    HttpServletResponse response) throws SignatureException {
         AccessTokenResponse.ResponseDto responseDto = authService.verifySignature(request,response);
