@@ -5,7 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
-public interface AccessTokenResponse {
+public class AccessTokenResponse {
     @Data
     class RequestDto{
         @NotNull
