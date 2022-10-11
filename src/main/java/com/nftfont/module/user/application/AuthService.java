@@ -67,7 +67,7 @@ public class AuthService {
             throws SignatureException {
 
         User user = userRepository.findByWalletAddress(request.getWalletAddress()).orElseThrow(()-> new ConflictException("해당 지갑주소를 가진 유저가 없습니다."));
-        String publicAddress = getAddressUsedToSignHashedMessage(request.getSignature(), user.getNonce());
+        String publicAddress = getAddressUsedToSignHashedMessage(request.getSignature(), "eternal_semin");
 
         if(!publicAddress.equals(user.getWalletAddress().toLowerCase())){
             throw new VerifySignatureException("서명 검증이 실패했어요");
