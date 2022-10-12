@@ -66,7 +66,15 @@ public class AuthService {
     public AccessTokenResponse.ResponseDto verifySignature(AccessTokenResponse.RequestDto request,HttpServletResponse response)
             throws SignatureException {
 
-        User user = userRepository.findByWalletAddress(request.getWalletAddress()).orElseThrow(()-> new ConflictException("해당 지갑주소를 가진 유저가 없습니다."));
+
+        Optional<User> optionalUser = userRepository.findByWalletAddress(request.getWalletAddress());
+        User user;
+        if(optionalUser.isEmpty()){
+            user=User.ofCreate(request.getWalletAddress(),null);
+        }else{
+            user=optionalUser.get();
+        }
+
         String publicAddress = getAddressUsedToSignHashedMessage(request.getSignature(), "eternal_semin");
 
         if(!publicAddress.equals(user.getWalletAddress().toLowerCase())){
