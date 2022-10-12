@@ -1,13 +1,16 @@
 package com.nftfont.module.user.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
-public class AccessTokenResponse {
+
+public interface AccessTokenResponse {
     @Data
-    public static class RequestDto{
+    @Schema(name = "request")
+    class RequestDto{
         @NotNull
         private String walletAddress;
         @NotNull
@@ -16,7 +19,8 @@ public class AccessTokenResponse {
 
     @Data
     @Builder
-    public static class ResponseDto{
+    @Schema(name = "response")
+    class ResponseDto{
         @NotNull
         private String accessToken;
         private Long userId;

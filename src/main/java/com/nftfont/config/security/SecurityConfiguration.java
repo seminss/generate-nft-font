@@ -39,12 +39,11 @@ public class SecurityConfiguration {
     private final CustomUserDetailsService customUserDetailsService;
 
     private static final String[] GET_PERMITTED_URLS = {
-            "/users/auth/refresh"
+            "/auth/refresh"
     };
 
     private static final String[] POST_PERMITTED_URLS = {
-            "/users/signIn",
-            "/users/auth/signature"
+            "/signIn"
     };
 
     @Bean
