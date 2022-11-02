@@ -1,7 +1,7 @@
 package com.nftfont.module.font.user_like_font.application;
 
-import com.nftfont.domain.font.user_like_font.UserLikeFont;
-import com.nftfont.domain.font.user_like_font.UserLikeFontRepository;
+import com.nftfont.module.font.user_like_font.domain.UserLikeFont;
+import com.nftfont.module.font.user_like_font.domain.UserLikeFontRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

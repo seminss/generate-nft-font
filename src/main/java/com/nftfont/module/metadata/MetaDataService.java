@@ -1,6 +1,6 @@
 package com.nftfont.module.metadata;
 
-import com.nftfont.domain.glyph.Glyph;
+import com.nftfont.module.glyph.domain.Glyph;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -6,7 +6,6 @@ import com.nftfont.common.jwt.JwtAuthenticationEntryPoint;
 import com.nftfont.common.jwt.JwtAuthenticationFilter;
 import com.nftfont.common.jwt.JwtTokenProvider;
 import com.nftfont.module.user.application.CustomUserDetailsService;
-import com.nftfont.domain.user.user.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

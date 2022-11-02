@@ -1,6 +1,6 @@
 package com.nftfont.common.annotation;
 
-import com.nftfont.domain.userprincipal.UserPrincipal;
+import com.nftfont.module.user.domain.userprincipal.UserPrincipal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;

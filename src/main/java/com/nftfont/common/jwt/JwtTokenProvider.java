@@ -3,7 +3,7 @@ package com.nftfont.common.jwt;
 import com.nftfont.common.exception.TokenValidFailedException;
 import com.nftfont.config.properties.AppProperties;
 import com.nftfont.module.user.application.CustomUserDetailsService;
-import com.nftfont.domain.userprincipal.UserPrincipal;
+import com.nftfont.module.user.domain.userprincipal.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

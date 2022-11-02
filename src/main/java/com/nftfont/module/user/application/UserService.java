@@ -2,11 +2,11 @@ package com.nftfont.module.user.application;
 
 
 import com.nftfont.common.exception.ConflictException;
-import com.nftfont.domain.user.user.User;
-import com.nftfont.domain.user.user.UserRepository;
-import com.nftfont.domain.user.userprofile.UserProfile;
-import com.nftfont.domain.user.userprofile.UserProfileRepoSupport;
-import com.nftfont.domain.user.userprofile.UserProfileRepository;
+import com.nftfont.module.user.domain.user.User;
+import com.nftfont.module.user.domain.user.UserRepository;
+import com.nftfont.module.user.domain.userprofile.UserProfile;
+import com.nftfont.module.user.domain.userprofile.UserProfileRepoSupport;
+import com.nftfont.module.user.domain.userprofile.UserProfileRepository;
 import com.nftfont.module.file.image_file.application.ImageFileDto;
 import com.nftfont.module.file.image_file.application.ImageFileService;
 import com.nftfont.module.user.dto.UserProfileCreation;

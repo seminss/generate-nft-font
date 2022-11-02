@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nftfont.common.utils.FileUtil;
 import com.nftfont.config.redis.CacheKey;
-import com.nftfont.domain.font.font.NftFont;
-import com.nftfont.domain.font.font.NftFontRepository;
-import com.nftfont.domain.glyph.Glyph;
-import com.nftfont.domain.glyph.GlyphRepository;
+import com.nftfont.module.font.font.domain.NftFont;
+import com.nftfont.module.font.font.domain.NftFontRepository;
+import com.nftfont.module.glyph.domain.Glyph;
+import com.nftfont.module.glyph.domain.GlyphRepository;
 
 import com.nftfont.module.font.user_make_font.dto.FontCreate;
-import com.nftfont.module.ipfs.IpfsPinningEvent;
 import com.nftfont.module.ipfs.IpfsService;
 import com.nftfont.module.metadata.MetaDataService;
 import com.nftfont.module.metadata.MetadataOfGlyph;

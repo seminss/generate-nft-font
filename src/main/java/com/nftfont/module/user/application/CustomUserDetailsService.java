@@ -1,9 +1,9 @@
 package com.nftfont.module.user.application;
 
 import com.nftfont.config.redis.CacheKey;
-import com.nftfont.domain.userprincipal.UserPrincipal;
-import com.nftfont.domain.user.user.User;
-import com.nftfont.domain.user.user.UserRepository;
+import com.nftfont.module.user.domain.userprincipal.UserPrincipal;
+import com.nftfont.module.user.domain.user.User;
+import com.nftfont.module.user.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;

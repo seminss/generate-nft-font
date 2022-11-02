@@ -1,10 +1,9 @@
 package com.nftfont.module.user.dto;
 
-import com.nftfont.domain.user.user.User;
+import com.nftfont.module.user.domain.user.User;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 public interface UserLoginInfo {

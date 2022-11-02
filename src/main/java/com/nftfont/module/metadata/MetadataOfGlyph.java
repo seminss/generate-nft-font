@@ -1,6 +1,6 @@
 package com.nftfont.module.metadata;
 
-import com.nftfont.domain.glyph.Glyph;
+import com.nftfont.module.glyph.domain.Glyph;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

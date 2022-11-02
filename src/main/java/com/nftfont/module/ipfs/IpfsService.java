@@ -1,7 +1,7 @@
 package com.nftfont.module.ipfs;
 
 import com.nftfont.config.redis.CacheKey;
-import com.nftfont.domain.glyph.GlyphRepository;
+import com.nftfont.module.glyph.domain.GlyphRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.transcoder.TranscoderException;
