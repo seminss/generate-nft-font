@@ -47,7 +47,7 @@ public class JwtTokenProvider {
             }catch (Exception e){
                 throw new RuntimeException(e.getMessage());
             }
-
+//토근에서 인증 정보를 얻는다
             Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
                             .map(SimpleGrantedAuthority::new)
