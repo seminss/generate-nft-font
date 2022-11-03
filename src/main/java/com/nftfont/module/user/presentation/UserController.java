@@ -16,12 +16,10 @@ public class UserController {
     private final UserService userService;
 
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#request.getId())")
-    @PostMapping(value = "/users/{userId}/profile",consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(value = "/users/{userId}/profile")
     public ApiResult<UserProfileCreation.ResponseDto> createProfile(@PathVariable Long userId,
-                                                                    @RequestPart(value = "body") UserProfileCreation.RequestDto request,
-                                                                    @RequestPart(value = "profileImage",required = false) MultipartFile profileImageFile,
-                                                                    @RequestPart(value = "backgroundImage",required = false) MultipartFile backgroundImageFile){
-        UserProfileCreation.ResponseDto responseDto = userService.createProfile(userId,request,profileImageFile,backgroundImageFile);
+                                                                    @RequestBody UserProfileCreation.RequestDto request){
+        UserProfileCreation.ResponseDto responseDto = userService.createProfile(userId,request);
         ApiResult<UserProfileCreation.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }

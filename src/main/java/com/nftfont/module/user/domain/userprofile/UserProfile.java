@@ -57,12 +57,13 @@ public class UserProfile {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    public static UserProfile ofCreation(UserProfileCreation.RequestDto request, ImageFileDto profileImage,ImageFileDto backgroundImage){
+    public static UserProfile ofCreation(UserProfileCreation.RequestDto request,User user){
         return UserProfile.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .profileImageUrl(profileImage.getImageUrl())
-                .backgroundImageUrl(backgroundImage.getImageUrl())
+                .user(user)
+                .profileImageUrl(null)
+                .backgroundImageUrl(null)
                 .selfDescription(request.getSelfDescription())
                 .build();
     }

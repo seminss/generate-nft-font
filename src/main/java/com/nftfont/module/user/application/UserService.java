@@ -28,15 +28,10 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final UserProfileRepoSupport userProfileRepoSupport;
     private final ImageFileService imageFileService;
-    public UserProfileCreation.ResponseDto createProfile(Long userId,UserProfileCreation.RequestDto request,MultipartFile image,MultipartFile background){
+    public UserProfileCreation.ResponseDto createProfile(Long userId,UserProfileCreation.RequestDto request){
         User user = userRepository.findById(userId).orElseThrow(()-> new ConflictException("유저가업서요"));
 
-        ImageFileDto profileImage = imageFileService.saveProfileImage(image);
-        ImageFileDto backgroundImage = imageFileService.saveBackgroundImage(background);
-
-        UserProfile userProfile = UserProfile.ofCreation(request,profileImage,backgroundImage);
-
-        userProfile.setUser(user);
+        UserProfile userProfile = UserProfile.ofCreation(request,user);
 
         UserProfile save = userProfileRepository.save(userProfile);
 
