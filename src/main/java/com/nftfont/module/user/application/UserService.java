@@ -39,39 +39,11 @@ public class UserService {
 
     }
 
-    public UserProfileUpdate.ResponseDto updateProfile(Long userId,UserProfileUpdate.RequestDto request,MultipartFile image,MultipartFile background){
+    public UserProfileUpdate.ResponseDto updateProfile(Long userId,UserProfileUpdate.RequestDto request){
         User user = userRepository.findById(userId).orElseThrow(()-> new ConflictException("유저가 없어요."));
         UserProfile userProfile = userProfileRepoSupport.findByUser(user);
 
-        if(userProfile == null){
-            throw new ConflictException("해당유저정보가없어요");
-        }
-
-        if(request.getUsername() != null){
-            userProfile.setUsername(request.getUsername());
-        }
-
-        if(request.getSelfDescription() != null){
-            userProfile.setSelfDescription(request.getSelfDescription());
-        }
-
-        if(image != null){
-            if(userProfile.getProfileImageUrl() != null){
-                imageFileService.deleteImageFile(userProfile.getProfileImageUrl());
-            }
-            ImageFileDto imageFileDto = imageFileService.saveProfileImage(image);
-            userProfile.setProfileImageUrl(imageFileDto.getImageUrl());
-        }
-
-        if(image != null){
-            if(userProfile.getBackgroundImageUrl() != null){
-                imageFileService.deleteImageFile(userProfile.getBackgroundImageUrl());
-            }
-            ImageFileDto imageFileDto = imageFileService.saveBackgroundImage(background);
-            userProfile.setBackgroundImageUrl(imageFileDto.getImageUrl());
-        }
-
-        UserProfile save = userProfileRepository.save(userProfile);
+        UserProfile save = userProfileRepository.save(userProfile.copyWith(request));
 
         return UserProfileUpdate.ResponseDto.of(save);
     }

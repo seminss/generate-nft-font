@@ -5,6 +5,7 @@ import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.user.domain.user.User;
 import com.nftfont.module.file.image_file.application.ImageFileDto;
 import com.nftfont.module.user.dto.UserProfileCreation;
+import com.nftfont.module.user.dto.UserProfileUpdate;
 import lombok.*;
 
 import javax.persistence.*;
@@ -68,4 +69,16 @@ public class UserProfile {
                 .build();
     }
 
+    public UserProfile copyWith(UserProfileUpdate.RequestDto request){
+        if(request.getSelfDescription()!=null){
+            this.setSelfDescription(request.getSelfDescription());
+        }
+        if(request.getUsername()!=null){
+            this.setUsername(request.getUsername());
+        }
+        if(request.getEmail()!=null){
+            this.setEmail(request.getEmail());
+        }
+        return this;
+    }
 }

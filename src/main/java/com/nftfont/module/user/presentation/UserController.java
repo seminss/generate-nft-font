@@ -25,12 +25,10 @@ public class UserController {
     }
 
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#request.getId())")
-    @PatchMapping(value = "/users/{userId}/profile",consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PatchMapping(value = "/users/{userId}/profile")
     public ApiResult<UserProfileUpdate.ResponseDto> updateProfile(@PathVariable Long userId,
-                                                                  @RequestPart(value = "body") UserProfileUpdate.RequestDto request,
-                                                                  @RequestPart(value = "profileImage",required = false) MultipartFile profileImageFile,
-                                                                  @RequestPart(value = "backgroundImage",required = false) MultipartFile backgroundImageFile){
-        UserProfileUpdate.ResponseDto responseDto = userService.updateProfile(userId, request, profileImageFile, backgroundImageFile);
+                                                                  @RequestBody UserProfileUpdate.RequestDto request){
+        UserProfileUpdate.ResponseDto responseDto = userService.updateProfile(userId, request);
         ApiResult<UserProfileUpdate.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }

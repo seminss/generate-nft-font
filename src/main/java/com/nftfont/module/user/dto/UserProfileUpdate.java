@@ -14,6 +14,7 @@ public interface UserProfileUpdate {
 
         private String selfDescription;
 
+        private String email;
     }
 
     @Data
