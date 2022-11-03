@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserService userService;
 
-    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#request.getId())")
+    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#userId)")
     @PostMapping(value = "/users/{userId}/profile")
     public ApiResult<UserProfileCreation.ResponseDto> createProfile(@PathVariable Long userId,
                                                                     @RequestBody UserProfileCreation.RequestDto request){
@@ -24,7 +24,7 @@ public class UserController {
         return apiResult;
     }
 
-    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#request.getId())")
+    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#userId)")
     @PatchMapping(value = "/users/{userId}/profile")
     public ApiResult<UserProfileUpdate.ResponseDto> updateProfile(@PathVariable Long userId,
                                                                   @RequestBody UserProfileUpdate.RequestDto request){

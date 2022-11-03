@@ -16,7 +16,7 @@ public class HeaderUtil {
             return null;
         }
 
-        if (!headerValue.startsWith(TOKEN_PREFIX)) {
+        if (headerValue.startsWith(TOKEN_PREFIX)) {
             return headerValue.substring(TOKEN_PREFIX.length());
         }
         throw new AuthenticationException("access 인증 토큰이 없습니다.");

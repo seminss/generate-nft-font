@@ -31,7 +31,7 @@ public class UserProfile {
 
     @JsonIgnore
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id")
     private User user;
 
     @Column(name = "user_name",length = 100,nullable = false)
