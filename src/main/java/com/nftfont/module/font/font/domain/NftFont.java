@@ -17,20 +17,24 @@ import java.time.LocalDateTime;
 public class NftFont {
     @Id
     @Column(name = "NFT_FONT_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne()
-    private User ownerName;
-    private String fontUrl; // aws s3 파일 저장 s3의 주소
-    //
-    private Long likedCount;
-    @OneToOne()
-    private User producer; //테이블 조인
     private String fontName;
+    private String fontSymbol;
     private FontType fontType;
     private SupportType supportType;
+
+    @OneToOne()
+    private User producer; //테이블 조인
+    @OneToOne()
+    private User ownerName;
+
+    private String fontUrl; // aws s3 파일 저장 s3의 주소
+    private Long likedCount;
+    private Long downloadCount;
+
     @Column(nullable = false)
     private LocalDateTime createDt;
-    private Long downloadCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile_id",nullable = false)
