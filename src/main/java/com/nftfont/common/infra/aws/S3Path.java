@@ -1,4 +1,4 @@
-package com.nftfont.domain.file;
+package com.nftfont.common.infra.aws;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,9 +7,10 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @Getter
-public enum FilePath {
-    PROFILE("user/profile/profile_image/"),
-    BACKGROUND("user/profile/background/");
+public enum S3Path {
+    USER_PROFILE("user/profile"),
+
+    USER_BACKGROUND("user/background");
 
     private final String path;
 }

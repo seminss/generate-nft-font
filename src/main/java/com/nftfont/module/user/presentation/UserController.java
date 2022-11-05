@@ -16,19 +16,25 @@ public class UserController {
     private final UserService userService;
 
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#userId)")
-    @PostMapping(value = "/users/{userId}/profile")
+    @PostMapping(value = "/users/{userId}/profile",consumes = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ApiResult<UserProfileCreation.ResponseDto> createProfile(@PathVariable Long userId,
-                                                                    @RequestBody UserProfileCreation.RequestDto request){
-        UserProfileCreation.ResponseDto responseDto = userService.createProfile(userId,request);
+                                                                    @RequestPart UserProfileCreation.RequestDto request,
+                                                                    @RequestPart MultipartFile profileImage,
+                                                                    @RequestPart MultipartFile backgroundImage){
+        UserProfileCreation.ResponseDto responseDto = userService.createProfile(userId,request,profileImage,backgroundImage);
         ApiResult<UserProfileCreation.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }
 
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#userId)")
-    @PatchMapping(value = "/users/{userId}/profile")
+    @PatchMapping(value = "/users/{userId}/profile",consumes = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ApiResult<UserProfileUpdate.ResponseDto> updateProfile(@PathVariable Long userId,
-                                                                  @RequestBody UserProfileUpdate.RequestDto request){
-        UserProfileUpdate.ResponseDto responseDto = userService.updateProfile(userId, request);
+                                                                  @RequestPart UserProfileUpdate.RequestDto request,
+                                                                  @RequestPart MultipartFile profileImage,
+                                                                  @RequestPart MultipartFile backgroundImage){
+        UserProfileUpdate.ResponseDto responseDto = userService.updateProfile(userId, request,profileImage,backgroundImage);
         ApiResult<UserProfileUpdate.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }

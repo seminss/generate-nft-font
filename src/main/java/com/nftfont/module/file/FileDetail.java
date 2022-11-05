@@ -1,12 +1,11 @@
-package com.nftfont.domain.file;
+package com.nftfont.module.file;
 
 import lombok.Builder;
 import lombok.Data;
 
-@Data
 @Builder
+@Data
 public class FileDetail {
     private String url;
     private Long fileSize;
-    private FileType fileType;
 }

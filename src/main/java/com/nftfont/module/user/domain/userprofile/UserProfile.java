@@ -1,9 +1,9 @@
 package com.nftfont.module.user.domain.userprofile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nftfont.module.file.image_file.ImageFileDto;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.user.domain.user.User;
-import com.nftfont.module.file.image_file.application.ImageFileDto;
 import com.nftfont.module.user.dto.UserProfileCreation;
 import com.nftfont.module.user.dto.UserProfileUpdate;
 import lombok.*;
@@ -58,18 +58,18 @@ public class UserProfile {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    public static UserProfile ofCreation(UserProfileCreation.RequestDto request,User user){
+    public static UserProfile ofCreation(UserProfileCreation.RequestDto request, User user, ImageFileDto profile,ImageFileDto background){
         return UserProfile.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .user(user)
-                .profileImageUrl(null)
-                .backgroundImageUrl(null)
+                .profileImageUrl(profile.getImageUrl())
+                .backgroundImageUrl(background.getImageUrl())
                 .selfDescription(request.getSelfDescription())
                 .build();
     }
 
-    public UserProfile copyWith(UserProfileUpdate.RequestDto request){
+    public UserProfile copyWith(UserProfileUpdate.RequestDto request,ImageFileDto profile,ImageFileDto background){
         if(request.getSelfDescription()!=null){
             this.setSelfDescription(request.getSelfDescription());
         }
@@ -78,6 +78,12 @@ public class UserProfile {
         }
         if(request.getEmail()!=null){
             this.setEmail(request.getEmail());
+        }
+        if(profile!=null){
+            this.profileImageUrl = profile.getImageUrl();
+        }
+        if(background!=null){
+            this.backgroundImageUrl = background.getImageUrl();
         }
         return this;
     }
