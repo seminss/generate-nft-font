@@ -11,6 +11,7 @@ import com.nftfont.module.user.domain.userprofile.UserProfile;
 import com.nftfont.module.user.domain.userprofile.UserProfileRepoSupport;
 import com.nftfont.module.user.domain.userprofile.UserProfileRepository;
 import com.nftfont.module.user.dto.UserProfileCreation;
+import com.nftfont.module.user.dto.UserProfileDetail;
 import com.nftfont.module.user.dto.UserProfileUpdate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,4 +65,10 @@ public class UserService {
         return UserProfileUpdate.ResponseDto.of(save);
     }
 
+    public UserProfileDetail.ResponseDto getProfile(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new ConflictException("유저가 없어요."));
+        UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(() -> new ConflictException("유저가 없어요."));
+
+        return UserProfileDetail.ResponseDto.of(userProfile);
+    }
 }

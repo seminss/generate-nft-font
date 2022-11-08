@@ -38,7 +38,7 @@ public class SecurityConfiguration {
     private final CustomUserDetailsService customUserDetailsService;
 
     private static final String[] GET_PERMITTED_URLS = {
-            "/auth/refresh","/health"
+            "/auth/refresh","/health","/users/*/profile"
     };
 
     private static final String[] POST_PERMITTED_URLS = {
