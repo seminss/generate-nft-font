@@ -1,7 +1,6 @@
 package com.nftfont.module.font.user_make_font.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nftfont.domain.file.image_file.ImageFileObject;
 import com.nftfont.module.user.domain.user.User;
 import lombok.*;
 
@@ -25,8 +24,6 @@ public class UserMakeFont {
     @JoinColumn(name = "USER_SEQ", nullable = false, insertable = false, updatable = false)
     private User user;
 
-    @OneToOne()
-    private ImageFileObject imageFileObject;
 
     private String imageUrl;
 

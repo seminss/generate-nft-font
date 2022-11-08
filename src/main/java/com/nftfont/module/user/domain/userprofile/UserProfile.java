@@ -1,10 +1,11 @@
 package com.nftfont.module.user.domain.userprofile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.nftfont.module.file.image_file.ImageFileDto;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.user.domain.user.User;
-import com.nftfont.module.file.image_file.application.ImageFileDto;
 import com.nftfont.module.user.dto.UserProfileCreation;
+import com.nftfont.module.user.dto.UserProfileUpdate;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,7 +31,7 @@ public class UserProfile {
 
     @JsonIgnore
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
     @Column(name = "user_name",length = 100,nullable = false)
@@ -57,14 +58,33 @@ public class UserProfile {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    public static UserProfile ofCreation(UserProfileCreation.RequestDto request, ImageFileDto profileImage,ImageFileDto backgroundImage){
+    public static UserProfile ofCreation(UserProfileCreation.RequestDto request, User user, ImageFileDto profile,ImageFileDto background){
         return UserProfile.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .profileImageUrl(profileImage.getImageUrl())
-                .backgroundImageUrl(backgroundImage.getImageUrl())
+                .user(user)
+                .profileImageUrl(profile.getImageUrl())
+                .backgroundImageUrl(background.getImageUrl())
                 .selfDescription(request.getSelfDescription())
                 .build();
     }
 
+    public UserProfile copyWith(UserProfileUpdate.RequestDto request,ImageFileDto profile,ImageFileDto background){
+        if(request.getSelfDescription()!=null){
+            this.setSelfDescription(request.getSelfDescription());
+        }
+        if(request.getUsername()!=null){
+            this.setUsername(request.getUsername());
+        }
+        if(request.getEmail()!=null){
+            this.setEmail(request.getEmail());
+        }
+        if(profile!=null){
+            this.profileImageUrl = profile.getImageUrl();
+        }
+        if(background!=null){
+            this.backgroundImageUrl = background.getImageUrl();
+        }
+        return this;
+    }
 }

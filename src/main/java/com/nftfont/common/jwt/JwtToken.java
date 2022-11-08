@@ -1,8 +1,10 @@
 package com.nftfont.common.jwt;
 
+import com.nftfont.config.properties.AppProperties;
 import io.jsonwebtoken.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,7 @@ import java.util.Date;
 @Slf4j
 @RequiredArgsConstructor
 @Getter
+@Setter
 public class JwtToken {
     private final String token ;
 
@@ -27,7 +30,6 @@ public class JwtToken {
         this.secret=secret;
         this.token = createAuthToken(id, expiry);
     }
-
     private String createAuthToken(String id,Date expiry){
         return Jwts.builder()
                 .setSubject(id)

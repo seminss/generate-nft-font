@@ -5,9 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.nftfont.domain.file.FileDetail;
-import com.nftfont.domain.file.FilePath;
-import com.nftfont.domain.file.FileType;
+import com.nftfont.module.file.FileDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,20 +30,15 @@ public class AwsS3Service {
     @Value("${cloud.aws.s3.url}")
     private String baseUrl;
 
-    public FileDetail uploadFile(MultipartFile file, FileType fileType, FilePath filePath){
+    public FileDetail uploadFile(MultipartFile file, S3Path s3Path){
         String fileName = createFileName(file.getOriginalFilename());
-        String uploadFileName = filePath.getPath()+fileName;
+        String uploadFileName = s3Path.getPath()+fileName;
 
         upload(file,uploadFileName);
-        
-        /*
-         image resize 필요
-         */
-        
+
         return FileDetail.builder()
                 .url(baseUrl+"/"+uploadFileName)
                 .fileSize(file.getSize())
-                .fileType(fileType)
                 .build();
     }
 

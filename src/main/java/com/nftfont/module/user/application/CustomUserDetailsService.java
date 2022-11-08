@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    @Cacheable(value = CacheKey.USER,key = "#username",unless = "#result == null ")
+    @Cacheable(value = CacheKey.USER,key = "#userId",unless = "#result == null ")
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(()-> new ConcurrentModificationException("asfd"));
 

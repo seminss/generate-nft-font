@@ -24,9 +24,11 @@ public interface AccessTokenResponse {
         @NotNull
         private String accessToken;
         private Long userId;
-        public static ResponseDto ofSuccess(String accessToken,Long userId){
+        private Boolean isSignUp;
+        public static ResponseDto ofSuccess(String accessToken,Long userId,Boolean isSignUp){
             return ResponseDto.builder()
                     .accessToken(accessToken)
+                    .isSignUp(isSignUp)
                     .userId(userId)
                     .build();
         }
@@ -35,5 +37,6 @@ public interface AccessTokenResponse {
                     .accessToken(accessToken)
                     .build();
         }
+
     }
 }

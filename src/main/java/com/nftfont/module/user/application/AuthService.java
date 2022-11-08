@@ -67,9 +67,10 @@ public class AuthService {
 
 
         Optional<User> optionalUser = userRepository.findByWalletAddress(request.getWalletAddress());
-        User user;
+        User user;Boolean isFirstAttempt = false;
         if(optionalUser.isEmpty()){
             user=User.ofCreate(request.getWalletAddress(),null);
+            isFirstAttempt = true;
         }else{
             user=optionalUser.get();
         }
@@ -105,7 +106,7 @@ public class AuthService {
 
         setCookie(response, refreshToken.getToken());
 
-        return AccessTokenResponse.ResponseDto.ofSuccess(accessToken.getToken(),user.getId());
+        return AccessTokenResponse.ResponseDto.ofSuccess(accessToken.getToken(),user.getId(),isFirstAttempt);
 
 
     }

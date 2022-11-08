@@ -5,6 +5,7 @@ import com.nftfont.config.properties.AppProperties;
 import com.nftfont.module.user.application.CustomUserDetailsService;
 import com.nftfont.module.user.domain.userprincipal.UserPrincipal;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +36,9 @@ public class JwtTokenProvider {
     }
 
     public JwtToken convertJwtToken(String token){
-        return new JwtToken(token);
+        JwtToken jwtToken = new JwtToken(token);
+        jwtToken.setSecret(appProperties.getAuth().getTokenSecret());
+        return jwtToken;
     }
 
     public Authentication getAuthentication(JwtToken jwtToken){
@@ -54,7 +57,6 @@ public class JwtTokenProvider {
                             .collect(Collectors.toList());
 
             UserPrincipal userPrincipal =(UserPrincipal) customUserDetailsService.loadUserByUsername(claims.getSubject());
-
             return new UsernamePasswordAuthenticationToken(userPrincipal, jwtToken,authorities);
         }
 
