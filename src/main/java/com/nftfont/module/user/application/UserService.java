@@ -30,8 +30,13 @@ public class UserService {
                                                          MultipartFile backgroundImage){
         User user = userRepository.findById(userId).orElseThrow(()-> new ConflictException("유저가업서요"));
 
-        ImageFileDto profile = imageFileService.saveImage(profileImage, S3Path.USER_PROFILE);
-        ImageFileDto background = imageFileService.saveImage(backgroundImage, S3Path.USER_BACKGROUND);
+        ImageFileDto profile = null;
+        ImageFileDto background = null;
+
+        if(!profileImage.isEmpty()&& backgroundImage.isEmpty()) {
+            profile = imageFileService.saveImage(profileImage, S3Path.USER_PROFILE);
+            background = imageFileService.saveImage(backgroundImage, S3Path.USER_BACKGROUND);
+        }
 
         UserProfile userProfile = UserProfile.ofCreation(request,user,profile,background);
 
