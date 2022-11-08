@@ -38,5 +38,9 @@ public class AuthController {
         ApiResult<AccessTokenResponse.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }
+    @GetMapping("/health")
+    public String aaa(){
+        return "OK";
+    }
 }
 
