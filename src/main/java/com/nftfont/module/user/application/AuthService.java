@@ -71,6 +71,7 @@ public class AuthService {
         if(optionalUser.isEmpty()){
             user=User.ofCreate(request.getWalletAddress(),null);
             isFirstAttempt = true;
+            userRepository.save(user);
         }else{
             user=optionalUser.get();
         }
