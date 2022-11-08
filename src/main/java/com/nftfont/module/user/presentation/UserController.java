@@ -3,6 +3,7 @@ package com.nftfont.module.user.presentation;
 import com.nftfont.common.dto.ApiResult;
 import com.nftfont.module.user.application.UserService;
 import com.nftfont.module.user.dto.UserProfileCreation;
+import com.nftfont.module.user.dto.UserProfileDetail;
 import com.nftfont.module.user.dto.UserProfileUpdate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -36,6 +37,13 @@ public class UserController {
                                                                   @RequestPart MultipartFile backgroundImage){
         UserProfileUpdate.ResponseDto responseDto = userService.updateProfile(userId, request,profileImage,backgroundImage);
         ApiResult<UserProfileUpdate.ResponseDto> apiResult = ApiResult.success(responseDto);
+        return apiResult;
+    }
+
+    @GetMapping(value="/users/{userId}/profile")
+    public ApiResult<UserProfileDetail.ResponseDto> getProfile(@PathVariable Long userId) {
+        UserProfileDetail.ResponseDto responseDto = userService.getProfile(userId);
+        ApiResult<UserProfileDetail.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }
 }
