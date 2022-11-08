@@ -17,7 +17,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         authException.printStackTrace();
         log.info("Responding with unauthorized error. Message := {}", authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getLocalizedMessage());
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "인증이안되었습니다.");
 
     }
 }
