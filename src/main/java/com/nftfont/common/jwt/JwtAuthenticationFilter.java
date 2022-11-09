@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 
 //
 @Slf4j
@@ -26,8 +27,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String tokenStr = HeaderUtil.getAccessToken(request);
-        System.out.println(request.getHeaderNames()+"해더이름들입니다.");
-        System.out.println(tokenStr+"이미이밍미ㅣㅣ미ㅣ밈미ㅣ");
         JwtToken token =  tokenProvider.convertJwtToken(tokenStr);
         if(token.validate()){
             Authentication authentication = tokenProvider.getAuthentication(token);

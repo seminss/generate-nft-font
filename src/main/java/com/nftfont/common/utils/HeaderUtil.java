@@ -7,13 +7,16 @@ import javax.servlet.http.HttpServletRequest;
 public class HeaderUtil {
 
     private final static String HEADER_AUTHORIZATION = "Authorization";
+    private final static String HEADER_AUTHORIZATION2 = "access_token";
     private final static String TOKEN_PREFIX = "Bearer ";
 
     public static String getAccessToken(HttpServletRequest request) {
         String headerValue = request.getHeader(HEADER_AUTHORIZATION);
-        System.out.println(request.getHeaderNames());
-        System.out.println(headerValue+"마마마ㅏ마마");
+
         if (headerValue == null) {
+            headerValue = request.getHeader(HEADER_AUTHORIZATION2);
+        }
+        if(headerValue == null){
             return null;
         }
 
