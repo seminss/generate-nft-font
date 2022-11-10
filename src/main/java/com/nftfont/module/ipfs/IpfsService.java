@@ -4,7 +4,6 @@ import com.nftfont.config.redis.CacheKey;
 import com.nftfont.module.glyph.domain.GlyphRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.batik.transcoder.TranscoderException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -35,7 +34,7 @@ public class IpfsService {
     private final ApplicationEventPublisher eventPublisher;
     private final RedisTemplate<String,Object> redisTemplate;
     @Async
-    public CompletableFuture<List<String>> asyncStore(List<File> files, Long userId) throws IOException, TranscoderException, ApiException {
+    public CompletableFuture<List<String>> asyncStore(List<File> files, Long userId) throws IOException,  ApiException {
 
         ApiClient defaultClient = setClient();
         setBearerAuth(defaultClient);
@@ -52,7 +51,7 @@ public class IpfsService {
         return CompletableFuture.completedFuture(CIDs);
     }
 
-    public CompletableFuture<List<String>> store(List<File> files, Long userId) throws IOException, TranscoderException, ApiException {
+    public CompletableFuture<List<String>> store(List<File> files, Long userId) throws IOException,  ApiException {
 
         ApiClient defaultClient = setClient();
         setBearerAuth(defaultClient);
