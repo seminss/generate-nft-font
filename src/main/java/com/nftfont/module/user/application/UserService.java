@@ -27,16 +27,18 @@ public class UserService {
     private final UserProfileRepository userProfileRepository;
     private final UserProfileRepoSupport userProfileRepoSupport;
     private final ImageFileService imageFileService;
-    public UserProfileCreation.ResponseDto createProfile(Long userId, UserProfileCreation.RequestDto request, MultipartFile profileImage,
-                                                         MultipartFile backgroundImage){
+    public UserProfileCreation.ResponseDto setProfile(Long userId, UserProfileCreation.RequestDto request, MultipartFile profileImage,
+                                                      MultipartFile backgroundImage){
         User user = userRepository.findById(userId).orElseThrow(()-> new ConflictException("유저가업서요"));
 
         ImageFileDto profile = null;
         ImageFileDto background = null;
 
-        if(!profileImage.isEmpty()&& backgroundImage.isEmpty()) {
-            profile = imageFileService.saveImage(profileImage, S3Path.USER_PROFILE);
-            background = imageFileService.saveImage(backgroundImage, S3Path.USER_BACKGROUND);
+        if(!profileImage.isEmpty()){
+            profile = imageFileService.saveImage(profileImage,S3Path.USER_PROFILE);
+        }
+        if(!backgroundImage.isEmpty()){
+            background = imageFileService.saveImage(backgroundImage,S3Path.USER_BACKGROUND);
         }
 
         UserProfile userProfile = UserProfile.ofCreation(request,user,profile,background);
@@ -45,24 +47,6 @@ public class UserService {
 
         return UserProfileCreation.ResponseDto.of(save);
 
-    }
-
-    public UserProfileUpdate.ResponseDto updateProfile(Long userId,UserProfileUpdate.RequestDto request,MultipartFile profile, MultipartFile background){
-        User user = userRepository.findById(userId).orElseThrow(()-> new ConflictException("유저가 없어요."));
-        UserProfile userProfile = userProfileRepoSupport.findByUser(user);
-        ImageFileDto profileDto=null; ImageFileDto backgroundDto=null;
-        if(profile!=null){
-            imageFileService.deleteImage(userProfile.getProfileImageUrl());
-            profileDto=imageFileService.saveImage(profile,S3Path.USER_PROFILE);
-        }
-        if(background!=null){
-            imageFileService.deleteImage(userProfile.getBackgroundImageUrl());
-            backgroundDto=imageFileService.saveImage(background,S3Path.USER_BACKGROUND);
-        }
-
-        UserProfile save = userProfileRepository.save(userProfile.copyWith(request,profileDto,backgroundDto));
-
-        return UserProfileUpdate.ResponseDto.of(save);
     }
 
     public UserProfileDetail.ResponseDto getProfile(Long userId){
