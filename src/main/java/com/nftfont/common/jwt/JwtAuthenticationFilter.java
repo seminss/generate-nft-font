@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String value = request.getHeader(key);
             System.out.println(key+"ㅁㅁㅁ"+value);
         }
-
+        System.out.println("요청 uri:"+request.getRequestURI());
 
         String tokenStr = HeaderUtil.getAccessToken(request);
         JwtToken token =  tokenProvider.convertJwtToken(tokenStr);
