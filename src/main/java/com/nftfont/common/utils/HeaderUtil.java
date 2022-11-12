@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class HeaderUtil {
 
-    private final static String HEADER_AUTHORIZATION = "Authorization";
+    private final static String HEADER_AUTHORIZATION = "authorization";
     private final static String HEADER_AUTHORIZATION2 = "access_token";
     private final static String TOKEN_PREFIX = "Bearer ";
 
