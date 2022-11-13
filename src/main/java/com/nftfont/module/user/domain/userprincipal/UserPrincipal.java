@@ -24,7 +24,6 @@ public class UserPrincipal implements UserDetails, OidcUser {
     private final Long id;
     private final String password;
     private final RoleType roleType;
-    private final User user;
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
@@ -85,28 +84,13 @@ public class UserPrincipal implements UserDetails, OidcUser {
     public String getName() {
         return null;
     }
-//    public static UserPrincipal create(User user) {
-//
-//        return new UserPrincipal(
-//                user.getId(),
-//                "none",
-//                RoleType.USER,
-//                user,
-//                Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))
-//        );
-//    }
+
     public UserPrincipal(User user){
         this.id = user.getId();
         this.password = "none";
         this.roleType = user.getRoleType();
-        this.user = user;
         this.authorities=Collections.singletonList(new SimpleGrantedAuthority(user.getRoleType().getCode()));
     }
-//    public static UserPrincipal create(User user, Map<String, Object> attributes) {
-//        UserPrincipal userPrincipal = create(user);
-//        userPrincipal.setAttributes(attributes);
-//
-//        return userPrincipal;
-//    }
+
 
 }

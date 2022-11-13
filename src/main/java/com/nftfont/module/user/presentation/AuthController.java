@@ -1,13 +1,8 @@
 package com.nftfont.module.user.presentation;
 import com.nftfont.common.dto.ApiResult;
-import com.nftfont.config.properties.AppProperties;
 import com.nftfont.module.user.application.AuthService;
-import com.nftfont.module.user.dto.UserLoginInfo;
 import com.nftfont.module.user.dto.AccessTokenResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.server.Cookie.SameSite;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;

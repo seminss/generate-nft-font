@@ -15,9 +15,11 @@ public class ImageFileService {
     private final AwsS3Service awsS3Service;
 
     public ImageFileDto saveImage(MultipartFile imageFile, S3Path s3Path){
+        if(imageFile == null) return null;
         return ImageFileDto.of(awsS3Service.uploadFile(imageFile,s3Path));
     }
     public void deleteImage(String url){
+        if(url == null) return ;
         awsS3Service.deleteFile(url);
     }
 }

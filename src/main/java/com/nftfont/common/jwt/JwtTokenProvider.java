@@ -58,7 +58,6 @@ public class JwtTokenProvider {
                             .collect(Collectors.toList());
 
             UserDetails userDetails =customUserDetailsService.loadUserByUsername(claims.getSubject());
-
             return new UsernamePasswordAuthenticationToken(userDetails, jwtToken,authorities);
         }
 

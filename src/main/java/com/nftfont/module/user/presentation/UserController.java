@@ -1,8 +1,10 @@
 package com.nftfont.module.user.presentation;
 
 import com.nftfont.common.dto.ApiResult;
+import com.nftfont.config.security.CurrentUser;
 import com.nftfont.module.user.application.UserService;
-import com.nftfont.module.user.dto.UserProfileCreation;
+import com.nftfont.module.user.domain.user.User;
+import com.nftfont.module.user.dto.UserProfileSet;
 import com.nftfont.module.user.dto.UserProfileDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -15,15 +17,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
     private final UserService userService;
 
-    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication,#userId)")
+    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#userId)")
     @PostMapping(value = "/users/{userId}/profile",consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ApiResult<UserProfileCreation.ResponseDto> setProfile(@PathVariable Long userId,
-                                                                    @RequestPart UserProfileCreation.RequestDto request,
-                                                                    @RequestPart MultipartFile profileImage,
-                                                                    @RequestPart MultipartFile backgroundImage){
-        UserProfileCreation.ResponseDto responseDto = userService.setProfile(userId,request,profileImage,backgroundImage);
-        ApiResult<UserProfileCreation.ResponseDto> apiResult = ApiResult.success(responseDto);
+    public ApiResult<UserProfileSet.ResponseDto> setProfile(@PathVariable Long userId,
+                                                            @CurrentUser User user,
+                                                            @RequestPart UserProfileSet.RequestDto request,
+                                                            @RequestPart(required = false) MultipartFile profileImage,
+                                                            @RequestPart(required = false) MultipartFile backgroundImage){
+        UserProfileSet.ResponseDto responseDto = userService.setProfile(user,request,profileImage,backgroundImage);
+        ApiResult<UserProfileSet.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }
 

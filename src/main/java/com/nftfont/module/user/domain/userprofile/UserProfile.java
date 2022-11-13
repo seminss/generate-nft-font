@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nftfont.module.file.image_file.ImageFileDto;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.user.domain.user.User;
-import com.nftfont.module.user.dto.UserProfileCreation;
-import com.nftfont.module.user.dto.UserProfileUpdate;
+import com.nftfont.module.user.dto.UserProfileSet;
 import lombok.*;
 
 import javax.persistence.*;
@@ -46,10 +45,10 @@ public class UserProfile {
     @OneToMany(mappedBy = "userProfile",fetch = FetchType.LAZY)
     private Set<NftFont> nftFonts = new LinkedHashSet<>();
 
-    @Column(name = "image_url")
+    @Column(name = "image_url",nullable = false)
     private String profileImageUrl;
 
-    @Column(name = "background_image_url")
+    @Column(name = "background_image_url",nullable = false)
     private String backgroundImageUrl;
 
     @Column(name = "self_description")
@@ -57,34 +56,16 @@ public class UserProfile {
 
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
-
-    public static UserProfile ofCreation(UserProfileCreation.RequestDto request, User user, ImageFileDto profile,ImageFileDto background){
+    public static UserProfile ofSet(UserProfileSet.RequestDto request, ImageFileDto profile, ImageFileDto background,
+                                    User user,Long id){
         return UserProfile.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
+                .id(id == null ? null : id)
                 .user(user)
-                .profileImageUrl(profile.getImageUrl())
-                .backgroundImageUrl(background.getImageUrl())
+                .email(request.getEmail())
                 .selfDescription(request.getSelfDescription())
-                .build();
-    }
-
-    public UserProfile copyWith(UserProfileUpdate.RequestDto request,ImageFileDto profile,ImageFileDto background){
-        if(request.getSelfDescription()!=null){
-            this.setSelfDescription(request.getSelfDescription());
-        }
-        if(request.getUsername()!=null){
-            this.setUsername(request.getUsername());
-        }
-        if(request.getEmail()!=null){
-            this.setEmail(request.getEmail());
-        }
-        if(profile!=null){
-            this.profileImageUrl = profile.getImageUrl();
-        }
-        if(background!=null){
-            this.backgroundImageUrl = background.getImageUrl();
-        }
-        return this;
+                .username(request.getUsername())
+                .backgroundImageUrl(background == null ? null : background.getImageUrl())
+                .profileImageUrl(profile == null ? null : profile.getImageUrl())
+                .modifiedAt(LocalDateTime.now()).build();
     }
 }

@@ -33,10 +33,6 @@ public class User implements Serializable {
     @NotNull
     private RoleType roleType;
 
-    @OneToOne(targetEntity = UserProfile.class,fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_profile_id",nullable = true)
-    private UserProfile userProfile;
-
     @Column(name = "created_at")
     @NotNull
     private LocalDateTime createdAt;

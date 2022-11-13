@@ -1,8 +1,7 @@
 package com.nftfont.module.user.application;
 
 import com.nftfont.config.redis.CacheKey;
-import com.nftfont.module.user.domain.userprincipal.UserAdapter;
-import com.nftfont.module.user.domain.userprincipal.UserPrincipal;
+import com.nftfont.module.user.domain.userprincipal.UserAccount;
 import com.nftfont.module.user.domain.user.User;
 import com.nftfont.module.user.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Can not find username.");
         }
-        return new UserAdapter(user,user.getUserProfile());
+        return new UserAccount(user);
     }
 }
 
