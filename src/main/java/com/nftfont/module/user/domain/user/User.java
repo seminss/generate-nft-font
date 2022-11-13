@@ -2,11 +2,13 @@ package com.nftfont.module.user.domain.user;
 
 
 import com.nftfont.module.user.domain.userprincipal.RoleType;
+import com.nftfont.module.user.domain.userprofile.UserProfile;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @JsonIgnore
     @Id
     @Column(name = "user_id")
@@ -30,6 +32,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @NotNull
     private RoleType roleType;
+
+    @OneToOne(targetEntity = UserProfile.class,fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_profile_id",nullable = true)
+    private UserProfile userProfile;
 
     @Column(name = "created_at")
     @NotNull

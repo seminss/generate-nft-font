@@ -1,6 +1,7 @@
 package com.nftfont.module.user.application;
 
 import com.nftfont.config.redis.CacheKey;
+import com.nftfont.module.user.domain.userprincipal.UserAdapter;
 import com.nftfont.module.user.domain.userprincipal.UserPrincipal;
 import com.nftfont.module.user.domain.user.User;
 import com.nftfont.module.user.domain.user.UserRepository;
@@ -23,11 +24,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Cacheable(value = CacheKey.USER,key = "#userId",unless = "#result == null ")
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(()-> new ConcurrentModificationException("asfd"));
-
         if (user == null) {
             throw new UsernameNotFoundException("Can not find username.");
         }
-        return UserPrincipal.create(user);
+        return new UserAdapter(user,user.getUserProfile());
     }
 }
 

@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -50,14 +51,15 @@ public class JwtTokenProvider {
             }catch (Exception e){
                 throw new RuntimeException(e.getMessage());
             }
-//토근에서 인증 정보를 얻는다
+
             Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
 
-            UserPrincipal userPrincipal =(UserPrincipal) customUserDetailsService.loadUserByUsername(claims.getSubject());
-            return new UsernamePasswordAuthenticationToken(userPrincipal, jwtToken,authorities);
+            UserDetails userDetails =customUserDetailsService.loadUserByUsername(claims.getSubject());
+
+            return new UsernamePasswordAuthenticationToken(userDetails, jwtToken,authorities);
         }
 
         throw new TokenValidFailedException();

@@ -57,15 +57,15 @@ public class JwtToken {
                     .parseClaimsJws(token)
                     .getBody();
         }catch (SecurityException e){
-
+            System.out.println(e.getMessage());
         }catch (MalformedJwtException e){
-
+            System.out.println(e.getMessage());
         }catch (ExpiredJwtException e){
-
+            System.out.println(e.getMessage());
         }catch (UnsupportedJwtException e){
-
+            System.out.println(e.getMessage());
         }catch (IllegalArgumentException e){
-
+            System.out.println(e.getMessage());
         }
         return null;
     }
