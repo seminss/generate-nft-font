@@ -18,6 +18,9 @@ public interface UserProfileSet {
 
         private String selfDescription;
 
+        private Boolean deleteProfile;
+
+        private Boolean deleteBackground;
     }
 
 

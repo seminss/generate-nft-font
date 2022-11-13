@@ -8,9 +8,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 public enum S3Path {
-    USER_PROFILE("user/profile"),
-
-    USER_BACKGROUND("user/background");
+    USER_PROFILE("user/profile/profile_image/"),
+    USER_BACKGROUND("user/profile/background/");
 
     private final String path;
 }

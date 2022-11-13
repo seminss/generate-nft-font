@@ -30,14 +30,19 @@ public class UserService {
                                                  MultipartFile backgroundImage){
         Optional<UserProfile> optionalUserProfile = userProfileRepository.findByUser(user);
         UserProfile userProfile = new UserProfile();
+
         if(optionalUserProfile.isPresent()){
             userProfile = optionalUserProfile.get();
-            imageFileService.deleteImage(userProfile.getBackgroundImageUrl());
-            imageFileService.deleteImage(userProfile.getProfileImageUrl());
+            if(request.getDeleteProfile() || profileImage != null){
+                imageFileService.deleteImage(userProfile.getProfileImageUrl());
+            }
+            if(request.getDeleteBackground() || backgroundImage != null) {
+                imageFileService.deleteImage(userProfile.getBackgroundImageUrl());
+            }
         }
 
         ImageFileDto profile = imageFileService.saveImage(profileImage,S3Path.USER_PROFILE);
-        ImageFileDto background = imageFileService.saveImage(backgroundImage,S3Path.USER_PROFILE);
+        ImageFileDto background = imageFileService.saveImage(backgroundImage,S3Path.USER_BACKGROUND);
 
         UserProfile save = userProfileRepository.save(UserProfile.ofSet(request,profile,background,user,userProfile.getId()));
 
