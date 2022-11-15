@@ -6,6 +6,7 @@ import com.nftfont.module.user.application.UserService;
 import com.nftfont.module.user.domain.user.User;
 import com.nftfont.module.user.dto.UserProfileSet;
 import com.nftfont.module.user.dto.UserProfileDetail;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +22,7 @@ public class UserController {
     @PostMapping(value = "/users/{userId}/profile",consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ApiResult<UserProfileSet.ResponseDto> setProfile(@PathVariable Long userId,
-                                                            @CurrentUser User user,
+                                                            @Parameter(hidden = true) @CurrentUser User user,
                                                             @RequestPart UserProfileSet.RequestDto request,
                                                             @RequestPart(required = false) MultipartFile profileImage,
                                                             @RequestPart(required = false) MultipartFile backgroundImage){
