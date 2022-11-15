@@ -31,7 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("이름"+request.getLocalName());
         System.out.println("포트"+request.getLocalPort());
         System.out.println("로컬"+request.getLocale());
-        System.out.println("해더이름들"+request.getHeaderNames());
+        
+        System.out.println(request.getMethod());
+        System.out.println(request.getHttpServletMapping());
         String tokenStr = HeaderUtil.getAccessToken(request);
         JwtToken token =  tokenProvider.convertJwtToken(tokenStr);
         if(token.validate()){
