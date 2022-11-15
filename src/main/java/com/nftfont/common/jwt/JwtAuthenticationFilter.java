@@ -27,7 +27,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         System.out.println("요청 uri:"+request.getRequestURI());
-
+        System.out.println("주소"+request.getLocalAddr());
+        System.out.println("이름"+request.getLocalName());
+        System.out.println("포트"+request.getLocalPort());
+        System.out.println("로컬"+request.getLocale());
+        System.out.println("해더이름들"+request.getHeaderNames());
         String tokenStr = HeaderUtil.getAccessToken(request);
         JwtToken token =  tokenProvider.convertJwtToken(tokenStr);
         if(token.validate()){
