@@ -1,9 +1,16 @@
 package com.nftfont.module.font.font.domain;
 
-public enum SupportType {
-    /*
-    TYPE_1("한글+영어"),
-    TYPE2_("영어+숫자");
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
-    private String text;*/
+@ToString
+@AllArgsConstructor
+@Getter
+public enum SupportType {
+
+    KO_ER("한글+영어"),
+    ER("영어"),
+    KR("한글");
+    private String text;
 }

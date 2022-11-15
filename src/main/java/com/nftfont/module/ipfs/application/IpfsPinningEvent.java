@@ -1,4 +1,4 @@
-package com.nftfont.module.ipfs;
+package com.nftfont.module.ipfs.application;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,9 @@
-package com.nftfont.module.ipfs;
+package com.nftfont.module.ipfs.application;
 
 import com.nftfont.config.redis.CacheKey;
 import com.nftfont.module.glyph.domain.GlyphRepository;
+import com.nftfont.module.ipfs.Progress;
+import com.nftfont.module.ipfs.application.IpfsPinningEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,7 +71,7 @@ public class IpfsService {
     }
 
 
-    public Progress.ResponseDto getProgress(Long userId,Long fondId){
+    public Progress.ResponseDto getProgress(Long userId, Long fondId){
         String realKey = CacheKey.IPFS_PINNING+userId.toString();
 
         Long size = redisTemplate.opsForList().size(realKey);

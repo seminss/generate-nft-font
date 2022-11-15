@@ -1,13 +1,11 @@
-package com.nftfont.module.ipfs;
+package com.nftfont.module.ipfs.application;
 
 import com.nftfont.config.redis.CacheKey;
+import com.nftfont.module.ipfs.application.IpfsPinningEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-
-import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
