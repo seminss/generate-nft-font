@@ -29,4 +29,12 @@ public class FontCID {
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
+
+    public static FontCID ofCreation(String cid,NftFont font,User user){
+        return FontCID.builder()
+                .cid(cid)
+                .font(font)
+                .user(user)
+                .build();
+    }
 }

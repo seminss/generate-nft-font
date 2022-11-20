@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.nftfont.config.redis.CacheKey;
 import com.nftfont.module.ipfs.application.IpfsPinningEvent;
+import com.nftfont.module.ipfs.domain.FontCID;
+import com.nftfont.module.ipfs.domain.FontCIDRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.context.event.EventListener;
@@ -18,14 +20,12 @@ import org.springframework.stereotype.Component;
 public class IpfsPinningListener {
 
     private final RedisTemplate<String,Object> redisTemplate;
-
+    private final FontCIDRepository fontCIDRepository;
     @EventListener
     public void save(final IpfsPinningEvent event) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
-        System.out.println(event.getBody()+"바디입니다.");
         CustomPinataResponse response = objectMapper.readValue(event.getBody(),CustomPinataResponse.class);
-        System.out.println(response.getIpfsHash()+"해쉬값");
+        fontCIDRepository.save(FontCID.ofCreation(response.getIpfsHash(),event.getFont(),event.getUser()));
     }
 
 

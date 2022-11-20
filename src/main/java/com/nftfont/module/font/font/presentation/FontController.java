@@ -1,5 +1,6 @@
 package com.nftfont.module.font.font.presentation;
 
+import com.nftfont.common.dto.ApiResult;
 import com.nftfont.config.security.CurrentUser;
 import com.nftfont.module.font.font.application.FontService;
 import com.nftfont.module.font.font.dto.FontUpload;
@@ -21,8 +22,10 @@ public class FontController {
     private final FontService fontService;
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#user.getId())")
     @PostMapping(value ="/font/pinning",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public void uploadTtfFile(@Parameter(hidden = true) @CurrentUser User user,
+    public ApiResult<String> uploadTtfFile(@Parameter(hidden = true) @CurrentUser User user,
                         @RequestPart MultipartFile ttfFile, @RequestPart FontUpload.RequestDto request){
-        fontService.upload(user,ttfFile,request);
+        String cid = fontService.upload(user, ttfFile, request);
+        ApiResult<String> success = ApiResult.success(cid);
+        return success;
     }
 }

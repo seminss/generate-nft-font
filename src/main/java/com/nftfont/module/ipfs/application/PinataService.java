@@ -2,6 +2,8 @@ package com.nftfont.module.ipfs.application;
 
 import com.nftfont.common.utils.FileUtil;
 import com.nftfont.config.properties.PinataProperties;
+import com.nftfont.module.font.font.domain.NftFont;
+import com.nftfont.module.user.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +32,7 @@ public class PinataService implements IpfsService{
     private final RedisTemplate<String,Object> redisTemplate;
     private final PinataProperties pinataProperties;
 
-    public void pinning(MultipartFile file,Long userId) {
+    public void pinning(MultipartFile file, User user, NftFont font) {
         Pinata pinata = new Pinata(pinataProperties.getKey(), pinataProperties.getApiKey());
         PinataResponse pinataResponse;
         File file2 = null;
@@ -45,8 +47,7 @@ public class PinataService implements IpfsService{
         }finally {
             file2.delete();
         }
-        System.out.println("마마맘"+pinataResponse.getBody());
-        eventPublisher.publishEvent(IpfsPinningEvent.of(file.getOriginalFilename(),pinataResponse.getBody(),userId));
+        eventPublisher.publishEvent(IpfsPinningEvent.of(file.getOriginalFilename(),pinataResponse.getBody(),user,font));
     }
 
 //    @Async

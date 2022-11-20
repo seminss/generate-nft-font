@@ -1,11 +1,16 @@
 package com.nftfont.module.font.font.application;
 
 import com.nftfont.common.exception.ConflictException;
+import com.nftfont.common.infra.aws.S3Path;
+import com.nftfont.module.file.FontFile.FontFileDto;
+import com.nftfont.module.file.FontFile.FontFileService;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.font.font.domain.NftFontRepository;
 import com.nftfont.module.font.font.dto.FontUpload;
 import com.nftfont.module.ipfs.application.CIDResponse;
 import com.nftfont.module.ipfs.application.IpfsService;
+import com.nftfont.module.ipfs.domain.FontCID;
+import com.nftfont.module.ipfs.domain.FontCIDRepository;
 import com.nftfont.module.user.domain.user.User;
 import com.nftfont.module.user.domain.userprofile.UserProfile;
 import com.nftfont.module.user.domain.userprofile.UserProfileRepository;
@@ -23,28 +28,19 @@ public class FontService {
     private final NftFontRepository nftFontRepository;
     private final UserProfileRepository userProfileRepository;
     private final IpfsService pinataService;
-    public Boolean isCreator(Long fontId,Long userId){
-        NftFont nftFont = nftFontRepository.findById(fontId).
-                orElseThrow(() -> new ConflictException("해당 폰트가 없습니다."));
-
-        if(userId != nftFont.getUserProfile().getUser().getId()){
-            throw new ConflictException("해당 폰트의 제작자가 아닙니다.");
-        }
-        return true;
-    }
-
-    public CIDResponse upload(User user, MultipartFile ttfFile, FontUpload.RequestDto request){
-        pinataService.pinning(ttfFile,user.getId());
-
-
-
-
-
-
-
+    private final FontFileService fontFileService;
+    private final FontCIDRepository fontCIDRepository;
+    public String upload(User user, MultipartFile ttfFile, FontUpload.RequestDto request){
         UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(ConflictException::new);
-//        NftFont.ofCreation(request.getFontName(),request.getFontSymbol(),userProfile,)
-        return null;
+        FontFileDto fontFileDto = fontFileService.saveFile(ttfFile, S3Path.NFT_FONT);
+        NftFont save = nftFontRepository.save(NftFont.ofCreation(request.getFontName(),
+                request.getFontSymbol(), user,userProfile, fontFileDto.getUrl()));
+
+        pinataService.pinning(ttfFile,user,save);
+
+        FontCID fontCID = fontCIDRepository.findByUserAndFont(user, save).orElseThrow(ConflictException::new);
+
+        return fontCID.getCid();
     }
 
 
