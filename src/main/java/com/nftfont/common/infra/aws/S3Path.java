@@ -10,7 +10,6 @@ import lombok.ToString;
 public enum S3Path {
     USER_PROFILE("user/profile/profile_image/"),
     USER_BACKGROUND("user/profile/background/"),
-
     NFT_FONT("font/");
     private final String path;
 }

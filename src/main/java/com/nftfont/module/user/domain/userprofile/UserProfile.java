@@ -33,11 +33,11 @@ public class UserProfile {
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @Column(name = "user_name",length = 100,nullable = false)
+    @Column(name = "user_name",length = 100)
     @Size(max = 100)
     private String username;
 
-    @Column(name = "user_email",length = 512, unique = true,nullable = false)
+    @Column(name = "user_email",length = 512, unique = true)
     @Size(max = 512)
     @Email(message = "이메일 형식이 아니에요!")
     private String email;
@@ -45,10 +45,10 @@ public class UserProfile {
     @OneToMany(mappedBy = "userProfile",fetch = FetchType.LAZY)
     private Set<NftFont> nftFonts = new LinkedHashSet<>();
 
-    @Column(name = "image_url",nullable = false)
+    @Column(name = "image_url")
     private String profileImageUrl;
 
-    @Column(name = "background_image_url",nullable = false)
+    @Column(name = "background_image_url")
     private String backgroundImageUrl;
 
     @Column(name = "self_description")
@@ -67,5 +67,10 @@ public class UserProfile {
                 .backgroundImageUrl(background == null ? null : background.getImageUrl())
                 .profileImageUrl(profile == null ? null : profile.getImageUrl())
                 .modifiedAt(LocalDateTime.now()).build();
+    }
+    public static UserProfile ofUser(User user){
+        return UserProfile.builder()
+                .user(user)
+                .build();
     }
 }

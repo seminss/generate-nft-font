@@ -33,9 +33,7 @@ public class AwsS3Service {
     public FileDetail uploadFile(MultipartFile file, S3Path s3Path){
         String fileName = createFileName(file.getOriginalFilename());
         String uploadFileName = s3Path.getPath()+fileName;
-
         upload(file,uploadFileName);
-
         return FileDetail.builder()
                 .url(baseUrl+"/"+uploadFileName)
                 .fileSize(file.getSize())

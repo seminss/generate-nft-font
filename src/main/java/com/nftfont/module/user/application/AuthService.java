@@ -12,6 +12,8 @@ import com.nftfont.module.user.domain.user.User;
 import com.nftfont.module.user.domain.user.UserRefreshToken;
 import com.nftfont.module.user.domain.userprincipal.RoleType;
 import com.nftfont.module.user.domain.user.UserRepository;
+import com.nftfont.module.user.domain.userprofile.UserProfile;
+import com.nftfont.module.user.domain.userprofile.UserProfileRepository;
 import com.nftfont.module.user.dto.UserLoginInfo;
 import com.nftfont.module.user.domain.user.UserRefreshTokenRepository;
 import com.nftfont.module.user.dto.AccessTokenResponse;
@@ -39,6 +41,7 @@ import java.util.UUID;
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final UserProfileRepository userProfileRepository;
     private final UserRepository userRepository;
     private final Web3jCustom web3jCustom;
     private final AppProperties appProperties;
@@ -65,14 +68,18 @@ public class AuthService {
     public AccessTokenResponse.ResponseDto verifySignature(AccessTokenResponse.RequestDto request,HttpServletResponse response)
             throws SignatureException {
 
-
         Optional<User> optionalUser = userRepository.findByWalletAddress(request.getWalletAddress());
-        User user;Boolean isFirstAttempt = false;
+        User user;
+
+        Boolean isFirstAttempt = false;
         if(optionalUser.isEmpty()){
             user=User.ofCreate(request.getWalletAddress(),null);
+            UserProfile userProfile = UserProfile.ofUser(user);
             isFirstAttempt = true;
-            userRepository.save(user);
+            System.out.println("마마마마마");
+            userRepository.save(user);userProfileRepository.save(userProfile);
         }else{
+            System.out.println("가나다라");
             user=optionalUser.get();
         }
 
