@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nftfont.module.font.font.domain.NftFontRepository;
 import com.nftfont.module.glyph.domain.GlyphRepository;
 
-import com.nftfont.module.ipfs.application.IpfsService;
+import com.nftfont.module.ipfs.application.PinataService;
 import com.nftfont.module.metadata.MetaDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserMakeFontService {
 
-    private final IpfsService ipfsService;
+    private final PinataService pinataService;
     private final GlyphRepository glyphRepository;
     private final MetaDataService metaDataService;
     private final NftFontRepository nftFontRepository;

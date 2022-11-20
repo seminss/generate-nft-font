@@ -1,8 +1,7 @@
 package com.nftfont.module.ipfs.presentation;
 
 import com.nftfont.config.security.CurrentUser;
-import com.nftfont.module.ipfs.application.IpfsService;
-import com.nftfont.module.ipfs.dto.TTFPinning;
+import com.nftfont.module.ipfs.application.PinataService;
 import com.nftfont.module.user.domain.user.User;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 public class IpfsController {
-    private final IpfsService ipfsService;
+    private final PinataService pinataService;
 
     @PostMapping(value ="/ipfs/pinning",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void pinning(@Parameter(hidden = true) @CurrentUser User user,
-                        @RequestPart MultipartFile ttfFile,@RequestPart TTFPinning ttfPinning){
-
-
+                        @RequestPart MultipartFile ttfFile/*@RequestPart TTFPinning ttfPinning*/){
+        pinataService.asyncStore(ttfFile);
     }
 }

@@ -80,8 +80,15 @@ dependencies {
 	implementation files("target/nft.storage-client-1.0.jar")
 	implementation fileTree(dir: 'target/lib',includes: ['*.jar'])
 
+	implementation files("target/pinata-java-sdk.jar")
+
+
 //	// svg2png
 //	implementation fileTree(dir: 'svglib',includes: ['*.jar'])
+
+	// pinata
+//	implementation 'io.github.zinebfadili:pinata-java-sdk:2.1.0'
+
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
