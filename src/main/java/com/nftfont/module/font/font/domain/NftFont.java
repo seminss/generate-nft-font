@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "NFT_FONT")
+@Table(name = "nft_font")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

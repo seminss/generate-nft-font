@@ -1,12 +1,9 @@
-package com.nftfont.module.font.user_like_font.domain;
+package com.nftfont.module.font.font.domain.like;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.user.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -17,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "USER_LIKE_FONT")
 public class UserLikeFont {
     @JsonIgnore
@@ -27,12 +25,12 @@ public class UserLikeFont {
 
     @JsonIgnore
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_SEQ", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @JsonIgnore
     @ManyToOne(targetEntity = NftFont.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "NFT_FONT_ID")
+    @JoinColumn(name = "nft_font_id")
     private NftFont nftFont;
 
     @Column(nullable = false)
@@ -40,4 +38,12 @@ public class UserLikeFont {
     private LocalDateTime createdAt;
 
 
+    public static UserLikeFont of(User user,NftFont font){
+        return UserLikeFont.builder()
+                .user(user)
+                .nftFont(font)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+    }
 }

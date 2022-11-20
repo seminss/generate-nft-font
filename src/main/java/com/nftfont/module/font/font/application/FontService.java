@@ -7,11 +7,12 @@ import com.nftfont.module.file.FontFile.FontFileService;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.font.font.domain.NftFontRepoSupport;
 import com.nftfont.module.font.font.domain.NftFontRepository;
+import com.nftfont.module.font.font.domain.like.UserLikeFont;
+import com.nftfont.module.font.font.domain.like.UserLikeFontRepository;
 import com.nftfont.module.font.font.dto.FontDetailDto;
 import com.nftfont.module.font.font.dto.FontThumbnailDto;
 import com.nftfont.module.font.font.dto.FontUpload;
 import com.nftfont.module.font.font.presentation.request.FontRequestParam;
-import com.nftfont.module.ipfs.application.CIDResponse;
 import com.nftfont.module.ipfs.application.IpfsService;
 import com.nftfont.module.ipfs.domain.FontCID;
 import com.nftfont.module.ipfs.domain.FontCIDRepository;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,7 @@ import java.util.concurrent.CompletableFuture;
 public class FontService {
     private final NftFontRepository nftFontRepository;
     private final UserProfileRepository userProfileRepository;
+    private final UserLikeFontRepository userLikeFontRepository;
     private final NftFontRepoSupport nftFontRepoSupport;
     private final IpfsService pinataService;
     private final FontFileService fontFileService;
@@ -47,6 +49,19 @@ public class FontService {
         FontCID fontCID = fontCIDRepository.findByUserAndFont(user, save).orElseThrow(ConflictException::new);
 
         return fontCID.getCid();
+    }
+
+    public Boolean likeFont(Long fontId,User user){
+        NftFont nftFont = nftFontRepository.findById(fontId).orElseThrow(ConflictException::new);
+        Optional<UserLikeFont> optionalUserLikeFont = userLikeFontRepository.findByUserAndNftFont(user, nftFont);
+        if(optionalUserLikeFont.isPresent()){
+            userLikeFontRepository.delete(optionalUserLikeFont.get());
+            nftFontRepository.minusLikeCount(fontId);
+            return false;
+        }
+        userLikeFontRepository.save(UserLikeFont.of(user,nftFont));
+        nftFontRepository.plusLikeCount(fontId);
+        return true;
     }
 
     public List<FontThumbnailDto> findFontsByFilter(FontRequestParam requestParam){
