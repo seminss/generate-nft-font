@@ -7,12 +7,12 @@ import lombok.Data;
 @Builder
 public class IpfsPinningEvent {
     private String fileName;
-    private String cid;
+    private String body;
     private Long userId;
-    public static IpfsPinningEvent of(String fileName,String cid,Long userId){
+    public static IpfsPinningEvent of(String fileName,String body,Long userId){
             return IpfsPinningEvent.builder()
                     .fileName(fileName)
-                    .cid(cid)
+                    .body(body)
                     .userId(userId)
                     .build();
     }

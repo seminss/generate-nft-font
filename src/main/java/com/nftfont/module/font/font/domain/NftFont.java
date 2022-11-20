@@ -2,6 +2,7 @@ package com.nftfont.module.font.font.domain;
 
 import com.nftfont.module.user.domain.user.User;
 import com.nftfont.module.user.domain.userprofile.UserProfile;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,18 +15,14 @@ import java.time.LocalDateTime;
 @Data
 @Getter
 @Setter
+@Builder
 public class NftFont {
     @Id
-    @Column(name = "NFT_FONT_ID")
+    @Column(name = "nft_font_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fontName;
     private String fontSymbol;
-    private FontType fontType;
-    private SupportType supportType;
-
-    @OneToOne()
-    private User producer; //테이블 조인
     @OneToOne()
     private User ownerName;
 
@@ -40,7 +37,14 @@ public class NftFont {
     @JoinColumn(name = "user_profile_id",nullable = false)
     private UserProfile userProfile;
 
-    //@ManyToOne(targetEntity = UserProfile.class)
-    //@JoinColumn(name = "USER_PROFILE_ID", insertable = false, updatable = false)
+    public static NftFont ofCreation(String fontName,String fontSymbol,UserProfile userProfile,String fontUrl){
+        return NftFont.builder()
+                .fontName(fontName)
+                .fontSymbol(fontSymbol)
+                .userProfile(userProfile)
+                .fontUrl(fontUrl)
+                .createDt(LocalDateTime.now())
+                .build();
+    }
 
 }
