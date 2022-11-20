@@ -7,6 +7,7 @@ import com.nftfont.module.file.FontFile.FontFileService;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.font.font.domain.NftFontRepoSupport;
 import com.nftfont.module.font.font.domain.NftFontRepository;
+import com.nftfont.module.font.font.dto.FontDetailDto;
 import com.nftfont.module.font.font.dto.FontThumbnailDto;
 import com.nftfont.module.font.font.dto.FontUpload;
 import com.nftfont.module.font.font.presentation.request.FontRequestParam;
@@ -51,4 +52,9 @@ public class FontService {
     public List<FontThumbnailDto> findFontsByFilter(FontRequestParam requestParam){
         return nftFontRepoSupport.findFontsByFilter(requestParam);
     }
+
+    public FontDetailDto findOneById(Long fontId){
+        return nftFontRepoSupport.findById(fontId);
+    }
+
 }

@@ -1,10 +1,12 @@
 package com.nftfont.module.font.font.domain;
 
+import com.nftfont.module.font.font.dto.FontDetailDto;
 import com.nftfont.module.font.font.dto.FontThumbnailDto;
 import com.nftfont.module.font.font.presentation.request.FontRequestParam;
 import com.nftfont.module.user.domain.user.QUser;
 import com.nftfont.module.user.domain.userprofile.QUserProfile;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,14 +35,27 @@ public class NftFontRepoSupport {
 
         List<NftFont> fonts = queryFactory
                 .selectFrom(nftFont)
-                .leftJoin(nftFont.userProfile,userProfile).fetchJoin()
                 .where(where)
                 .limit(requestParam.getLimit())
                 .fetch();
 
         return fonts.stream()
-                .map(f -> new FontThumbnailDto(f.getId(),f.getFontThumbnailImage(),f.getLikedCount()
-                ,f.getUserProfile().getUsername(),f.getFontName())).collect(Collectors.toList());
+                .map(f -> new FontThumbnailDto(f.getId(),f.getFontThumbnailImage(),f.getLikedCount(),
+                f.getDownloadCount(),f.getFontName())).collect(Collectors.toList());
+    }
+
+    public FontDetailDto findById(Long fontId){
+        BooleanBuilder where = new BooleanBuilder();
+
+        where.and(nftFont.id.eq(fontId));
+
+        return queryFactory.select(Projections.bean(FontDetailDto.class,
+                        nftFont.id,nftFont.userProfile.username.as("creator")
+                        ,nftFont.fontUrl.as("ttfUrl")))
+                .from(nftFont)
+                .leftJoin(nftFont.userProfile,userProfile)
+                .where(where)
+                .fetchOne();
     }
 
 }

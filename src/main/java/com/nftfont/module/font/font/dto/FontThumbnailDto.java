@@ -18,7 +18,7 @@ public class FontThumbnailDto {
     private Long fontId;
     private String fontThumbnailImage;
     private Long likedCount;
-    private String ownerName;
+    private Long downloadCount;
     private String fontName;
 
 }

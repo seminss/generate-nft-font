@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 public class NftFont {
     @Id
-    @Column(name = "id")
+    @Column(name = "nft_font_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fontName;
@@ -30,11 +30,11 @@ public class NftFont {
     @Column(nullable = false)
     private LocalDateTime createDt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity=User.class,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity=UserProfile.class,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile_id",nullable = false)
     private UserProfile userProfile;
 
