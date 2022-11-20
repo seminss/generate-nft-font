@@ -17,15 +17,13 @@ import java.time.LocalDateTime;
 @Builder
 public class NftFont {
     @Id
-    @Column(name = "nft_font_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fontName;
     private String fontSymbol;
-    @OneToOne()
-    private User ownerName;
-
-    private String fontUrl; // aws s3 파일 저장 s3의 주소
+    private String fontThumbnailImage;
+    private String fontUrl;
     private Long likedCount;
     private Long downloadCount;
 
@@ -42,6 +40,8 @@ public class NftFont {
 
     public static NftFont ofCreation(String fontName,String fontSymbol,User user,UserProfile userProfile,String fontUrl){
         return NftFont.builder()
+                .likedCount(0L)
+                .downloadCount(0L)
                 .fontName(fontName)
                 .fontSymbol(fontSymbol)
                 .user(user)

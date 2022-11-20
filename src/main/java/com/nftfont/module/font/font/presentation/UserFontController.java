@@ -1,0 +1,31 @@
+package com.nftfont.module.font.font.presentation;
+
+import com.nftfont.common.dto.ApiResult;
+import com.nftfont.config.security.CurrentUser;
+import com.nftfont.module.font.font.application.FontService;
+import com.nftfont.module.font.font.dto.FontUpload;
+import com.nftfont.module.user.domain.user.User;
+import io.swagger.v3.oas.annotations.Parameter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+@Slf4j
+@RequiredArgsConstructor
+public class UserFontController {
+    private final FontService fontService;
+    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#user.getId())")
+    @PostMapping(value ="/font/pinning",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ApiResult<String> uploadTTFFile(@Parameter(hidden = true) @CurrentUser User user,
+                                           @RequestPart MultipartFile ttfFile, @RequestPart FontUpload.RequestDto request){
+        String cid = fontService.upload(user, ttfFile, request);
+        ApiResult<String> success = ApiResult.success(cid);
+        return success;
+    }
+}

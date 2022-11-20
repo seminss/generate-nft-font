@@ -1,24 +1,24 @@
 package com.nftfont.module.font.font.dto;
 
-import lombok.Builder;
+import com.nftfont.module.font.font.domain.QNftFont;
+import com.nftfont.module.user.domain.user.QUser;
+import com.nftfont.module.user.domain.userprofile.QUserProfile;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.QBean;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
-@Builder
+@Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class FontThumbnailDto {
     private Long fontId;
-    private String fontThumbnail;
+    private String fontThumbnailImage;
     private Long likedCount;
     private String ownerName;
     private String fontName;
 
-//    public static FontThumbnailDto ofLike(UserLikeFont userLikeFont){
-//        return FontThumbnailDto.builder()
-//                .fontId(userLikeFont.getFontId())
-//                .fontName(userLikeFont.getNftFont().getFontName())
-//                .fontThumbnail(userLikeFont.getNftFont().getThumbnailUrl())
-//                .likedCount(userLikeFont.getNftFont().getLikedCount())
-//                .ownerName(userLikeFont.getNftFont().getOwnerName())
-//                .build();
-//    }
 }

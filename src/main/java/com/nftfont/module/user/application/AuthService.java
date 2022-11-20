@@ -76,10 +76,8 @@ public class AuthService {
             user=User.ofCreate(request.getWalletAddress(),null);
             UserProfile userProfile = UserProfile.ofUser(user);
             isFirstAttempt = true;
-            System.out.println("마마마마마");
             userRepository.save(user);userProfileRepository.save(userProfile);
         }else{
-            System.out.println("가나다라");
             user=optionalUser.get();
         }
 

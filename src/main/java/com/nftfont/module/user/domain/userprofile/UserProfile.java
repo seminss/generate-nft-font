@@ -11,7 +11,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -43,7 +45,7 @@ public class UserProfile {
     private String email;
 
     @OneToMany(mappedBy = "userProfile",fetch = FetchType.LAZY)
-    private Set<NftFont> nftFonts = new LinkedHashSet<>();
+    private List<NftFont> nftFonts = new ArrayList<>();
 
     @Column(name = "image_url")
     private String profileImageUrl;
