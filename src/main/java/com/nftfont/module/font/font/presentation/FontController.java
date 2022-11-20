@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -35,5 +37,10 @@ public class FontController {
         FontDetailDto fontDetailDto = fontService.findOneById(fontId);
         ApiResult<FontDetailDto> success = ApiResult.success(fontDetailDto);
         return success;
+    }
+
+    @GetMapping("/fonts/{fontId}/download")
+    public void download(@PathVariable Long fontId, HttpServletResponse response) {
+        fontService.download(fontId,response);
     }
 }

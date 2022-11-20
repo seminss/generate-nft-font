@@ -15,4 +15,9 @@ public interface NftFontRepository extends JpaRepository<NftFont,Long> {
     @Query(value = "update nft_font set liked_count = liked_count - 1 where nft_font_id=:id", nativeQuery = true)
     void minusLikeCount(@io.lettuce.core.dynamic.annotation.Param("id") Long id);
 
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update nft_font set download_count = download_count + 1 where nft_font_id=:id", nativeQuery = true)
+    void plusDownloadCount(@io.lettuce.core.dynamic.annotation.Param("id") Long id);
 }

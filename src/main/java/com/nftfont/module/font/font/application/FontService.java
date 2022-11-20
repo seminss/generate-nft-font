@@ -5,6 +5,7 @@ import com.nftfont.common.exception.ConflictException;
 import com.nftfont.common.infra.aws.S3Path;
 import com.nftfont.module.file.FontFile.FontFileDto;
 import com.nftfont.module.file.FontFile.FontFileService;
+import com.nftfont.module.font.font.application.event.FontDownloadEvent;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.font.font.domain.NftFontRepoSupport;
 import com.nftfont.module.font.font.domain.NftFontRepository;
@@ -25,9 +26,12 @@ import com.nftfont.module.user.domain.userprofile.UserProfile;
 import com.nftfont.module.user.domain.userprofile.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +47,27 @@ public class FontService {
     private final IpfsService pinataService;
     private final FontFileService fontFileService;
     private final FontCIDRepository fontCIDRepository;
+    private final ApplicationEventPublisher eventPublisher;
+
+    public void download(Long fontId, HttpServletResponse response){
+        NftFont nftFont = nftFontRepository.findById(fontId).orElseThrow(ConflictException::new);
+        try{
+            File file = new File(nftFont.getFontUrl());
+            response.setHeader("Content-Disposition", "attachment;filename=" + file.getName());
+
+            FileInputStream fileInputStream = new FileInputStream(file);
+            OutputStream out = response.getOutputStream();
+
+            int read = 0;
+            byte[] buffer = new byte[1024];
+            while ((read = fileInputStream.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+        }catch (Exception e){
+        }
+        eventPublisher.publishEvent(FontDownloadEvent.of(fontId));
+    }
+
     public String upload(User user, MultipartFile ttfFile, FontUpload.RequestDto request){
         UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(ConflictException::new);
         FontFileDto fontFileDto = fontFileService.saveFile(ttfFile, S3Path.NFT_FONT);
