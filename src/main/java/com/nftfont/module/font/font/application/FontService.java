@@ -1,5 +1,6 @@
 package com.nftfont.module.font.font.application;
 
+import com.nftfont.common.annotation.QueryStringArgResolver;
 import com.nftfont.common.exception.ConflictException;
 import com.nftfont.common.infra.aws.S3Path;
 import com.nftfont.module.file.FontFile.FontFileDto;
@@ -8,11 +9,14 @@ import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.font.font.domain.NftFontRepoSupport;
 import com.nftfont.module.font.font.domain.NftFontRepository;
 import com.nftfont.module.font.font.domain.like.UserLikeFont;
+import com.nftfont.module.font.font.domain.like.UserLikeFontRepoSupport;
 import com.nftfont.module.font.font.domain.like.UserLikeFontRepository;
 import com.nftfont.module.font.font.dto.FontDetailDto;
 import com.nftfont.module.font.font.dto.FontThumbnailDto;
 import com.nftfont.module.font.font.dto.FontUpload;
+import com.nftfont.module.font.font.dto.UserLikeFontDto;
 import com.nftfont.module.font.font.presentation.request.FontRequestParam;
+import com.nftfont.module.font.font.presentation.request.GetUserLikeFontParams;
 import com.nftfont.module.ipfs.application.IpfsService;
 import com.nftfont.module.ipfs.domain.FontCID;
 import com.nftfont.module.ipfs.domain.FontCIDRepository;
@@ -34,6 +38,7 @@ public class FontService {
     private final NftFontRepository nftFontRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserLikeFontRepository userLikeFontRepository;
+    private final UserLikeFontRepoSupport userLikeFontRepoSupport;
     private final NftFontRepoSupport nftFontRepoSupport;
     private final IpfsService pinataService;
     private final FontFileService fontFileService;
@@ -63,6 +68,11 @@ public class FontService {
         nftFontRepository.plusLikeCount(fontId);
         return true;
     }
+
+    public List<UserLikeFontDto> findAllLikeByFilter(User user, @QueryStringArgResolver GetUserLikeFontParams params){
+        return userLikeFontRepoSupport.findAllByFilter(user,params);
+    }
+
 
     public List<FontThumbnailDto> findFontsByFilter(FontRequestParam requestParam){
         return nftFontRepoSupport.findFontsByFilter(requestParam);
