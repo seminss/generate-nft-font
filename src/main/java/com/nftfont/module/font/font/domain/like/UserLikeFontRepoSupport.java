@@ -35,4 +35,15 @@ public class UserLikeFontRepoSupport {
                 .limit(params.getLimit())
                 .fetch();
     }
+    public Boolean findLikeYn(Long userId,Long fontId){
+        BooleanBuilder where = new BooleanBuilder();
+        where.and(userLikeFont.user.id.eq(userId));
+        where.and(userLikeFont.nftFont.id.eq(fontId));
+
+        return queryFactory.selectFrom(userLikeFont)
+                .leftJoin(userLikeFont.nftFont,nftFont)
+                .leftJoin(userLikeFont.user,user)
+                .where(where)
+                .fetchFirst() != null;
+    }
 }

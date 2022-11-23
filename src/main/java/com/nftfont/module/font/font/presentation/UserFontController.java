@@ -48,4 +48,10 @@ public class UserFontController {
         ApiResult<List<UserLikeFontDto>> success = ApiResult.success(likes);
         return success;
     }
+
+    @GetMapping("/users/{userId}/like-fonts/likeYn")
+    public ApiResult<Boolean> isUserLikeFont(@PathVariable Long userId,@RequestParam Long fontId){
+        Boolean flag = fontService.isUserLikeFont(userId,fontId);
+        return ApiResult.success(flag);
+    }
 }

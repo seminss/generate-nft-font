@@ -107,4 +107,7 @@ public class FontService {
         return nftFontRepoSupport.findById(fontId);
     }
 
+    public Boolean isUserLikeFont(Long userId,Long fontId){
+        return userLikeFontRepoSupport.findLikeYn(userId,fontId);
+    }
 }
