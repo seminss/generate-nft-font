@@ -54,7 +54,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ConflictException("유저가 없어요."));
         UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(() -> new ConflictException("유저가 없어요."));
 
-        return UserProfileDetail.ResponseDto.of(userProfile);
+        return UserProfileDetail.ResponseDto.of(userProfile,user);
     }
     public String getUserWallet(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new ConflictException("유저가 없어요."));
