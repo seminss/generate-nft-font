@@ -37,4 +37,10 @@ public class UserController {
         ApiResult<UserProfileDetail.ResponseDto> apiResult = ApiResult.success(responseDto);
         return apiResult;
     }
+
+    @GetMapping("/users/{userId}/wallet")
+    public ApiResult<String> getWalletAddress(@PathVariable Long userId){
+        String address = userService.getUserWallet(userId);
+        return ApiResult.success(address);
+    }
 }
