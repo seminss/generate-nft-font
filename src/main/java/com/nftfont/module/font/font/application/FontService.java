@@ -5,6 +5,8 @@ import com.nftfont.common.exception.ConflictException;
 import com.nftfont.common.infra.aws.S3Path;
 import com.nftfont.module.file.FontFile.FontFileDto;
 import com.nftfont.module.file.FontFile.FontFileService;
+import com.nftfont.module.file.image_file.ImageFileDto;
+import com.nftfont.module.file.image_file.ImageFileService;
 import com.nftfont.module.font.font.application.event.FontDownloadEvent;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.font.font.domain.NftFontRepoSupport;
@@ -46,6 +48,7 @@ public class FontService {
     private final NftFontRepoSupport nftFontRepoSupport;
     private final IpfsService pinataService;
     private final FontFileService fontFileService;
+    private final ImageFileService imageFileService;
     private final FontCIDRepository fontCIDRepository;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -68,11 +71,12 @@ public class FontService {
         eventPublisher.publishEvent(FontDownloadEvent.of(fontId));
     }
 
-    public String upload(User user, MultipartFile ttfFile, FontUpload.RequestDto request){
+    public String upload(User user, MultipartFile ttfFile,MultipartFile fontThumbnailImage, FontUpload.RequestDto request){
         UserProfile userProfile = userProfileRepository.findByUser(user).orElseThrow(ConflictException::new);
         FontFileDto fontFileDto = fontFileService.saveFile(ttfFile, S3Path.NFT_FONT);
+        ImageFileDto imageFileDto = imageFileService.saveImage(fontThumbnailImage,S3Path.NFT_FONT_THUMBNAIL);
         NftFont save = nftFontRepository.save(NftFont.ofCreation(request.getFontName(),
-                request.getFontSymbol(), user,userProfile, fontFileDto.getUrl()));
+                request.getFontSymbol(), user,userProfile, fontFileDto.getUrl(), imageFileDto.getImageUrl()));
 
         pinataService.pinning(ttfFile,user,save);
 

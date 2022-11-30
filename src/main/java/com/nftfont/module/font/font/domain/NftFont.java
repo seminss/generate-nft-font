@@ -38,12 +38,14 @@ public class NftFont {
     @JoinColumn(name = "user_profile_id",nullable = false)
     private UserProfile userProfile;
 
-    public static NftFont ofCreation(String fontName,String fontSymbol,User user,UserProfile userProfile,String fontUrl){
+    public static NftFont ofCreation(String fontName,String fontSymbol,User user,UserProfile userProfile,
+                                     String fontUrl,String fontThumbnailImage){
         return NftFont.builder()
                 .likedCount(0L)
                 .downloadCount(0L)
                 .fontName(fontName)
                 .fontSymbol(fontSymbol)
+                .fontThumbnailImage(fontThumbnailImage)
                 .user(user)
                 .userProfile(userProfile)
                 .fontUrl(fontUrl)

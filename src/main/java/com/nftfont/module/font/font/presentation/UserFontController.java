@@ -26,10 +26,13 @@ import java.util.List;
 public class UserFontController {
     private final FontService fontService;
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#user.getId())")
-    @PostMapping(value ="/font/pinning",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value ="/font/pinning",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE,
+            MediaType.APPLICATION_JSON_VALUE})
     public ApiResult<String> uploadTTFFile(@Parameter(hidden = true) @CurrentUser User user,
-                                           @RequestPart MultipartFile ttfFile, @RequestPart FontUpload.RequestDto request){
-        String cid = fontService.upload(user, ttfFile, request);
+                                           @RequestPart MultipartFile ttfFile,
+                                           @RequestPart MultipartFile fontThumbnailImage,
+                                           @RequestPart FontUpload.RequestDto request){
+        String cid = fontService.upload(user, ttfFile,fontThumbnailImage ,request);
         ApiResult<String> success = ApiResult.success(cid);
         return success;
     }
