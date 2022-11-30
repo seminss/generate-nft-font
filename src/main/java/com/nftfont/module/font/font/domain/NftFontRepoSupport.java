@@ -41,7 +41,7 @@ public class NftFontRepoSupport {
 
         return fonts.stream()
                 .map(f -> new FontThumbnailDto(f.getId(),f.getFontThumbnailImage(),f.getLikedCount(),
-                f.getDownloadCount(),f.getFontName())).collect(Collectors.toList());
+                f.getDownloadCount(),f.getFontName(),f.getUser().getId(),f.getFontUrl())).collect(Collectors.toList());
     }
 
     public FontDetailDto findById(Long fontId){
