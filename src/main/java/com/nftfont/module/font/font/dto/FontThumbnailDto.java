@@ -20,6 +20,7 @@ public class FontThumbnailDto {
     private Long likedCount;
     private Long downloadCount;
     private String fontName;
-    private Long creator;
+    private Long creatorId;
+    private String creatorName;
     private String ttfUrl;
 }
