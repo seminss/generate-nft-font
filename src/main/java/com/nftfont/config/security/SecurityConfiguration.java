@@ -51,8 +51,6 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .cors().disable()
-                .and()
-                .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
