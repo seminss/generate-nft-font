@@ -17,5 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+
 public class IpfsController {
 }
