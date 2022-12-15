@@ -58,8 +58,7 @@ public class SecurityConfiguration {
                 .and()
                 .userDetailsService(customUserDetailsService)
                 .authorizeRequests()
-                    .antMatchers("/api-docs/**","/swagger-ui/**").permitAll()
-                    .antMatchers("/hello/api").permitAll()
+                .antMatchers(HttpMethod.OPTIONS,"/**/*").permitAll()
                     .antMatchers(HttpMethod.GET,GET_PERMITTED_URLS).permitAll()
                     .antMatchers(HttpMethod.POST,POST_PERMITTED_URLS).permitAll()
                 .anyRequest().authenticated();
