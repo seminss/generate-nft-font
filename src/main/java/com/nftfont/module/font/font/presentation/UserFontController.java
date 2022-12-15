@@ -38,10 +38,9 @@ public class UserFontController {
     }
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#userId)")
     @PostMapping("/users/{userId}/like-fonts/toggle")
-    public ApiResult<Boolean> likeFont(@RequestBody LikeDto request, @PathVariable Long userId,
+    public void likeFont(@RequestBody LikeDto request, @PathVariable Long userId,
                                        @Parameter(hidden = true) @CurrentUser User user){
-        Boolean flag = fontService.likeFont(request.getFontId(), user);
-        return ApiResult.success(flag);
+        fontService.likeFont(request,user);
     }
 
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#userId)")

@@ -6,5 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class LikeDto {
-    private Long fontId;
+    private String address;
+    private Long tokenId;
 }

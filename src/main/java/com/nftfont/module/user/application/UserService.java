@@ -60,4 +60,12 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ConflictException("유저가 없어요."));
         return user.getWalletAddress();
     }
+    public String getUserName(User user){
+        Optional<UserProfile> byUser = userProfileRepository.findByUser(user);
+        if(byUser.isPresent()){
+            return byUser.get().getUser() != null ? byUser.get().getUsername() : "이름 없음";
+        }else{
+            return "이름없음";
+        }
+    }
 }

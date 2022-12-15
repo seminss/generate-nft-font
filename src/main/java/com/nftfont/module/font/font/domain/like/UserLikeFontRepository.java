@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserLikeFontRepository extends JpaRepository<UserLikeFont,Long> {
-    Optional<UserLikeFont> findByUserAndNftFont(User user, NftFont nftFont);
+public interface UserLikeFontRepository extends JpaRepository<UserLikeFontV2,Long> {
+    Optional<UserLikeFontV2> findByAddressAndTokenId(String address,Long tokenId);
 }

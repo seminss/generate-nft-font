@@ -14,10 +14,8 @@ import com.nftfont.module.font.font.domain.NftFontRepository;
 import com.nftfont.module.font.font.domain.like.UserLikeFont;
 import com.nftfont.module.font.font.domain.like.UserLikeFontRepoSupport;
 import com.nftfont.module.font.font.domain.like.UserLikeFontRepository;
-import com.nftfont.module.font.font.dto.FontDetailDto;
-import com.nftfont.module.font.font.dto.FontThumbnailDto;
-import com.nftfont.module.font.font.dto.FontUpload;
-import com.nftfont.module.font.font.dto.UserLikeFontDto;
+import com.nftfont.module.font.font.domain.like.UserLikeFontV2;
+import com.nftfont.module.font.font.dto.*;
 import com.nftfont.module.font.font.presentation.request.FontRequestParam;
 import com.nftfont.module.font.font.presentation.request.GetUserLikeFontParams;
 import com.nftfont.module.ipfs.application.IpfsService;
@@ -85,17 +83,15 @@ public class FontService {
         return fontCID.getCid();
     }
 
-    public Boolean likeFont(Long fontId,User user){
-        NftFont nftFont = nftFontRepository.findById(fontId).orElseThrow(ConflictException::new);
-        Optional<UserLikeFont> optionalUserLikeFont = userLikeFontRepository.findByUserAndNftFont(user, nftFont);
-        if(optionalUserLikeFont.isPresent()){
-            userLikeFontRepository.delete(optionalUserLikeFont.get());
-            nftFontRepository.minusLikeCount(fontId);
-            return false;
+    public void likeFont(LikeDto request, User user){
+        Optional<UserLikeFontV2> optional = userLikeFontRepository.findByAddressAndTokenId(request.getAddress(), request.getTokenId());
+        // 존재하면 삭제
+        if(optional.isPresent()){
+            userLikeFontRepository.delete(optional.get());
+            return ;
         }
-        userLikeFontRepository.save(UserLikeFont.of(user,nftFont));
-        nftFontRepository.plusLikeCount(fontId);
-        return true;
+        // 업스면 생성
+        userLikeFontRepository.save(UserLikeFontV2.ofCreation(user, request.getAddress(),request.getTokenId()));
     }
 
     public List<UserLikeFontDto> findAllLikeByFilter(User user, @QueryStringArgResolver GetUserLikeFontParams params){

@@ -43,4 +43,9 @@ public class UserController {
         String address = userService.getUserWallet(userId);
         return ApiResult.success(address);
     }
+    @GetMapping("/users/name")
+    public ApiResult<String> getUserName(@CurrentUser User user){
+        String name = userService.getUserName(user);
+        return ApiResult.success(name);
+    }
 }
