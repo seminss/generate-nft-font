@@ -85,7 +85,7 @@ public class SecurityConfiguration {
         corsConfig.setAllowedHeaders(Arrays.asList("*"));
         corsConfig.setAllowedMethods(Arrays.asList("*"));
         corsConfig.setAllowedOrigins(Arrays.asList("*"));
-        corsConfig.setAllowedOrigins(Arrays.asList("*"));
+        corsConfig.setAllowedOrigins(Arrays.asList("https://eternal-semin-feature-likes.vercel.app/"));
         corsConfig.setAllowCredentials(true);
         corsConfig.setMaxAge(corsConfig.getMaxAge());
 
