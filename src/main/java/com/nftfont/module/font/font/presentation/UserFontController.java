@@ -52,7 +52,7 @@ public class UserFontController {
         return success;
     }
 
-    @GetMapping("/fonts/likes")
+    @GetMapping("/fonts/like/all")
     public ApiResult<List<vhsxmwhghl>> getUserLikeFonts(@QueryStringArgResolver GetUserLikeFontParams params){
         List<vhsxmwhghl> allByFilter = fontService.findAllByFilter(params.getAddress());
         ApiResult<List<vhsxmwhghl>> success = ApiResult.success(allByFilter);
