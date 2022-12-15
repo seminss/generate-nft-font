@@ -43,6 +43,15 @@ public class UserFontController {
         fontService.likeFont(request,user);
     }
 
+    @GetMapping("/fonts/likes")
+    public ApiResult<List<iii>> getAll(){
+        List<iii> getalll = fontService.getalll();
+        ApiResult<List<iii>> success = ApiResult.success(getalll);
+        return success;
+    }
+
+
+
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#userId)")
     @GetMapping("/users/{userId}/like-fonts")
     public ApiResult<List<UserLikeFontDto>> getUserLikeFonts(@Parameter(hidden = true) @CurrentUser User user, @PathVariable Long userId, @QueryStringArgResolver GetUserLikeFontParams params){

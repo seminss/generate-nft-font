@@ -16,6 +16,7 @@ import com.nftfont.module.font.font.domain.like.UserLikeFontRepoSupport;
 import com.nftfont.module.font.font.domain.like.UserLikeFontRepository;
 import com.nftfont.module.font.font.domain.like.UserLikeFontV2;
 import com.nftfont.module.font.font.dto.*;
+import com.nftfont.module.font.font.presentation.iii;
 import com.nftfont.module.font.font.presentation.request.FontRequestParam;
 import com.nftfont.module.font.font.presentation.request.GetUserLikeFontParams;
 import com.nftfont.module.ipfs.application.IpfsService;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -84,7 +86,7 @@ public class FontService {
     }
 
     public void likeFont(LikeDto request, User user){
-        Optional<UserLikeFontV2> optional = userLikeFontRepository.findByAddressAndTokenId(request.getAddress(), request.getTokenId());
+        Optional<UserLikeFontV2> optional = userLikeFontRepository.findByAddressAndTokenIdAndUser(request.getAddress(), request.getTokenId(),user);
         // 존재하면 삭제
         if(optional.isPresent()){
             userLikeFontRepository.delete(optional.get());
@@ -93,6 +95,13 @@ public class FontService {
         // 업스면 생성
         userLikeFontRepository.save(UserLikeFontV2.ofCreation(user, request.getAddress(),request.getTokenId()));
     }
+
+    public List<iii> getalll(){
+        List<UserLikeFontV2> all = userLikeFontRepository.findAll();
+        return all.stream().map(iii::of).collect(Collectors.toList());
+    }
+
+
 
     public List<UserLikeFontDto> findAllLikeByFilter(User user, @QueryStringArgResolver GetUserLikeFontParams params){
         return userLikeFontRepoSupport.findAllByFilter(user,params);

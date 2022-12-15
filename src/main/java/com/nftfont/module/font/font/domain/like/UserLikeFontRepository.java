@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserLikeFontRepository extends JpaRepository<UserLikeFontV2,Long> {
-    Optional<UserLikeFontV2> findByAddressAndTokenId(String address,Long tokenId);
+    Optional<UserLikeFontV2> findByAddressAndTokenIdAndUser(String address,Long tokenId,User user);
 }
