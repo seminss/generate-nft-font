@@ -50,7 +50,7 @@ public class SecurityConfiguration {
 
         http
                 .csrf().disable()
-                .cors()
+                .cors().disable()
                 .and()
                 .csrf().disable()
                 .formLogin().disable()
@@ -60,33 +60,11 @@ public class SecurityConfiguration {
                 .and()
                 .userDetailsService(customUserDetailsService)
                 .authorizeRequests()
-
                     .antMatchers("/api-docs/**","/swagger-ui/**").permitAll()
                     .antMatchers("/hello/api").permitAll()
                     .antMatchers(HttpMethod.GET,GET_PERMITTED_URLS).permitAll()
                     .antMatchers(HttpMethod.POST,POST_PERMITTED_URLS).permitAll()
                 .anyRequest().authenticated();
-
-                //.authorizeRequests()
-//                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                //.and()
-                // oauth2
-
-
-//                .oauth2Login()
-//                .authorizationEndpoint()
-//                .baseUri("/oauth2/authorization")
-//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-//                .and()
-//                .redirectionEndpoint()
-//                .baseUri("/*/oauth2/code/*")
-//                .and()
-//                .userInfoEndpoint()
-//                .userService(oAuth2UserService)
-//                .and()
-//                .successHandler(oAuth2AuthenticationSuccessHandler())
-//                .failureHandler(oAuth2AuthenticationFailureHandler());
-
         http.addFilterBefore(JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -106,9 +84,9 @@ public class SecurityConfiguration {
         UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
 
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
-        corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
-        corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
+        corsConfig.setAllowedHeaders(Arrays.asList("*"));
+        corsConfig.setAllowedMethods(Arrays.asList("*"));
+        corsConfig.setAllowedOrigins(Arrays.asList("*"));
         corsConfig.setAllowedOrigins(Arrays.asList("*"));
         corsConfig.setAllowCredentials(true);
         corsConfig.setMaxAge(corsConfig.getMaxAge());
