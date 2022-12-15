@@ -23,7 +23,6 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserFontController {
     private final FontService fontService;
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#user.getId())")
