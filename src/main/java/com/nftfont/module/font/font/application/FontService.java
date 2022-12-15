@@ -33,8 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,9 +95,14 @@ public class FontService {
         userLikeFontRepository.save(UserLikeFontV2.ofCreation(user, request.getAddress(),request.getTokenId()));
     }
 
-    public List<iii> getalll(){
+    public Map<String,Long> getalll(){
         List<UserLikeFontV2> all = userLikeFontRepository.findAll();
-        return all.stream().map(iii::of).collect(Collectors.toList());
+        Map<String,Long> ret = new HashMap<>();
+        for(UserLikeFontV2 a : all){
+            System.out.println(a.getAddress()+" "+a.getTokenId());
+            ret.compute(a.getAddress(),(k,v)->(v==null) ? 1 : v+1);
+        }
+        return ret;
     }
 
 

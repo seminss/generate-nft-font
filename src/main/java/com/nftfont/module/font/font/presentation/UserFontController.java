@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Null;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -44,17 +45,19 @@ public class UserFontController {
     }
 
     @GetMapping("/fonts/likes")
-    public ApiResult<List<iii>> getAll(){
-        List<iii> getalll = fontService.getalll();
-        ApiResult<List<iii>> success = ApiResult.success(getalll);
+    public ApiResult<Map<String,Long>> getAll(){
+        Map<String,Long> getalll = fontService.getalll();
+        ApiResult<Map<String,Long>> success = ApiResult.success(getalll);
         return success;
     }
 
-
+//    @GetMapping("/fonts/likes/")
+//    public ApiResult<>
 
     @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#userId)")
     @GetMapping("/users/{userId}/like-fonts")
-    public ApiResult<List<UserLikeFontDto>> getUserLikeFonts(@Parameter(hidden = true) @CurrentUser User user, @PathVariable Long userId, @QueryStringArgResolver GetUserLikeFontParams params){
+    public ApiResult<List<UserLikeFontDto>> getUserLikeFonts(@Parameter(hidden = true) @CurrentUser User user, @PathVariable Long userId,
+                                                             @QueryStringArgResolver GetUserLikeFontParams params){
         List<UserLikeFontDto> likes = fontService.findAllLikeByFilter(user, params);
         ApiResult<List<UserLikeFontDto>> success = ApiResult.success(likes);
         return success;
