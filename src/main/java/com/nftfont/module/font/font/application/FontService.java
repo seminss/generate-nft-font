@@ -11,8 +11,7 @@ import com.nftfont.module.font.font.application.event.FontDownloadEvent;
 import com.nftfont.module.font.font.domain.NftFont;
 import com.nftfont.module.font.font.domain.NftFontRepoSupport;
 import com.nftfont.module.font.font.domain.NftFontRepository;
-import com.nftfont.module.font.font.domain.like.UserLikeFont;
-import com.nftfont.module.font.font.domain.like.UserLikeFontRepoSupport;
+
 import com.nftfont.module.font.font.domain.like.UserLikeFontRepository;
 import com.nftfont.module.font.font.domain.like.UserLikeFontV2;
 import com.nftfont.module.font.font.dto.*;
@@ -23,6 +22,7 @@ import com.nftfont.module.ipfs.application.IpfsService;
 import com.nftfont.module.ipfs.domain.FontCID;
 import com.nftfont.module.ipfs.domain.FontCIDRepository;
 import com.nftfont.module.user.domain.user.User;
+import com.nftfont.module.user.domain.user.UserRepository;
 import com.nftfont.module.user.domain.userprofile.UserProfile;
 import com.nftfont.module.user.domain.userprofile.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,13 +43,13 @@ public class FontService {
     private final NftFontRepository nftFontRepository;
     private final UserProfileRepository userProfileRepository;
     private final UserLikeFontRepository userLikeFontRepository;
-    private final UserLikeFontRepoSupport userLikeFontRepoSupport;
     private final NftFontRepoSupport nftFontRepoSupport;
     private final IpfsService pinataService;
     private final FontFileService fontFileService;
     private final ImageFileService imageFileService;
     private final FontCIDRepository fontCIDRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final UserRepository userRepository;
 
     public void download(Long fontId, HttpServletResponse response){
         NftFont nftFont = nftFontRepository.findById(fontId).orElseThrow(ConflictException::new);
@@ -99,17 +99,20 @@ public class FontService {
         List<UserLikeFontV2> all = userLikeFontRepository.findAll();
         Map<String,Long> ret = new HashMap<>();
         for(UserLikeFontV2 a : all){
-            System.out.println(a.getAddress()+" "+a.getTokenId());
             ret.compute(a.getAddress(),(k,v)->(v==null) ? 1 : v+1);
         }
         return ret;
     }
 
-
-
-    public List<UserLikeFontDto> findAllLikeByFilter(User user, @QueryStringArgResolver GetUserLikeFontParams params){
-        return userLikeFontRepoSupport.findAllByFilter(user,params);
+    public List<vhsxmwhghl> findAllByFilter(String address){
+        User user = userRepository.findByWalletAddress(address).orElseThrow();
+        List<UserLikeFontV2> allByUser = userLikeFontRepository.findAllByUser(user);
+        return allByUser.stream().map(vhsxmwhghl::of).collect(Collectors.toList());
     }
+
+//    public List<UserLikeFontDto> findAllLikeByFilter(User user, @QueryStringArgResolver GetUserLikeFontParams params){
+//        return userLikeFontRepoSupport.findAllByFilter(user,params);
+//    }
 
 
     public List<FontThumbnailDto> findFontsByFilter(FontRequestParam requestParam){
@@ -120,7 +123,7 @@ public class FontService {
         return nftFontRepoSupport.findById(fontId);
     }
 
-    public Boolean isUserLikeFont(Long userId,Long fontId){
-        return userLikeFontRepoSupport.findLikeYn(userId,fontId);
-    }
+//    public Boolean isUserLikeFont(Long userId,Long fontId){
+//        return userLikeFontRepoSupport.findLikeYn(userId,fontId);
+//    }
 }

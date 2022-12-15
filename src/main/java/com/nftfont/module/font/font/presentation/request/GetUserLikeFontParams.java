@@ -8,7 +8,5 @@ import java.time.LocalDateTime;
 @Data
 @Getter
 public class GetUserLikeFontParams {
-    private Long offset;
-
-    private Long limit;
+    private String address;
 }

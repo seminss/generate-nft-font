@@ -7,6 +7,7 @@ import com.nftfont.module.font.font.application.FontService;
 import com.nftfont.module.font.font.dto.FontUpload;
 import com.nftfont.module.font.font.dto.LikeDto;
 import com.nftfont.module.font.font.dto.UserLikeFontDto;
+import com.nftfont.module.font.font.dto.vhsxmwhghl;
 import com.nftfont.module.font.font.presentation.request.GetUserLikeFontParams;
 import com.nftfont.module.user.domain.user.User;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,21 +52,25 @@ public class UserFontController {
         return success;
     }
 
-//    @GetMapping("/fonts/likes/")
-//    public ApiResult<>
-
-    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#userId)")
-    @GetMapping("/users/{userId}/like-fonts")
-    public ApiResult<List<UserLikeFontDto>> getUserLikeFonts(@Parameter(hidden = true) @CurrentUser User user, @PathVariable Long userId,
-                                                             @QueryStringArgResolver GetUserLikeFontParams params){
-        List<UserLikeFontDto> likes = fontService.findAllLikeByFilter(user, params);
-        ApiResult<List<UserLikeFontDto>> success = ApiResult.success(likes);
+    @GetMapping("/fonts/likes")
+    public ApiResult<List<vhsxmwhghl>> getUserLikeFonts(@QueryStringArgResolver GetUserLikeFontParams params){
+        List<vhsxmwhghl> allByFilter = fontService.findAllByFilter(params.getAddress());
+        ApiResult<List<vhsxmwhghl>> success = ApiResult.success(allByFilter);
         return success;
     }
 
-    @GetMapping("/users/{userId}/like-fonts/likeYn")
-    public ApiResult<Boolean> isUserLikeFont(@PathVariable Long userId,@RequestParam Long fontId){
-        Boolean flag = fontService.isUserLikeFont(userId,fontId);
-        return ApiResult.success(flag);
-    }
+//    @PreAuthorize("@apiSecurityChecker.hasUserPermission(authentication.getPrincipal(),#userId)")
+//    @GetMapping("/users/{userId}/like-fonts")
+//    public ApiResult<List<UserLikeFontDto>> getUserLikeFonts(@Parameter(hidden = true) @CurrentUser User user, @PathVariable Long userId,
+//                                                             @QueryStringArgResolver GetUserLikeFontParams params){
+//        List<UserLikeFontDto> likes = fontService.findAllLikeByFilter(user, params);
+//        ApiResult<List<UserLikeFontDto>> success = ApiResult.success(likes);
+//        return success;
+//    }
+
+//    @GetMapping("/users/{userId}/like-fonts/likeYn")
+//    public ApiResult<Boolean> isUserLikeFont(@PathVariable Long userId,@RequestParam Long fontId){
+//        Boolean flag = fontService.isUserLikeFont(userId,fontId);
+//        return ApiResult.success(flag);
+//    }
 }
