@@ -56,6 +56,13 @@ public class UserService {
 
         return UserProfileDetail.ResponseDto.of(userProfile,user);
     }
+
+    public String findByWalletAddress(String address){
+        User user = userRepository.findByWalletAddress(address).orElseThrow();
+        return userProfileRepository.findByUser(user).orElseThrow().getUsername();
+    }
+
+
     public String getUserWallet(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new ConflictException("유저가 없어요."));
         return user.getWalletAddress();

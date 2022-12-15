@@ -38,6 +38,12 @@ public class UserController {
         return apiResult;
     }
 
+    @GetMapping("/users/namebyaddress")
+    public ApiResult<String> getUserName(@RequestParam String address){
+        String byWalletAddress = userService.findByWalletAddress(address);
+        ApiResult<String> success = ApiResult.success(byWalletAddress);
+        return success;
+    }
     @GetMapping("/users/{userId}/wallet")
     public ApiResult<String> getWalletAddress(@PathVariable Long userId){
         String address = userService.getUserWallet(userId);
